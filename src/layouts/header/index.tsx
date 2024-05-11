@@ -1,4 +1,3 @@
-import React from "react";
 import logo_black from "../../assets/sii_white.png";
 import { Link } from "react-router-dom";
 const Navbar = () => {
