@@ -9,7 +9,6 @@ const CardFlip = () => {
     setIsFlipped(!isFlipped);
   };
 
-  // Variants for the card animation
   const cardVariants = {
     front: {
       rotateY: 0,

@@ -57,7 +57,18 @@ const ProfilePosts = () => {
           }  flex justify-center items-center h-full mr-16 cursor-pointer `}
           onClick={() => handleTabClick("posts")}
         >
-          <FontAwesomeIcon icon={faTable} />
+          <div
+            className={`${
+              activeTab === "posts" ? "bg-secondary" : "bg-black"
+            }  h-6 w-6 justify-center items-center flex rounded-sm`}
+          >
+            <FontAwesomeIcon
+              icon={faTable}
+              className={`${
+                activeTab === "posts" ? "text-black" : "text-secondary"
+              }`}
+            />
+          </div>
           <span className="lg:inline-block ml-2">Posts</span>
         </a>
         <a
@@ -69,7 +80,18 @@ const ProfilePosts = () => {
           } flex justify-center items-center h-full mr-16 cursor-pointer `}
           onClick={() => handleTabClick("videos")}
         >
-          <FontAwesomeIcon icon={faVideo} />
+          <div
+            className={`${
+              activeTab === "videos" ? "bg-secondary" : "bg-black"
+            }  h-6 w-6 justify-center items-center flex rounded-sm`}
+          >
+            <FontAwesomeIcon
+              icon={faVideo}
+              className={`${
+                activeTab === "videos" ? "text-black" : "text-secondary"
+              }`}
+            />
+          </div>
           <span className="lg:inline-block ml-2">Videos</span>
         </a>
         <a
@@ -81,7 +103,18 @@ const ProfilePosts = () => {
           } flex justify-center items-center h-full mr-16 cursor-pointer `}
           onClick={() => handleTabClick("saves")}
         >
-          <FontAwesomeIcon icon={faBookmark} />
+          <div
+            className={`${
+              activeTab === "saves" ? "bg-secondary" : "bg-black"
+            }  h-6 w-6 justify-center items-center flex rounded-sm`}
+          >
+            <FontAwesomeIcon
+              icon={faBookmark}
+              className={`${
+                activeTab === "saves" ? "text-black" : "text-secondary"
+              }`}
+            />
+          </div>
           <span className="lg:inline-block ml-2">Saves</span>
         </a>
         <a
@@ -93,17 +126,26 @@ const ProfilePosts = () => {
           } flex justify-center items-center h-full mr-16 cursor-pointer `}
           onClick={() => handleTabClick("likes")}
         >
-          <FontAwesomeIcon icon={faThumbsUp} />
+          <div
+            className={`${
+              activeTab === "likes" ? "bg-secondary" : "bg-black"
+            }  h-6 w-6 justify-center items-center flex rounded-sm`}
+          >
+            <FontAwesomeIcon
+              icon={faThumbsUp}
+              className={`${
+                activeTab === "likes" ? "text-black" : "text-secondary"
+              }`}
+            />
+          </div>
           <span className="lg:inline-block ml-2">Likes</span>
         </a>
       </div>
       <div className="grid grid-cols-4 gap-1 lg:gap-1">
-        {/* Conditionally render content based on active tab */}
         {activeTab === "posts" &&
           posts.map((post, index) => (
             <ProfilePost key={index} imageUrl={post.imageUrl} />
           ))}
-        {/* You can add similar blocks for other tabs */}
       </div>
     </div>
   );
