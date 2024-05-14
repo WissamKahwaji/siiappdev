@@ -56,18 +56,13 @@ const ProfilePosts = () => {
           onClick={() => handleTabClick("posts")}
         >
           <div
-            className={`${
-              activeTab === "posts" ? "bg-secondary" : "bg-black"
-            }  md:h-6 md:w-6 h-9 w-9  justify-center items-center flex rounded-sm`}
+            className={`bg-secondary p-2  justify-center items-center flex rounded-sm`}
           >
-            <FontAwesomeIcon
-              icon={faTable}
-              className={`${
-                activeTab === "posts" ? "text-black" : "text-secondary"
-              } `}
-            />
+            <FontAwesomeIcon icon={faTable} className="text-black" />
+            <span className=" lg:inline-block ml-2 text-black text-xs">
+              Posts
+            </span>
           </div>
-          <span className="hidden lg:inline-block ml-2">Posts</span>
         </a>
         <a
           href="#"
@@ -75,22 +70,17 @@ const ProfilePosts = () => {
             activeTab === "videos"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center w-full  h-full md:mr-16 mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full md:mr-16 mr-8 cursor-pointer   ml-2`}
           onClick={() => handleTabClick("videos")}
         >
           <div
-            className={`${
-              activeTab === "videos" ? "bg-secondary" : "bg-black"
-            }   md:h-6 md:w-6 h-9 w-9 justify-center items-center flex rounded-sm`}
+            className={`bg-secondary p-2  justify-center items-center flex rounded-sm`}
           >
-            <FontAwesomeIcon
-              icon={faVideo}
-              className={`${
-                activeTab === "videos" ? "text-black" : "text-secondary"
-              }`}
-            />
+            <FontAwesomeIcon icon={faVideo} className="text-black" />
+            <span className=" lg:inline-block ml-2 text-black text-xs">
+              Videos
+            </span>
           </div>
-          <span className="hidden lg:inline-block ml-2">Videos</span>
         </a>
         <a
           href="#"
@@ -98,22 +88,17 @@ const ProfilePosts = () => {
             activeTab === "saves"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer   ml-2`}
           onClick={() => handleTabClick("saves")}
         >
           <div
-            className={`${
-              activeTab === "saves" ? "bg-secondary" : "bg-black"
-            }   md:h-6 md:w-6 h-9 w-9 justify-center items-center flex rounded-sm`}
+            className={`bg-secondary p-2  justify-center items-center flex rounded-sm`}
           >
-            <FontAwesomeIcon
-              icon={faBookmark}
-              className={`${
-                activeTab === "saves" ? "text-black" : "text-secondary"
-              }`}
-            />
+            <FontAwesomeIcon icon={faBookmark} className="text-black" />
+            <span className="  lg:inline-block ml-2 text-black text-xs">
+              Saves
+            </span>
           </div>
-          <span className="hidden lg:inline-block ml-2">Saves</span>
         </a>
         <a
           href="#"
@@ -121,22 +106,17 @@ const ProfilePosts = () => {
             activeTab === "likes"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer`}
           onClick={() => handleTabClick("likes")}
         >
           <div
-            className={`${
-              activeTab === "likes" ? "bg-secondary" : "bg-black"
-            }   md:h-6 md:w-6 h-9 w-9 justify-center items-center flex rounded-sm`}
+            className={`bg-secondary  p-2  justify-center items-center flex rounded-sm`}
           >
-            <FontAwesomeIcon
-              icon={faThumbsUp}
-              className={`${
-                activeTab === "likes" ? "text-black" : "text-secondary"
-              }`}
-            />
+            <FontAwesomeIcon icon={faThumbsUp} className="text-black" />
+            <span className=" lg:inline-block ml-2 text-black text-xs">
+              Likes
+            </span>
           </div>
-          <span className="hidden lg:inline-block ml-2">Likes</span>
         </a>
       </div>
       <div className="grid md:grid-cols-4 grid-cols-3 gap-2 lg:gap-1 py-10">
