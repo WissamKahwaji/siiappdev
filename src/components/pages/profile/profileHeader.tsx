@@ -61,7 +61,7 @@ const ProfileHeader = () => {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between space-x-8">
+          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between space-x-14">
             <p className="md:text-2xl text-base font-header font-semibold">
               Wesam Kahwaji
             </p>
