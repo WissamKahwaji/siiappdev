@@ -3,7 +3,7 @@ import ProfilePosts from "../../components/pages/profile/profilePosts";
 
 const Profile = () => {
   return (
-    <div className="container pt-8 mx-auto">
+    <div className="container md:py-8 mx-auto">
       <main className="bg-background">
         <ProfileHeader />
         <ProfilePosts />

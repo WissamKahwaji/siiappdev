@@ -27,24 +27,23 @@ const ProfileHeader = () => {
     setIsFlipped(!isFlipped);
   };
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-row space-x-8 justify-center">
+    <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
+      <div className="flex flex-row md:space-x-8 md:justify-center">
         <div className="flex flex-col">
           <img
             src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
             alt="profile"
-            className="rounded-lg h-[150px]"
-            width={150}
+            className="rounded-lg md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
-          <div className="font-header mt-4 text-lg h-[135px] overflow-ellipsis">
-            <p className="text-sm font-header font-semibold">wissam_98</p>
-            <p>
+          <div className="font-header mt-4 text-lg md:h-[135px] w-[140px] overflow-ellipsis">
+            <p className="text-sm  font-semibold">wissam_98</p>
+            <p className="text-base">
               this is bio <br />
               Software Engineer <br />
               Master Web Science
             </p>
           </div>
-          <div className="justify-end items-end flex">
+          <div className="hidden justify-end items-end md:flex">
             <div className="flex flex-row space-x-8 mt-3 capitalize">
               <div className="text-primary font-header flex flex-col items-center justify-center">
                 <p className="font-semibold">34</p>
@@ -62,9 +61,11 @@ const ProfileHeader = () => {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row space-x-10 h-fit items-center justify-between ">
-            <p className="text-2xl font-header font-semibold">Wesam Kahwaji</p>
-            <div className="flex flex-row space-x-5">
+          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between space-x-10">
+            <p className="md:text-2xl text-base font-header font-semibold">
+              Wesam Kahwaji
+            </p>
+            <div className="flex flex-row md:space-x-5 space-x-2">
               <div className="w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
                 <FontAwesomeIcon icon={faEdit} />
               </div>
@@ -76,10 +77,27 @@ const ProfileHeader = () => {
               </div>
             </div>
           </div>
-          <p className="text-secondary font-semibold font-header text-base">
+
+          <p className="text-secondary font-semibold font-header md:text-base text-sm">
             Software Engineer
           </p>
-          <div className="group perspective-1000 flex items-center justify-center my-2 w-[500px] h-[300px]">
+          <div className="md:hidden justify-end items-end ">
+            <div className="flex flex-row justify-between mt-3 capitalize">
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold">34</p>
+                <p className="text-sm">posts</p>
+              </div>
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold">50</p>
+                <p className="text-sm">followings</p>
+              </div>
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold">50</p>
+                <p className="text-sm">followers</p>
+              </div>
+            </div>
+          </div>
+          <div className="group perspective-1000 flex items-center justify-center my-2 md:w-[500px] md:h-[300px] w-full h-[150px]">
             <div className="relative w-full h-full">
               <div
                 className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
@@ -106,12 +124,12 @@ const ProfileHeader = () => {
         </div>
       </div>
 
-      <div className="mt-10 ">
-        <div className="flex space-x-20">
+      <div className="md:mt-10 mt-3 ">
+        <div className="flex md:space-x-20 space-x-4 justify-center items-center   ">
           {socialMediaIcons.map((item, index) => (
             <div
               key={index}
-              className="rounded-lg w-12 h-12 bg-secondary flex justify-center items-center"
+              className="rounded-lg md:w-12 md:h-12 w-10 h-10 bg-secondary flex justify-center items-center"
             >
               <div>{item.icon}</div>
             </div>

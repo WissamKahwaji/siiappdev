@@ -11,7 +11,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ imageUrl }) => {
 
   return (
     <div
-      className="relative overflow-hidden w-full pt-[100%]"
+      className="relative overflow-hidden w-full pt-[100%] "
       onMouseEnter={() => setShowOverlay(true)}
     >
       <a href="#">
