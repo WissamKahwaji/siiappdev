@@ -45,14 +45,14 @@ const ProfilePosts = () => {
           <strong className="text-black block"></strong>
         </li>
       </ul> */}
-      <div className="grid grid-cols-4 grid-flow-row  font-semibold text-2xl  border-t uppercase text-secondary tracking-widest md:h-16 h-8 lg:text-xs mt-4">
+      <div className=" grid grid-cols-4 grid-flow-row  font-semibold text-2xl  border-t uppercase text-secondary tracking-widest md:h-16 h-8 lg:text-xs mt-4">
         <a
           href="#"
           className={`${
             activeTab === "posts"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          }  flex justify-center items-center h-full md:mr-16 mr-8 cursor-pointer `}
+          }  flex justify-center items-center w-full h-full md:mr-16 mr-8 cursor-pointer `}
           onClick={() => handleTabClick("posts")}
         >
           <div
@@ -75,7 +75,7 @@ const ProfilePosts = () => {
             activeTab === "videos"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center h-full md:mr-16 mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full md:mr-16 mr-8 cursor-pointer `}
           onClick={() => handleTabClick("videos")}
         >
           <div
@@ -98,7 +98,7 @@ const ProfilePosts = () => {
             activeTab === "saves"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center h-full mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer `}
           onClick={() => handleTabClick("saves")}
         >
           <div
@@ -121,7 +121,7 @@ const ProfilePosts = () => {
             activeTab === "likes"
               ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
               : "text-black"
-          } flex justify-center items-center h-full mr-8 cursor-pointer `}
+          } flex justify-center items-center w-full  h-full mr-8 cursor-pointer `}
           onClick={() => handleTabClick("likes")}
         >
           <div

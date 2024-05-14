@@ -61,7 +61,7 @@ const ProfileHeader = () => {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between space-x-10">
+          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between space-x-8">
             <p className="md:text-2xl text-base font-header font-semibold">
               Wesam Kahwaji
             </p>
@@ -124,7 +124,7 @@ const ProfileHeader = () => {
         </div>
       </div>
 
-      <div className="md:mt-10 mt-3 ">
+      <div className="md:mt-10 mt-3 w-full">
         <div className="flex md:space-x-20 space-x-4 justify-center items-center   ">
           {socialMediaIcons.map((item, index) => (
             <div
