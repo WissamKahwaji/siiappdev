@@ -22,9 +22,9 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ imageUrl }) => {
           onMouseLeave={() => setShowOverlay(false)}
         >
           <FontAwesomeIcon icon={faHeart} />
-          <span className="ml-2">200</span>
-          <FontAwesomeIcon icon={faComment} className="ml-8" />
-          <span className="ml-2">200</span>
+          <span className="md:ml-2">200</span>
+          <FontAwesomeIcon icon={faComment} className="md:ml-8 ml-2" />
+          <span className="md:ml-2">200</span>
         </div>
       </a>
       <img

@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
   return (
-    <div className="pt-20 w-full flex flex-row items-center justify-center space-x-20">
-      <div className="w-64 h-auto">
+    <div className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20">
+      <div className="md:w-64 w-32 h-auto">
         <img src={logo} alt="" className="object-contain" />
       </div>
       <div className=" flex flex-col justify-center items-center">

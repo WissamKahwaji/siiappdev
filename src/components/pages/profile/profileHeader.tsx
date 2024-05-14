@@ -66,14 +66,14 @@ const ProfileHeader = () => {
               Wesam Kahwaji
             </p>
             <div className="flex flex-row md:space-x-5 space-x-2">
-              <div className="w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faEdit} />
+              <div className="md:w-8 md:h-8 w-6 h-6 flex justify-center items-center bg-secondary rounded-md">
+                <FontAwesomeIcon icon={faEdit} className="w-4" />
               </div>
-              <div className="w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faQrcode} />
+              <div className="md:w-8 md:h-8 w-6 h-6 flex justify-center items-center bg-secondary rounded-md">
+                <FontAwesomeIcon icon={faQrcode} className="w-4" />
               </div>
-              <div className="w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faGears} />
+              <div className="md:w-8 md:h-8 w-6 h-6 flex justify-center items-center bg-secondary rounded-md">
+                <FontAwesomeIcon icon={faGears} className="w-4" />
               </div>
             </div>
           </div>
