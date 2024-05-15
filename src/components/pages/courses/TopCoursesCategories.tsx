@@ -1,4 +1,3 @@
-import React from "react";
 import CategoryImage from "./CategoryImage";
 
 const TopCoursesCategories = () => {
