@@ -79,9 +79,9 @@ const ProfileHeader = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-[100%]">
           <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
-            <p className="text-sm  font-semibold min-w-[190px]">wissam_98</p>
+            <p className="text-sm  font-semibold ">wissam_98</p>
             {/* <p className="md:text-2xl text-sm font-header font-semibold min-w-[210px]">
               sii advertising & media company
             </p> */}
@@ -99,7 +99,7 @@ const ProfileHeader = () => {
             </div>
           </div>
           <div className="md:hidden justify-start items-start w-full mt-3">
-            <div className="flex flex-row justify-between mt-3 capitalize mx-10">
+            <div className="flex flex-row justify-between mt-3 capitalize mx-10 space-x-8">
               <div className="text-primary font-header flex flex-col items-center justify-center">
                 <p className="font-semibold">34</p>
                 <p className="text-sm">posts</p>
@@ -179,7 +179,7 @@ const ProfileHeader = () => {
           </button>
         </div>
       </div>
-      <div className="md:mt-10 mt-3 w-full">
+      <div className="md:mt-10 mt-3 w-full md:px-40">
         {/* <div className="flex md:space-x-20 space-x-4 justify-center items-center   ">
           {socialMediaIcons.map((item, index) => (
             <div
@@ -192,9 +192,31 @@ const ProfileHeader = () => {
         </div> */}
         <Swiper
           spaceBetween={4}
-          slidesPerView={6}
+          slidesPerView={9}
           onSlideChange={() => console.log("slide change")}
           onSwiper={swiper => console.log(swiper)}
+          breakpoints={{
+            0: {
+              spaceBetween: 4,
+              slidesPerView: 4,
+            },
+            468: {
+              spaceBetween: 4,
+              slidesPerView: 4,
+            },
+            768: {
+              spaceBetween: 4,
+              slidesPerView: 4,
+            },
+            1024: {
+              spaceBetween: 1,
+              slidesPerView: 10,
+            },
+            1280: {
+              spaceBetween: 1,
+              slidesPerView: 10,
+            },
+          }}
         >
           {socialMediaIcons.map((item, index) => (
             <SwiperSlide>

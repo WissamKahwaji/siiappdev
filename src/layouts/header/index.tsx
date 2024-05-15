@@ -1,16 +1,17 @@
 import { AiOutlineCloseSquare, AiOutlineMenu } from "react-icons/ai";
-import logo_black from "../../assets/sii_white.png";
-import { Link } from "react-router-dom";
+import logo_black from "../../assets/logo_sii.png";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
-
+  const location = useLocation();
+  const currentPath = location.pathname;
   const navItems = [
-    { title: "Profile", path: "/" },
-    { title: "Web Builder", path: "/" },
-    { title: "Advertising", path: "/" },
-    { title: "Services", path: "/" },
-    { title: "Employment", path: "/" },
+    { title: "Account", path: "/account" },
+    { title: "Web Builder", path: "/web-builder" },
+    { title: "Advertising", path: "/ads" },
+    { title: "Courses", path: "/courses" },
+    { title: "Employment", path: "/employment" },
   ];
 
   const toggleDrawer = () => {
@@ -26,18 +27,23 @@ const Navbar = () => {
               <img
                 src={logo_black}
                 alt=""
-                className="h-auto w-24 sm:h-auto sm:w-24 md:h-auto md:w-24 lg:h-auto lg:w-32 object-cover"
+                className="h-auto w-16 sm:h-auto sm:w-24 md:h-auto md:w-24 lg:h-auto lg:w-20 object-cover"
               />
             </Link>
           </div>
         </div>
         <div className="hidden text-white md:flex md:flex-row md:space-x-10 justify-between items-center  font-header capitalize">
-          <p className="text-secondary">Profile</p>
-          <p>Web Builder</p>
-          <p>Advertising</p>
-          <p>Courses</p>
-          <p>Services</p>
-          <p>employment</p>
+          {navItems.map((item, index) => (
+            <Link
+              className={`${
+                item.path === currentPath ? "text-secondary" : "text-white"
+              }`}
+              key={index}
+              to={item.path}
+            >
+              {item.title}
+            </Link>
+          ))}
         </div>
         <button
           onClick={toggleDrawer}
@@ -52,7 +58,7 @@ const Navbar = () => {
                 <img
                   src={logo_black}
                   alt=""
-                  className="h-auto w-24 sm:h-auto sm:w-24 md:h-auto md:w-24 lg:h-auto lg:w-32 object-cover mb-4"
+                  className="h-auto w-16 sm:h-auto sm:w-24 md:h-auto md:w-24 lg:h-auto lg:w-20 object-cover mb-4"
                 />
                 {navItems.map((item, index) => (
                   <a

@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <Navbar />
 
-      <main className="mt-[97px] md:mt-[185px] lg:mt-[56px] xl:mt-[100px]">
+      <main className="mt-[77px] md:mt-[185px] lg:mt-[56px] xl:mt-[90px]">
         <Outlet />
       </main>
 
