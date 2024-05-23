@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import card from "../../assets/sii_card_back.png";
 import yellowCardBack from "../../assets/sii_card_front.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

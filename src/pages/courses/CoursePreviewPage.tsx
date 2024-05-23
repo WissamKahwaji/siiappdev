@@ -1,4 +1,3 @@
-import React from "react";
 import VideoPlayer from "../../components/pages/courses/VideoPlayer";
 import CourseDetails from "../../components/pages/courses/CourseDetails";
 import EnrollmentCourse from "../../components/pages/courses/EnrollmentCourse";

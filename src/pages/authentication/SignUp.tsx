@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "../../assets/logo_sii.png";
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";

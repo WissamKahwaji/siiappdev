@@ -38,12 +38,12 @@ const useEditProfileMutation = () => {
   return useMutation({
     mutationKey: ["edit-profile"],
     mutationFn: (payload: EditProfileProps) => editUserProfile(payload),
-    onSuccess(data, variable) {
+    onSuccess(_, variable) {
       toast.success(`edit ${variable.fullName} successfully.`);
       queryClient.invalidateQueries({ queryKey: ["get-user-byId"] });
       navigate("/account", { replace: true });
     },
-    onError(data, variable) {
+    onError(_, variable) {
       toast.error(`failed to edit ${variable.fullName}`);
     },
   });
