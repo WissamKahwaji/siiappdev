@@ -12,131 +12,218 @@ import { FaThreads, FaX } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import {
+  faAdd,
+  faArrowRight,
   faEdit,
-  faGears,
   faQrcode,
-  faRightLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import yellowCard from "../../../assets/yellow_card.png";
-import yellowCardBack from "../../../assets/yellow_card_back.png";
+import * as Yup from "yup";
+
+import yellowCardBack from "../../../assets/card.png";
+import logo from "../../../assets/logo_sii_black.png";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 
-const ProfileHeader = () => {
-  const socialMediaIcons = [
-    { icon: <FaLink className="w-5 h-5" />, link: "" },
-    { icon: <FaFacebook className="w-5 h-5" />, link: "" },
-    { icon: <FaInstagram className="w-5 h-5" />, link: "" },
-    { icon: <BsWhatsapp className="w-5 h-5" />, link: "" },
-    { icon: <FaYoutube className="w-5 h-5" />, link: "" },
-    { icon: <FaThreads className="w-5 h-5" />, link: "" },
-    { icon: <FaX className="w-5 h-5" />, link: "" },
-    { icon: <FaLinkedin className="w-5 h-5" />, link: "" },
-    { icon: <FaSnapchat className="w-5 h-5" />, link: "" },
-    { icon: <MdAdd className="w-8 h-8" />, link: "" },
-  ];
+import { UserModel } from "../../../apis/account/type";
+import { Link, useNavigate } from "react-router-dom";
+import Modal from "../../const/Modal";
+import ImageDragDropField from "../../const/ImageDragDrop";
+import { PostInputProps } from "../../../apis/posts/type";
+import { useAddPostMutation } from "../../../apis/posts/queries";
+import { Formik, FormikHelpers } from "formik";
 
-  const [isFlipped, setIsFlipped] = useState(false);
-  const handleSwapClick = () => {
-    setIsFlipped(!isFlipped);
+interface ProfileHeaderProps {
+  user: UserModel;
+}
+
+const validationSchema = Yup.object().shape({
+  caption: Yup.string().required("Please enter your caption"),
+});
+
+const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
+  // const [isFlipped, setIsFlipped] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const socialMediaIcons = [
+    { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaFacebook className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaInstagram className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <BsWhatsapp className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaYoutube className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaThreads className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaX className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaLinkedin className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaSnapchat className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <MdAdd className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+  ];
+  const [fileType, setFileType] = useState("image");
+
+  const initialValues: PostInputProps = {
+    caption: "",
+    link: "",
+    mobileNumber: "",
+    whatsAppNumber: "",
+    tags: [],
+    postType: fileType,
   };
+  const { mutate: addPostInfo } = useAddPostMutation();
+
+  const handleSubmit = (
+    values: PostInputProps,
+    { setSubmitting }: FormikHelpers<PostInputProps>
+  ) => {
+    addPostInfo(values, {
+      onSettled() {
+        setSubmitting(false);
+      },
+    });
+  };
+  const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
+  // const handleSwapClick = () => {
+  //   setIsFlipped(!isFlipped);
+  // };
   return (
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
-      <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center">
+      <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center w-full">
         <img
-          src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+          src={
+            user.user?.profileImage ??
+            "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+          }
           alt="profile"
           className="md:hidden rounded-lg md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
         />
         <div className="hidden md:flex md:flex-col">
           <img
-            src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+            src={
+              user.user?.profileImage ??
+              "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+            }
             alt="profile"
             className="rounded-lg md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
-          <div className="font-header mt-4 text-lg md:h-[135px] w-[140px] overflow-ellipsis">
-            <p className="text-sm  font-semibold">wissam_98</p>
+          <div className="font-header mt-4 text-lg md:max-h-[112px] w-[240px] overflow-hidden whitespace-pre-wrap">
+            <p className="text-sm  font-bold">{user?.user?.fullName}</p>
             <p className="text-base">
-              this is bio <br />
-              Software Engineer <br />
-              Master Web Science
+              {user?.user?.bio ? user.user.bio : "write your bio in settings"}
             </p>
           </div>
-          <div className="hidden justify-end items-end md:flex">
-            <div className="flex flex-row space-x-8 mt-3 capitalize">
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">34</p>
-                <p className="text-sm">posts</p>
-              </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">50</p>
-                <p className="text-sm">followings</p>
-              </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">50</p>
-                <p className="text-sm">followers</p>
-              </div>
-            </div>
-          </div>
         </div>
-        <div className="flex flex-col w-[100%]">
-          <div className="flex flex-row md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
-            <p className="text-sm  font-semibold ">wissam_98</p>
-            {/* <p className="md:text-2xl text-sm font-header font-semibold min-w-[210px]">
-              sii advertising & media company
-            </p> */}
+        <div className="flex flex-col w-full md:w-auto">
+          {userId === user.user._id ? (
+            <div className="flex flex-row  md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
+              <p className="text-sm  font-semibold ">{user.user?.userName}</p>
 
-            <div className="flex flex-row md:space-x-5 space-x-2">
-              <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faEdit} className="" />
+              <div className="flex flex-row md:space-x-5 space-x-2">
+                <Link to="/account/edit-profile">
+                  <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
+                    <FontAwesomeIcon icon={faEdit} className="" />
+                  </div>
+                </Link>
+                <div
+                  className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <FontAwesomeIcon icon={faAdd} className="" />
+                </div>
+                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
+                  <FontAwesomeIcon icon={faQrcode} className="" />
+                </div>
               </div>
-              <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faQrcode} className="" />
+            </div>
+          ) : (
+            <div className="flex flex-row justify-between items-center">
+              <p className="text-sm  font-semibold ">{user.user?.userName}</p>
+              <div
+                className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <p className="font-serif text-navBackground font-semibold">
+                  Follow User
+                </p>
               </div>
-              <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                <FontAwesomeIcon icon={faGears} className="" />
+            </div>
+          )}
+          <div className="md:hidden justify-start items-start mt-3">
+            <div className="flex flex-row justify-around mt-3 capitalize space-x-6 w-full">
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold text-sm">
+                  {user.user?.posts.length}
+                </p>
+                <p className="text-xs">posts</p>
+              </div>
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold text-sm">
+                  {user.user?.followings.length}
+                </p>
+                <p className="text-xs">followings</p>
+              </div>
+              <div className="text-primary font-header flex flex-col items-center justify-center">
+                <p className="font-semibold text-sm">
+                  {user.user?.followers.length}
+                </p>
+                <p className="text-xs">followers</p>
               </div>
             </div>
           </div>
-          <div className="md:hidden justify-start items-start w-full mt-3">
-            <div className="flex flex-row justify-between mt-3 capitalize mx-10 space-x-8">
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">34</p>
-                <p className="text-sm">posts</p>
-              </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">50</p>
-                <p className="text-sm">followings</p>
-              </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold">50</p>
-                <p className="text-sm">followers</p>
+          <div className="hidden md:flex md:flex-col  group perspective-1000  items-center justify-center my-2 md:min-w-[530px]">
+            <div
+              className={`hidden ${
+                userId === user.user._id ? "justify-center" : "md:justify-start"
+              } md:w-full items-start md:flex md:mt-2`}
+            >
+              <div className="flex flex-row space-x-12  mb-2 capitalize">
+                <div className="text-primary font-header flex flex-col items-center justify-center">
+                  <p className="font-semibold">{user?.user?.posts.length}</p>
+                  <p className="text-sm">posts</p>
+                </div>
+                <div className="text-primary font-header flex flex-col items-center justify-center">
+                  <p className="font-semibold">
+                    {user?.user?.followings.length}
+                  </p>
+                  <p className="text-sm">followings</p>
+                </div>
+                <div className="text-primary font-header flex flex-col items-center justify-center">
+                  <p className="font-semibold">
+                    {user?.user?.followers.length}
+                  </p>
+                  <p className="text-sm">followers</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="hidden md:flex group perspective-1000  items-center justify-center my-2 md:w-[500px] md:h-[300px] w-full h-[150px]">
-            <div className="relative w-full h-full">
-              <div
-                className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  isFlipped ? "rotate-y-180 backface-hidden" : ""
-                }`}
-              >
-                <img src={yellowCard} alt="" className="w-full h-full" />
+
+            {userId === user.user._id && (
+              <div className=" bg-secondary rounded-xl px-4 py-8 ">
+                <div className="flex flex-row justify-between items-center">
+                  <div className="flex flex-col w-1/2">
+                    <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
+                      <img src={logo} alt="" className="w-7 h-7 mr-1" /> Premiem
+                      Card
+                    </h2>
+                    <p className="text-navBackground text-base font-semibold mt-1">
+                      improve your life, and get the sii card now to make your
+                      life easier
+                    </p>
+                    <div
+                      className="mt-3 text-sm flex items-center space-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
+                      onClick={() => {
+                        user.user?.siiCard
+                          ? navigate("/sii-card")
+                          : navigate(`/get-sii-card/${user.user?.userName}`);
+                      }}
+                    >
+                      <p>
+                        {user.user?.siiCard
+                          ? "Show Details .."
+                          : "Get Sii Card Now"}
+                      </p>
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </div>
+                  </div>
+                  <img src={yellowCardBack} alt="" className="w-36 mr-3" />
+                </div>
               </div>
-              <div
-                className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-                  isFlipped ? "" : "rotate-y-180 backface-hidden"
-                }`}
-              >
-                <img src={yellowCardBack} alt="" className="w-full h-full" />
-              </div>
-              <button
-                onClick={handleSwapClick}
-                className="absolute bottom-0 right-0 m-3 bg-white rounded-full p-2 shadow-md z-10"
-              >
-                <FontAwesomeIcon icon={faRightLeft} />
-              </button>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -154,42 +241,22 @@ const ProfileHeader = () => {
           Master Web Science
         </p>
       </div>
-
-      <div className="md:hidden group perspective-1000 flex items-center justify-center my-2 md:w-[500px] md:h-[300px] w-full h-[210px]">
-        <div className="relative w-full h-full mx-10 md:mx-0">
-          <div
-            className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-              isFlipped ? "rotate-y-180 backface-hidden" : ""
-            }`}
-          >
-            <img src={yellowCard} alt="" className="w-full h-full" />
+      <div className="md:hidden bg-secondary rounded-xl px-4 py-8 my-3">
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-col w-1/2">
+            <h2 className="text-navBackground font-serif  font-bold flex items-center">
+              <img src={logo} alt="" className="w-6 h-6 mr-1" /> Premiem Card
+            </h2>
+            <p className="text-navBackground text-xs font-semibold mt-1">
+              improve your life, and get the sii card now to make your life
+              easier
+            </p>
           </div>
-          <div
-            className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-              isFlipped ? "" : "rotate-y-180 backface-hidden"
-            }`}
-          >
-            <img src={yellowCardBack} alt="" className="w-full h-full" />
-          </div>
-          <button
-            onClick={handleSwapClick}
-            className="absolute bottom-0 right-0 m-3 bg-white rounded-full p-2 shadow-md z-10"
-          >
-            <FontAwesomeIcon icon={faRightLeft} />
-          </button>
+          <img src={yellowCardBack} alt="" className="w-36" />
         </div>
       </div>
-      <div className="md:mt-10 mt-3 w-full md:px-40">
-        {/* <div className="flex md:space-x-20 space-x-4 justify-center items-center   ">
-          {socialMediaIcons.map((item, index) => (
-            <div
-              key={index}
-              className="rounded-lg md:w-12 md:h-12 w-12 h-12 bg-secondary flex justify-center items-center"
-            >
-              <div>{item.icon}</div>
-            </div>
-          ))}
-        </div> */}
+
+      <div className="md:my-12 mt-3 w-full md:px-64 ">
         <Swiper
           spaceBetween={4}
           slidesPerView={9}
@@ -210,11 +277,11 @@ const ProfileHeader = () => {
             },
             1024: {
               spaceBetween: 1,
-              slidesPerView: 10,
+              slidesPerView: 6,
             },
             1280: {
               spaceBetween: 1,
-              slidesPerView: 10,
+              slidesPerView: 6,
             },
           }}
         >
@@ -222,7 +289,7 @@ const ProfileHeader = () => {
             <SwiperSlide>
               <div
                 key={index}
-                className="rounded-lg md:w-12 md:h-12 w-12 h-12 bg-secondary flex justify-center items-center"
+                className="rounded-lg md:w-20 md:h-20 w-12 h-12 bg-secondary   flex justify-center items-center"
               >
                 <div>{item.icon}</div>
               </div>
@@ -230,89 +297,236 @@ const ProfileHeader = () => {
           ))}
         </Swiper>
       </div>
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          title="Create Post"
+          size="md"
+        >
+          <Formik
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="flex flex-col space-y-2">
+                  <div className="flex justify-start space-x-4 mb-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="fileType"
+                        value="image"
+                        checked={fileType === "image"}
+                        onChange={() => {
+                          setFileType("image");
+                          setFieldValue("postType", "image");
+                        }}
+                      />
+                      <span className="ml-2">Image</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="fileType"
+                        value="video"
+                        checked={fileType === "video"}
+                        onChange={() => {
+                          setFileType("video");
+                          setFieldValue("postType", "video");
+                        }}
+                      />
+                      <span className="ml-2">Video</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="fileType"
+                        value="doc"
+                        checked={fileType === "doc"}
+                        onChange={() => {
+                          setFileType("doc");
+                          setFieldValue("postType", "doc");
+                        }}
+                      />
+                      <span className="ml-2">doc</span>
+                    </label>
+                  </div>
+
+                  {fileType === "image" && (
+                    <ImageDragDropField
+                      name="postImages"
+                      label="Add post image"
+                      oldImg=""
+                    />
+                  )}
+                  {fileType === "video" && (
+                    <div className="flex flex-col">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="postVideo"
+                      >
+                        Add post video
+                      </label>
+                      <input
+                        id="postVideo"
+                        name="postVideo"
+                        type="file"
+                        accept="video/*"
+                        onBlur={handleBlur}
+                        onChange={event =>
+                          setFieldValue(
+                            "video",
+                            event.currentTarget.files![0] ?? null
+                          )
+                        }
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+                  {fileType === "doc" && (
+                    <div className="flex flex-col">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="postPDF"
+                      >
+                        Add post doc
+                      </label>
+                      <input
+                        id="postPDF"
+                        name="postPDF"
+                        type="file"
+                        accept="application/pdf"
+                        onBlur={handleBlur}
+                        onChange={event =>
+                          setFieldValue(
+                            "doc",
+                            event.currentTarget.files![0] ?? null
+                          )
+                        }
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="caption"
+                      >
+                        Caption
+                      </label>
+                      <textarea
+                        id="caption"
+                        name="caption"
+                        minLength={1}
+                        className="px-4 h-10 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.caption ?? ""}
+                      />
+                      {errors.caption && touched.caption && (
+                        <div className="text-red-500 text-xs mt-1">
+                          {errors.caption}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="link"
+                      >
+                        Link
+                      </label>
+                      <input
+                        id="link"
+                        name="link"
+                        type="url"
+                        minLength={2}
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.link ?? ""}
+                      />
+                      {errors.link && touched.link && (
+                        <div className="text-red-500 text-xs mt-1">
+                          {errors.link}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="whatsAppNumber"
+                      >
+                        WhatsApp Number
+                      </label>
+                      <input
+                        id="whatsAppNumber"
+                        name="whatsAppNumber"
+                        type="text"
+                        minLength={2}
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.whatsAppNumber ?? ""}
+                      />
+                      {errors.whatsAppNumber && touched.whatsAppNumber && (
+                        <div className="text-red-500 text-xs mt-1">
+                          {errors.whatsAppNumber}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="mobileNumber"
+                      >
+                        Mobile Number
+                      </label>
+                      <input
+                        id="mobileNumber"
+                        name="mobileNumber"
+                        type="text"
+                        minLength={2}
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.mobileNumber ?? ""}
+                      />
+                      {errors.mobileNumber && touched.mobileNumber && (
+                        <div className="text-red-500 text-xs mt-1">
+                          {errors.mobileNumber}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full py-3 bg-navBackground text-secondary font-semibold rounded-lg hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {isSubmitting ? "Saving..." : "Save"}
+                </button>
+              </form>
+            )}
+          </Formik>
+        </Modal>
+      )}
     </div>
   );
-  // return (
-  //   <div className="flex flex-col items-center">
-  //     <div className="grid grid-flow-col grid-cols-2 gap-14">
-  //       <img
-  //         src="https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-  //         alt="profile"
-  //         className="rounded-lg"
-  //         width={150}
-  //       />
-  //       <div className="flex flex-col text-primary font-header">
-  //         <div className="flex flex-row justify-between items-center">
-  //           <p className="text-2xl font-header">wissam_98</p>
-  //           <div className="flex flex-row space-x-5">
-  //             <FontAwesomeIcon icon={faEdit} />
-  //             <FontAwesomeIcon icon={faQrcode} />
-  //             <FontAwesomeIcon icon={faGear} />
-  //           </div>
-  //         </div>
-  //         <div className="flex flex-row space-x-5 mt-3 capitalize">
-  //           <p className="text-primary">
-  //             <span className="font-semibold">70</span> posts
-  //           </p>
-  //           <p className="text-primary">
-  //             <span className="font-semibold">70</span> following
-  //           </p>
-  //           <p className="text-primary">
-  //             <span className="font-semibold">70</span> followers
-  //           </p>
-  //         </div>
-  //         <div className="flex flex-col mt-3">
-  //           <p className="font-bold">Wissam Kahwaji</p>
-  //           <p className="text-secondary font-semibold font-header text-sm">
-  //             Software Engineer
-  //           </p>
-  //           <p className="">
-  //             this is bio <br />
-  //             Software Engineer <br />
-  //             Master Web Science
-  //           </p>
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <div className="group perspective-1000 flex items-center justify-center my-5 w-[500px] h-[300px]">
-  //       <div className="relative w-full h-full">
-  //         <div
-  //           className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-  //             isFlipped ? "rotate-y-180 backface-hidden" : ""
-  //           }`}
-  //         >
-  //           <img src={yellowCard} alt="" className="w-full h-full" />
-  //         </div>
-  //         <div
-  //           className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
-  //             isFlipped ? "" : "rotate-y-180 backface-hidden"
-  //           }`}
-  //         >
-  //           <img src={yellowCardBack} alt="" className="w-full h-full" />
-  //         </div>
-  //         <button
-  //           onClick={handleSwapClick}
-  //           className="absolute top-0 left-0 m-3 bg-white rounded-full p-2 shadow-md z-10"
-  //         >
-  //           <FontAwesomeIcon icon={faRightLeft} />
-  //         </button>
-  //       </div>
-  //     </div>
-  //     {/* Stories Section */}
-  //     <div className="mt-10">
-  //       <div className="flex space-x-20">
-  //         {socialMediaIcons.map((item, index) => (
-  //           <div
-  //             key={index}
-  //             className="rounded-lg w-12 h-12 bg-secondary flex justify-center items-center"
-  //           >
-  //             <div>{item.icon}</div>
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default ProfileHeader;

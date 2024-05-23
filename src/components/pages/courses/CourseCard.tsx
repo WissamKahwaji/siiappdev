@@ -1,10 +1,18 @@
 import img1 from "../../../assets/img1.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const CourseCard = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col items-start space-y-2 p-2 md:p-4 mb-2 bg-white shadow-md rounded-lg font-header md:w-[240px]">
+    <div
+      className="flex flex-col items-start space-y-2 p-2 md:p-4 mb-2 bg-white shadow-md rounded-lg font-header md:w-[240px] cursor-pointer hover:rotate-2 hover:scale-105 ease-in-out transform duration-300"
+      onClick={() => {
+        navigate("/courses/course-preview");
+      }}
+    >
       <img
         src={img1}
         alt="Course"

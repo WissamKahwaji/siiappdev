@@ -6,9 +6,10 @@ const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
+  const userName = localStorage.getItem("userName");
   const navItems = [
-    { title: "Account", path: "/account" },
-    { title: "Web Builder", path: "/web-builder" },
+    { title: "Account", path: `/${userName}` },
+    { title: "Home", path: "/home" },
     { title: "Advertising", path: "/ads" },
     { title: "Courses", path: "/courses" },
     { title: "Employment", path: "/employment" },
