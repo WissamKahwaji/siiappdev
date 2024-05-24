@@ -21,7 +21,7 @@ import * as Yup from "yup";
 
 import yellowCardBack from "../../../assets/card.png";
 import logo from "../../../assets/logo_sii_black.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 
 import { UserModel } from "../../../apis/account/type";
@@ -121,6 +121,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   // const handleSwapClick = () => {
   //   setIsFlipped(!isFlipped);
   // };
+
+  useEffect(() => {
+    if (user.user.followers?.includes(userId ?? "")) {
+      setIsFollowed(true);
+    }
+  }, [user.user.followers, userId]);
+
   return (
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
       <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center w-full">
