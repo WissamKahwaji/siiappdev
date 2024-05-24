@@ -9,6 +9,7 @@ const Home = () => {
     isError: isErrorPosts,
   } = useGetAllPostsQuery();
   const currentUserId = localStorage.getItem("userId");
+
   if (isLoadingPosts) {
     return (
       <div className="text-center flex flex-col justify-center items-center h-screen">
@@ -16,16 +17,17 @@ const Home = () => {
       </div>
     );
   } else if (isErrorPosts) {
-    return <div> Error !!!</div>;
+    return <div>Error !!!</div>;
   }
+
   return (
-    <div className="container pt-10 flex flex-col items-center w-full">
-      {postsInfo && postsInfo?.length > 0 ? (
-        postsInfo?.map((post, index) => (
+    <div className="container mx-auto pt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center w-full">
+      {postsInfo && postsInfo.length > 0 ? (
+        postsInfo.map((post, index) => (
           <Post key={index} post={post} currentUserId={currentUserId ?? ""} />
         ))
       ) : (
-        <div> There is No posts yet !!!</div>
+        <div>There are no posts yet !!!</div>
       )}
     </div>
   );

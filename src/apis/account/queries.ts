@@ -5,8 +5,9 @@ import {
   getUserByUserName,
   getUserLikedPosts,
   getUserSavedPosts,
+  toggleFollow,
 } from ".";
-import { useNavigate } from "react-router-dom";
+
 import { EditProfileProps } from "./type";
 import { toast } from "react-toastify";
 
@@ -33,7 +34,7 @@ const useGetUserSavedPostsQuery = () =>
   });
 
 const useEditProfileMutation = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit-profile"],
@@ -41,10 +42,26 @@ const useEditProfileMutation = () => {
     onSuccess(_, variable) {
       toast.success(`edit ${variable.fullName} successfully.`);
       queryClient.invalidateQueries({ queryKey: ["get-user-byId"] });
-      navigate("/account", { replace: true });
+      // navigate("/account", { replace: true });
     },
     onError(_, variable) {
       toast.error(`failed to edit ${variable.fullName}`);
+    },
+  });
+};
+
+const useToggleFollowMutaion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["toggle-follow"],
+    mutationFn: (id: string | undefined) => toggleFollow(id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["get-user-userName"],
+      });
+    },
+    onError() {
+      // toast.error(`failed to add like`);
     },
   });
 };
@@ -55,4 +72,5 @@ export {
   useGetUserLikedPostsQuery,
   useGetUserSavedPostsQuery,
   useGetUserByUserNameQuery,
+  useToggleFollowMutaion,
 };

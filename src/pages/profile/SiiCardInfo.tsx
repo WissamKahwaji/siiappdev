@@ -26,7 +26,7 @@ const SiiCardInfo = () => {
 
   return (
     <div className="flex flex-col justify-center items-center font-header w-full h-full py-12 px-4 sm:px-6 lg:px-8">
-      <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start max-w-fit w-full">
+      <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start md:max-w-fit max-w-full w-full">
         <h2 className="text-2xl mb-8">Sii Card Info</h2>
 
         <div className="relative w-full justify-center flex h-[200px] md:h-[250px]  mb-10">

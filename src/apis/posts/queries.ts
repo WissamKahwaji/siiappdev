@@ -77,6 +77,9 @@ const useEditPostMutation = () => {
       queryClient.invalidateQueries({
         queryKey: ["get-post-by-id"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-posts"],
+      });
     },
     onError() {
       toast.error(`failed to edit post`);
@@ -93,6 +96,9 @@ const useDeletePostMutation = () => {
       toast.success(`delete post successfully.`);
       queryClient.invalidateQueries({
         queryKey: ["get-user-posts"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-all-posts"],
       });
       queryClient.invalidateQueries({
         queryKey: ["get-user-videos-posts"],

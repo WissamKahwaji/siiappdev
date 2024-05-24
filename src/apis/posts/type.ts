@@ -1,6 +1,7 @@
 export type PostModel = {
   _id: string;
   owner: {
+    _id: string;
     fullName: string;
     profileImage: string;
     userName: string;

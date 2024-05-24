@@ -8,11 +8,12 @@ const Navbar = () => {
   const currentPath = location.pathname;
   const userName = localStorage.getItem("userName");
   const navItems = [
+    { title: "Home", path: "/" },
     { title: "Account", path: `/${userName}` },
-    { title: "Home", path: "/home" },
-    { title: "Advertising", path: "/ads" },
-    { title: "Courses", path: "/courses" },
-    { title: "Employment", path: "/employment" },
+
+    // { title: "Advertising", path: "/ads" },
+    // { title: "Courses", path: "/courses" },
+    // { title: "Employment", path: "/employment" },
   ];
 
   const toggleDrawer = () => {

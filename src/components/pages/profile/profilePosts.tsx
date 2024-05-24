@@ -86,6 +86,21 @@ const ProfilePosts = (props: ProfilePostsProps) => {
     }
   }, [postId, postsInfo]);
 
+  const tabs =
+    props.userId === currentUserId
+      ? [
+          { tab: "posts", icon: faTable, label: "Posts" },
+          { tab: "video", icon: faVideo, label: "Videos" },
+          { tab: "docs", icon: faFile, label: "Docs" },
+          { tab: "saves", icon: faBookmark, label: "Saves" },
+          { tab: "likes", icon: faThumbsUp, label: "Likes" },
+        ]
+      : [
+          { tab: "posts", icon: faTable, label: "Posts" },
+          { tab: "video", icon: faVideo, label: "Videos" },
+          { tab: "docs", icon: faFile, label: "Docs" },
+        ];
+
   if (isLoadingPosts) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
@@ -99,14 +114,12 @@ const ProfilePosts = (props: ProfilePostsProps) => {
   }
   return (
     <div className="md:mx-40 w-full md:w-auto">
-      <div className="grid grid-cols-5 grid-flow-row font-semibold text-2xl border-t uppercase text-secondary tracking-widest md:h-16 h-8 lg:text-xs mt-4">
-        {[
-          { tab: "posts", icon: faTable, label: "Posts" },
-          { tab: "video", icon: faVideo, label: "Videos" },
-          { tab: "docs", icon: faFile, label: "Docs" },
-          { tab: "saves", icon: faBookmark, label: "Saves" },
-          { tab: "likes", icon: faThumbsUp, label: "Likes" },
-        ].map(({ tab, icon, label }) => (
+      <div
+        className={`grid ${
+          props.userId === currentUserId ? "grid-cols-5" : "grid-cols-3"
+        } grid-flow-row font-semibold text-2xl border-t uppercase text-secondary tracking-widest md:h-16 h-8 lg:text-xs mt-4`}
+      >
+        {tabs.map(({ tab, icon, label }) => (
           <div
             key={tab}
             className={`${

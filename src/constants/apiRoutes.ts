@@ -30,6 +30,7 @@ const USER = {
   GET_LIKED_POSTS: "/users/user-liked-posts",
   GET_SAVED_POSTS: "/users/user-saved-posts",
   GET_BY_USERNAEM: (userName: string) => `/users/by-userName/${userName}`,
+  TOGGLE_FOLLOW: (id: string | undefined) => `/users/toggle-follow/${id}`,
 };
 
 const API_ROUTES = { AUTH, USER, POST, SII_CARD };

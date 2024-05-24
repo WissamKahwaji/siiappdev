@@ -16,4 +16,17 @@ publicInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+publicInstance.interceptors.response.use(
+  response => response,
+  async error => {
+    if (error.response.status === 403) {
+      localStorage.removeItem("token");
+      window.localStorage.clear();
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default publicInstance;

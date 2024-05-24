@@ -175,11 +175,13 @@ const PostDetails = ({
               {postInfo?.owner.fullName}
             </p>
           </div>
-          <FontAwesomeIcon
-            icon={faEllipsis}
-            className="cursor-pointer"
-            onClick={() => setIsOptionsModalOpen(true)}
-          />
+          {postInfo?.owner._id === currentUserId && (
+            <FontAwesomeIcon
+              icon={faEllipsis}
+              className="cursor-pointer"
+              onClick={() => setIsOptionsModalOpen(true)}
+            />
+          )}
         </div>
         <hr className="mb-4" />
 

@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Routes from "./routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./context/AuthContext";
 
 const Wrapper = () => {
   const queryClient = new QueryClient();
@@ -10,8 +11,10 @@ const Wrapper = () => {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
 
-      <Routes />
-      <ToastContainer />
+      <AuthProvider>
+        <Routes />
+        <ToastContainer />
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

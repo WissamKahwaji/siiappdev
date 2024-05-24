@@ -31,6 +31,7 @@ import ImageDragDropField from "../../const/ImageDragDrop";
 import { PostInputProps } from "../../../apis/posts/type";
 import { useAddPostMutation } from "../../../apis/posts/queries";
 import { Formik, FormikHelpers } from "formik";
+import { useToggleFollowMutaion } from "../../../apis/account/queries";
 
 interface ProfileHeaderProps {
   user: UserModel;
@@ -44,18 +45,47 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   // const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const socialMediaIcons = [
-    { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaFacebook className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaInstagram className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <BsWhatsapp className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaYoutube className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaThreads className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaX className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaLinkedin className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <FaSnapchat className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
-    { icon: <MdAdd className="w-5 h-5 md:w-9 md:h-9" />, link: "" },
+    { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, field: "webSite" },
+    {
+      icon: <FaFacebook className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "faceBook",
+    },
+    {
+      icon: <FaInstagram className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "instagram",
+    },
+    {
+      icon: <BsWhatsapp className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "whatsApp",
+    },
+    { icon: <FaYoutube className="w-5 h-5 md:w-9 md:h-9" />, field: "youtube" },
+    { icon: <FaThreads className="w-5 h-5 md:w-9 md:h-9" />, field: "threads" },
+    { icon: <FaX className="w-5 h-5 md:w-9 md:h-9" />, field: "x" },
+    {
+      icon: <FaLinkedin className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "linkedIn",
+    },
+    {
+      icon: <FaSnapchat className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "snapChat",
+    },
+    { icon: <MdAdd className="w-5 h-5 md:w-9 md:h-9" />, field: "add" },
   ];
+  const filterSocialMediaIcons = (user: UserModel): typeof socialMediaIcons => {
+    return socialMediaIcons.filter(
+      icon =>
+        user.socialMedia &&
+        user.socialMedia[icon.field as keyof typeof user.socialMedia]
+    );
+  };
+
+  const filteredIcons = filterSocialMediaIcons(user.user);
   const [fileType, setFileType] = useState("image");
+  const [isFollowed, setIsFollowed] = useState(false);
+
+  const [followersCount, setFollowersCount] = useState<number>(
+    user.user.followers.length ?? 0
+  );
 
   const initialValues: PostInputProps = {
     caption: "",
@@ -66,6 +96,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     postType: fileType,
   };
   const { mutate: addPostInfo } = useAddPostMutation();
+  const { mutate: toggleFollow } = useToggleFollowMutaion();
+
+  const handleToggleFollow = () => {
+    setIsFollowed(!isFollowed);
+    setFollowersCount(prevCount =>
+      isFollowed ? prevCount - 1 : prevCount + 1
+    );
+    toggleFollow(user.user._id);
+  };
 
   const handleSubmit = (
     values: PostInputProps,
@@ -91,7 +130,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
           }
           alt="profile"
-          className="md:hidden rounded-lg md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+          className="md:hidden rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
         />
         <div className="hidden md:flex md:flex-col">
           <img
@@ -100,7 +139,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
             }
             alt="profile"
-            className="rounded-lg md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+            className="rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
           <div className="font-header mt-4 text-lg md:max-h-[112px] w-[240px] overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
@@ -112,7 +151,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <div className="flex flex-col w-full md:w-auto">
           {userId === user.user._id ? (
             <div className="flex flex-row  md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
-              <p className="text-sm  font-semibold ">{user.user?.userName}</p>
+              <p className="text-sm ml-4 md:ml-0 font-semibold ">
+                {user.user?.userName}
+              </p>
 
               <div className="flex flex-row md:space-x-5 space-x-2">
                 <Link to="/account/edit-profile">
@@ -136,10 +177,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
               <div
                 className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleToggleFollow}
               >
-                <p className="font-serif text-navBackground font-semibold">
-                  Follow User
+                <p className="font-serif text-navBackground font-semibold text-sm">
+                  {isFollowed ? "Following" : "Follow"}
                 </p>
               </div>
             </div>
@@ -159,9 +200,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="text-xs">followings</p>
               </div>
               <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold text-sm">
-                  {user.user?.followers.length}
-                </p>
+                <p className="font-semibold text-sm">{followersCount}</p>
                 <p className="text-xs">followers</p>
               </div>
             </div>
@@ -184,9 +223,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   <p className="text-sm">followings</p>
                 </div>
                 <div className="text-primary font-header flex flex-col items-center justify-center">
-                  <p className="font-semibold">
-                    {user?.user?.followers.length}
-                  </p>
+                  <p className="font-semibold">{followersCount}</p>
                   <p className="text-sm">followers</p>
                 </div>
               </div>
@@ -244,19 +281,92 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       <div className="md:hidden bg-secondary rounded-xl px-4 py-8 my-3">
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-col w-1/2">
-            <h2 className="text-navBackground font-serif  font-bold flex items-center">
-              <img src={logo} alt="" className="w-6 h-6 mr-1" /> Premiem Card
+            <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
+              <img src={logo} alt="" className="w-7 h-7 mr-1" /> Premiem Card
             </h2>
-            <p className="text-navBackground text-xs font-semibold mt-1">
+            <p className="text-navBackground text-base font-semibold mt-1">
               improve your life, and get the sii card now to make your life
               easier
             </p>
+            <div
+              className="mt-3 text-sm flex items-center space-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
+              onClick={() => {
+                user.user?.siiCard
+                  ? navigate("/sii-card")
+                  : navigate(`/get-sii-card/${user.user?.userName}`);
+              }}
+            >
+              <p>
+                {user.user?.siiCard ? "Show Details .." : "Get Sii Card Now"}
+              </p>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </div>
           </div>
           <img src={yellowCardBack} alt="" className="w-36" />
         </div>
       </div>
+      <div className={`md:my-12 mt-3 w-full md:px-64 `}>
+        {filteredIcons.length > 0 && (
+          <Swiper
+            spaceBetween={4}
+            slidesPerView={9}
+            onSlideChange={() => console.log("slide change")}
+            onSwiper={swiper => console.log(swiper)}
+            breakpoints={{
+              0: {
+                spaceBetween: 4,
+                slidesPerView: 4,
+              },
+              468: {
+                spaceBetween: 4,
+                slidesPerView: 4,
+              },
+              768: {
+                spaceBetween: 4,
+                slidesPerView: 4,
+              },
+              1024: {
+                spaceBetween: 1,
+                slidesPerView: 6,
+              },
+              1280: {
+                spaceBetween: 1,
+                slidesPerView: 6,
+              },
+            }}
+          >
+            {filteredIcons.map((item, index) => {
+              const socialLink =
+                user.user.socialMedia &&
+                user.user.socialMedia[
+                  item.field as keyof typeof user.user.socialMedia
+                ];
+              if (socialLink) {
+                return (
+                  <SwiperSlide>
+                    <div
+                      key={index}
+                      className="rounded-lg md:w-20 md:h-20 w-12 h-12 bg-secondary cursor-pointer  flex justify-center items-center"
+                      onClick={() => {
+                        if (item.field === "whatsApp") {
+                          window.open(`https://wa.me/${socialLink}`, "_blank");
+                        } else {
+                          window.open(socialLink, "_blank");
+                        }
+                      }}
+                    >
+                      <div>{item.icon}</div>
+                    </div>
+                  </SwiperSlide>
+                );
+              }
+              return null;
+            })}
+          </Swiper>
+        )}
+      </div>
 
-      <div className="md:my-12 mt-3 w-full md:px-64 ">
+      {/* <div className="md:my-12 mt-3 w-full md:px-64 ">
         <Swiper
           spaceBetween={4}
           slidesPerView={9}
@@ -285,18 +395,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             },
           }}
         >
-          {socialMediaIcons.map((item, index) => (
+          {filteredIcons.map((item, index) => (
             <SwiperSlide>
               <div
                 key={index}
-                className="rounded-lg md:w-20 md:h-20 w-12 h-12 bg-secondary   flex justify-center items-center"
+                className="rounded-lg md:w-20 md:h-20 w-12 h-12 bg-secondary cursor-pointer  flex justify-center items-center"
               >
                 <div>{item.icon}</div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
+      </div> */}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}

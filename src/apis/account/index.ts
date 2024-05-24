@@ -35,11 +35,15 @@ const editUserProfile = async (payload: EditProfileProps) => {
   const res = await publicInstance.put(API_ROUTES.USER.EDIT, data);
   return res.data;
 };
-
+const toggleFollow = async (id: string | undefined) => {
+  const res = await publicInstance.post(API_ROUTES.USER.TOGGLE_FOLLOW(id));
+  return res.data;
+};
 export {
   getUserById,
   editUserProfile,
   getUserLikedPosts,
   getUserSavedPosts,
   getUserByUserName,
+  toggleFollow,
 };

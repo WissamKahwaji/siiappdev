@@ -1,12 +1,11 @@
 import { faSmile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaBookmark, FaRegBookmark, FaRegComment } from "react-icons/fa";
 import {
-  FaBookmark,
-  FaRegBookmark,
-  FaRegComment,
-  FaShare,
-} from "react-icons/fa";
-import { PiHandsClappingFill, PiHandsClappingThin } from "react-icons/pi";
+  PiHandsClappingFill,
+  PiHandsClappingThin,
+  PiShareFatLight,
+} from "react-icons/pi";
 import { AddCommentInputProps, PostModel } from "../../../apis/posts/type";
 import { Link } from "react-router-dom";
 import {
@@ -14,15 +13,17 @@ import {
   useToggleLikeMutaion,
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Formik, FormikHelpers } from "formik";
 import Modal from "../../const/Modal";
 import PostDetails from "./PostDetails";
+import { toast } from "react-toastify";
 
 type PostProps = {
   post: PostModel;
   currentUserId: string;
 };
+
 const Post = (props: PostProps) => {
   const { mutate: addCommentInfo } = useAddCommentMutaion();
   const { mutate: toggleLike } = useToggleLikeMutaion();
@@ -35,9 +36,13 @@ const Post = (props: PostProps) => {
   const [selectedPost, setSelectedPost] = useState<PostModel | null>(null);
   const [showFullBrief, setShowFullBrief] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
+
+  const commentInputRef = useRef<HTMLInputElement>(null);
+
   const toggleBrief = () => {
     setShowFullBrief(!showFullBrief);
   };
+
   useEffect(() => {
     if (props.post.likes?.includes(props.currentUserId)) {
       setIsLiked(true);
@@ -51,12 +56,13 @@ const Post = (props: PostProps) => {
     } else {
       setShouldShowToggle(false);
     }
-  }, [props.post.likes, props.post.saves, props.currentUserId]);
+  }, [props.post.likes, props.post.saves, props.currentUserId, props.post._id]);
 
   const initialValues: AddCommentInputProps = {
     text: "",
     postId: props.post._id,
   };
+
   const handlePostClick = (post: PostModel) => {
     setSelectedPost(post);
     setIsModalOpen(true);
@@ -65,6 +71,7 @@ const Post = (props: PostProps) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
   const handleSubmit = (
     values: AddCommentInputProps,
     { setSubmitting, resetForm }: FormikHelpers<AddCommentInputProps>
@@ -88,6 +95,18 @@ const Post = (props: PostProps) => {
     setIsSaved(!isSaved);
   };
 
+  const handleCommentClick = () => {
+    commentInputRef.current?.focus();
+  };
+
+  const handleShareClick = () => {
+    navigator.clipboard
+      .writeText(window.location.href + `post/${props.post._id}`)
+      .then(() => {
+        toast.info("copy to clipboard");
+      });
+  };
+
   const renderPostContent = () => {
     switch (props.post?.postType) {
       case "image":
@@ -95,12 +114,12 @@ const Post = (props: PostProps) => {
           <img
             src={props.post.images[0]}
             alt="Post"
-            className="object-cover w-full  max-h-[450px]"
+            className="object-cover w-full max-h-[450px]"
           />
         );
       case "video":
         return (
-          <video controls className="object-cover w-full  max-h-[450px]">
+          <video controls className="object-cover w-full max-h-[450px]">
             <source src={props.post?.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -109,7 +128,6 @@ const Post = (props: PostProps) => {
         return (
           <iframe
             src={props.post.postDocs}
-            // className="md:w-full md:h-1/2 w-1/2 h-1/2 object-contain rounded-lg"
             title="Document"
             height="500px"
             width="100%"
@@ -119,11 +137,12 @@ const Post = (props: PostProps) => {
         return null;
     }
   };
+
   return (
-    <div className="border rounded-lg border-slate-200 mb-5 bg-white font-header w-[620px]">
-      <div className="p-3 flex flex-row">
+    <div className="border rounded-lg border-slate-200 mb-5 bg-white font-header w-full max-w-[620px]">
+      <div className="p-3 flex flex-row border-b border-gray-300">
         <div className="flex-1">
-          <Link to={`/${props.post.owner.userName}`}>
+          <Link to={`/${props.post.owner.userName}`} reloadDocument>
             <img
               src={props.post.owner.profileImage}
               alt=""
@@ -137,8 +156,9 @@ const Post = (props: PostProps) => {
       </div>
 
       {renderPostContent()}
+
       <div className="flex flex-col py-2 px-3">
-        <div className="flex space-x-4 mb-2 justify-between ">
+        <div className="flex space-x-4 mb-2 justify-between">
           <div className="flex space-x-5">
             <div
               onClick={handleToggleLike}
@@ -150,29 +170,30 @@ const Post = (props: PostProps) => {
                 <PiHandsClappingThin className="w-6 h-6" />
               )}
             </div>
-            <FaRegComment className="w-6 h-6 cursor-pointer hover:text-gray-500" />
-            <FaShare className="w-6 h-6 cursor-pointer hover:text-gray-500" />
+            <FaRegComment
+              className="w-6 h-6 cursor-pointer hover:text-gray-500"
+              onClick={handleCommentClick}
+            />
+            <PiShareFatLight
+              className="w-6 h-6 cursor-pointer hover:text-gray-500"
+              onClick={handleShareClick}
+            />
           </div>
-          {/* <div className="cursor-pointer">
-            <FaBookmark className="w-6 h-6   text-secondary hover:text-gray-500" />
-          </div> */}
           <div
             onClick={handleToggleSave}
             className="cursor-pointer hover:text-gray-500"
           >
             {isSaved ? (
-              <FaBookmark className="w-6 h-6   text-secondary" />
+              <FaBookmark className="w-6 h-6 text-secondary" />
             ) : (
               <FaRegBookmark className="w-6 h-6" />
             )}
           </div>
         </div>
+
         <div className="font-medium text-sm">{likeCount} Likes</div>
+
         <div className="text-sm">
-          {/* <p className="whitespace-pre-wrap">
-            <span className="font-medium">{props.post.owner.fullName}</span>{" "}
-            {props.post.caption}
-          </p> */}
           <div className="flex flex-row items-end">
             <div
               id={`post-caption-${props.post._id}`}
@@ -194,19 +215,19 @@ const Post = (props: PostProps) => {
           {props.post.whatsAppNumber && (
             <p
               className="cursor-pointer text-sm"
-              onClick={() => {
+              onClick={() =>
                 window.open(
                   `https://wa.me/${props.post.whatsAppNumber}`,
                   "_blank"
-                );
-              }}
+                )
+              }
             >
               <span className="font-bold">WhatsApp Number:</span>
               {` ${props.post?.whatsAppNumber}`}
             </p>
           )}
           {props.post?.mobileNumber && (
-            <p className=" text-sm mt-1">
+            <p className="text-sm mt-1">
               <span className="font-bold">Mobile Number:</span>
               {` ${props.post?.mobileNumber}`}
             </p>
@@ -221,15 +242,18 @@ const Post = (props: PostProps) => {
             </Link>
           )}
         </div>
+
         <div className="text-gray-500 uppercase text-xs tracking-wide mt-2">
           23 hours
         </div>
+
         <div
           className="text-sm text-gray-400 mt-1 cursor-pointer"
           onClick={() => handlePostClick(props.post)}
         >
           {`View all ${props.post.comments?.length} comments`}
         </div>
+
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({
             values,
@@ -241,19 +265,20 @@ const Post = (props: PostProps) => {
             isSubmitting,
           }) => (
             <form onSubmit={handleSubmit}>
-              <div className=" py-1 mt-2 flex flex-row border-t">
+              <div className="py-1 mt-2 flex flex-row border-t">
                 <div className="flex items-center">
-                  <a href="" className="text-2xl cursor-pointer ">
+                  <a href="" className="text-2xl cursor-pointer">
                     <FontAwesomeIcon icon={faSmile} />
                   </a>
                 </div>
 
                 <div className="flex-1 pr-3 py-1">
                   <input
+                    ref={commentInputRef}
                     id="text"
                     name="text"
                     type="text"
-                    className="w-full px-3 py-1 text-sm outline-0 "
+                    className="w-full px-3 py-1 text-sm outline-0"
                     placeholder="Add a comment"
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -265,6 +290,7 @@ const Post = (props: PostProps) => {
                     </div>
                   )}
                 </div>
+
                 <div className="flex items-center text-sm">
                   <button
                     className="ml-2 p-2 text-blue-500"
@@ -273,18 +299,13 @@ const Post = (props: PostProps) => {
                   >
                     Post
                   </button>
-                  {/* <a
-                    href=""
-                    className="text-sky-500 font font-medium cursor-pointer"
-                  >
-                    Post
-                  </a> */}
                 </div>
               </div>
             </form>
           )}
         </Formik>
       </div>
+
       {selectedPost && (
         <Modal
           isOpen={isModalOpen}

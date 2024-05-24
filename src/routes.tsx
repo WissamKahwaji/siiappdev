@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import {
-  RouterProvider,
-  createBrowserRouter,
+  BrowserRouter as Router,
+  Routes as BrowserRouterRoutes,
   Route,
-  createRoutesFromElements,
+  Navigate,
 } from "react-router-dom";
 import Profile from "./pages/profile";
 import App from "./App";
@@ -16,28 +16,50 @@ import EditProfilePage from "./pages/profile/EditProfilePage";
 import SiiCardInfo from "./pages/profile/SiiCardInfo";
 import GetSiiCard from "./pages/profile/GetSiiCard";
 import Home from "./pages/home";
+import ProtectedRoute from "./components/const/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
+// Import your authentication-related utilities
+
 const Routes = () => {
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path="/" element={<App />}>
-        <Route index element={<Login />} />
-        <Route path="home" element={<Home />} />
-        <Route path=":userName" element={<Profile />} />
-        <Route path="sii-card" element={<SiiCardInfo />} />
-        <Route path="get-sii-card/:userName" element={<GetSiiCard />} />
-        <Route path=":userName/:postId" element={<Profile />} />
-        <Route path="account/edit-profile" element={<EditProfilePage />} />
-        <Route path="register" element={<Signup />} />
-        <Route path="courses" element={<CoursesMainPage />} />
-        <Route path="courses/category" element={<CoursesPage />} />
-        <Route path="courses/course-preview" element={<CoursePreviewPage />} />
-      </Route>
-    )
-  );
+  const { isAuthenticated } = useAuth();
+
   return (
-    <Suspense>
-      <RouterProvider router={router} />
-    </Suspense>
+    <Router>
+      <Suspense fallback={<div>Loading...</div>}>
+        <BrowserRouterRoutes>
+          {/* Redirect to home page if authenticated */}
+          <Route
+            path="/login"
+            element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
+          />
+
+          <Route path="/" element={<App />}>
+            <Route element={<ProtectedRoute />}>
+              <Route path="/" element={<Home />} />
+              <Route path="sii-card" element={<SiiCardInfo />} />
+              <Route path="get-sii-card/:userName" element={<GetSiiCard />} />
+              <Route path=":userName" element={<Profile />} />
+              <Route path=":userName/:postId" element={<Profile />} />
+              <Route
+                path="account/edit-profile"
+                element={<EditProfilePage />}
+              />
+              <Route path="courses" element={<CoursesMainPage />} />
+              <Route path="courses/category" element={<CoursesPage />} />
+              <Route
+                path="courses/course-preview"
+                element={<CoursePreviewPage />}
+              />
+              {/* Add more routes here */}
+            </Route>
+          </Route>
+        </BrowserRouterRoutes>
+      </Suspense>
+    </Router>
   );
 };
 
