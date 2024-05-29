@@ -48,7 +48,19 @@ const Navbar = () => {
               {item.title}
             </Link>
           ))}
+          {isAuthenticated && (
+            <p
+              className="cursor-pointer"
+              onClick={() => {
+                window.localStorage.clear();
+                window.location.href = "/login";
+              }}
+            >
+              Sign out
+            </p>
+          )}
         </div>
+
         <button
           onClick={toggleDrawer}
           className="md:hidden  text-secondary hover:text-white transition duration-300 text-2xl focus:outline-none"
@@ -73,6 +85,17 @@ const Navbar = () => {
                     {item.title}
                   </a>
                 ))}
+                {isAuthenticated && (
+                  <p
+                    className="cursor-pointer text-white"
+                    onClick={() => {
+                      window.localStorage.clear();
+                      window.location.href = "/login";
+                    }}
+                  >
+                    Sign out
+                  </p>
+                )}
               </div>
             </div>
             <div className="h-[60px] w-[15%] bg-transparent flex justify-center items-center mx-3 mt-3">
