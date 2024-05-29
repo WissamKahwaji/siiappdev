@@ -90,7 +90,7 @@ const ImageDragDropField: React.FC<ImageDragDropFieldProps> = ({
           <div className="bg-navBackground text-secondary rounded-lg   md:px-3 py-1">
             <p className="text-xs md:text-sm">{label}</p>
             <button
-              className="cursor-pointer p-0 md:p-2 md:w-40 w-full h-fit text-xs bg-transparent text-gray-500"
+              className="cursor-pointer px-3 p-0 md:p-2 md:w-40 w-full h-fit text-xs bg-transparent text-gray-500"
               onClick={onButtonClick}
             >
               Drag and drop or Upload

@@ -6,3 +6,8 @@ export type SiiCardModel = {
   userName?: string | undefined;
   qrCode?: string | undefined;
 };
+
+export type EditCardParams = {
+  email: string;
+  mobileNumber: string;
+};

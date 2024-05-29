@@ -9,7 +9,50 @@ import { EditProfileProps } from "../../apis/account/type";
 import ImageDragDropField from "../../components/const/ImageDragDrop";
 import { SyncLoader } from "react-spinners";
 
-const validationSchema = Yup.object().shape({});
+const validationSchema = Yup.object().shape({
+  fullName: Yup.string().required("Full Name is required"),
+  bio: Yup.string(),
+  mobileNumber: Yup.string(),
+  userCategory: Yup.string(),
+  userAbout: Yup.object().shape({
+    aboutUs: Yup.string(),
+    ourMission: Yup.string(),
+    ourVision: Yup.string(),
+  }),
+  socialMedia: Yup.object().shape({
+    webSite: Yup.string().url("Invalid URL"),
+    whatsApp: Yup.string(),
+    faceBook: Yup.string(),
+    linkedIn: Yup.string(),
+    instagram: Yup.string(),
+    threads: Yup.string(),
+    snapChat: Yup.string(),
+    youtube: Yup.string(),
+  }),
+});
+
+const userCategories = [
+  "Finance",
+  "Media Agency",
+  "Public",
+  "Creator account",
+  "Music",
+  "Restaurants",
+  "Business account",
+  "Personal account",
+  "Makeup",
+  "Agriculture",
+  "Local service",
+  "Photographer",
+  "Social Club",
+  "Entertainment",
+  "Food",
+  "Clothes",
+  "Real Estate",
+  "Fashion",
+  "Nonprofit organization",
+  "Retail",
+];
 
 const EditProfilePage: React.FC = () => {
   const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
@@ -19,6 +62,12 @@ const EditProfilePage: React.FC = () => {
     mobileNumber: userInfo?.mobileNumber ?? "",
     fullName: userInfo?.fullName ?? "",
     bio: userInfo?.bio ?? "",
+    userCategory: userInfo?.userCategory ?? "",
+    userAbout: {
+      aboutUs: userInfo?.userAbout?.aboutUs ?? "",
+      ourMission: userInfo?.userAbout?.ourMission ?? "",
+      ourVision: userInfo?.userAbout?.ourVision ?? "",
+    },
     socialMedia: {
       webSite: userInfo?.socialMedia?.webSite ?? "",
       whatsApp: userInfo?.socialMedia?.whatsApp ?? "",
@@ -42,19 +91,25 @@ const EditProfilePage: React.FC = () => {
     });
   };
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
         <SyncLoader size={20} />
       </div>
     );
-  if (isError) return <div></div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="text-red-500 text-center">Error loading profile</div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-12">
       <h1 className="text-3xl font-bold text-center mb-8">Edit Profile</h1>
       <div className="flex justify-center">
-        <div className="bg-white p-10 rounded-lg shadow-lg ">
+        <div className="bg-white p-10 rounded-lg shadow-lg border border-secondary">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -67,23 +122,22 @@ const EditProfilePage: React.FC = () => {
               handleChange,
               handleBlur,
               handleSubmit,
-
               isSubmitting,
             }) => (
-              <form onSubmit={handleSubmit} className="space-y-6 ">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col">
                   <ImageDragDropField
                     name="profileImage"
-                    label="change your profile photo"
+                    label="Change your profile photo"
                     oldImg={userInfo?.profileImage}
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid md:grid-cols-1 gap-3 grid-cols-1">
                   <div className="flex flex-col">
                     <label
                       className="mb-2 text-sm font-medium text-gray-700"
-                      htmlFor="name"
+                      htmlFor="fullName"
                     >
                       Full Name
                     </label>
@@ -113,7 +167,7 @@ const EditProfilePage: React.FC = () => {
                     <textarea
                       id="bio"
                       name="bio"
-                      className="px-4 py-2 border h-11 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.bio ?? ""}
@@ -147,10 +201,59 @@ const EditProfilePage: React.FC = () => {
                       </div>
                     )}
                   </div>
+
                   <div className="flex flex-col">
                     <label
                       className="mb-2 text-sm font-medium text-gray-700"
-                      htmlFor="name"
+                      htmlFor="userCategory"
+                    >
+                      User Category
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="userCategory"
+                        name="userCategory"
+                        className="block appearance-none w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.userCategory}
+                      >
+                        <option
+                          value=""
+                          label="Select category"
+                          className="text-secondary"
+                        />
+                        {userCategories.map(category => (
+                          <option
+                            key={category}
+                            value={category}
+                            className="text-xs"
+                          >
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg
+                          className="fill-current h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                        </svg>
+                      </div>
+                    </div>
+                    {errors.userCategory && touched.userCategory && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.userCategory}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.webSite"
                     >
                       WebSite
                     </label>
@@ -164,12 +267,13 @@ const EditProfilePage: React.FC = () => {
                       value={values.socialMedia?.webSite}
                     />
                   </div>
+
                   <div className="flex flex-col">
                     <label
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.whatsApp"
                     >
-                      whatsApp
+                      WhatsApp
                     </label>
                     <input
                       id="socialMedia.whatsApp"
@@ -283,11 +387,64 @@ const EditProfilePage: React.FC = () => {
                       value={values.socialMedia?.youtube}
                     />
                   </div>
+
+                  {/* Add other social media fields similarly */}
+                </div>
+                <p className="text-navBackground bg-secondary font-serif font-semibold px-3 w-fit rounded py-1">
+                  About Section
+                </p>
+                <div className="flex flex-col">
+                  <label
+                    className="mb-2 text-sm font-medium text-gray-700"
+                    htmlFor="userAbout.aboutUs"
+                  >
+                    About Us
+                  </label>
+                  <textarea
+                    id="userAbout.aboutUs"
+                    name="userAbout.aboutUs"
+                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.userAbout?.aboutUs ?? ""}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    className="mb-2 text-sm font-medium text-gray-700"
+                    htmlFor="userAbout.ourVision"
+                  >
+                    Our Vision
+                  </label>
+                  <textarea
+                    id="userAbout.ourVision"
+                    name="userAbout.ourVision"
+                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.userAbout?.ourVision ?? ""}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    className="mb-2 text-sm font-medium text-gray-700"
+                    htmlFor="userAbout.ourMission"
+                  >
+                    Our Mission
+                  </label>
+                  <textarea
+                    id="userAbout.ourMission"
+                    name="userAbout.ourMission"
+                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.userAbout?.ourMission ?? ""}
+                  />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 bg-navBackground text-secondary font-semibold rounded-lg hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary transform ease-in-out duration-300  focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {isSubmitting ? "Saving..." : "Save"}
                 </button>

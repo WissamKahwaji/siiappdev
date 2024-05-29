@@ -1,23 +1,23 @@
-import { faSmile } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FaBookmark, FaRegBookmark, FaRegComment } from "react-icons/fa";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import {
   PiHandsClappingFill,
   PiHandsClappingThin,
   PiShareFatLight,
 } from "react-icons/pi";
-import { AddCommentInputProps, PostModel } from "../../../apis/posts/type";
+import { PostModel } from "../../../apis/posts/type";
 import { Link } from "react-router-dom";
 import {
-  useAddCommentMutaion,
   useToggleLikeMutaion,
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
-import { useEffect, useRef, useState } from "react";
-import { Formik, FormikHelpers } from "formik";
+import { useEffect, useState } from "react";
+
 import Modal from "../../const/Modal";
 import PostDetails from "./PostDetails";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../context/AuthContext";
+import LoginToast from "../../const/LoginToast";
+import LoginModalContent from "../../const/LoginModalContent";
 
 type PostProps = {
   post: PostModel;
@@ -25,7 +25,8 @@ type PostProps = {
 };
 
 const Post = (props: PostProps) => {
-  const { mutate: addCommentInfo } = useAddCommentMutaion();
+  const { isAuthenticated } = useAuth();
+  // const { mutate: addCommentInfo } = useAddCommentMutaion();
   const { mutate: toggleLike } = useToggleLikeMutaion();
   const { mutate: toggleSave } = useToggleSaveMutaion();
 
@@ -33,11 +34,13 @@ const Post = (props: PostProps) => {
   const [likeCount, setLikeCount] = useState(props.post.likes?.length ?? 0);
   const [isSaved, setIsSaved] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const [selectedPost, setSelectedPost] = useState<PostModel | null>(null);
   const [showFullBrief, setShowFullBrief] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
 
-  const commentInputRef = useRef<HTMLInputElement>(null);
+  // const commentInputRef = useRef<HTMLInputElement>(null);
 
   const toggleBrief = () => {
     setShowFullBrief(!showFullBrief);
@@ -58,10 +61,10 @@ const Post = (props: PostProps) => {
     }
   }, [props.post.likes, props.post.saves, props.currentUserId, props.post._id]);
 
-  const initialValues: AddCommentInputProps = {
-    text: "",
-    postId: props.post._id,
-  };
+  // const initialValues: AddCommentInputProps = {
+  //   text: "",
+  //   postId: props.post._id,
+  // };
 
   const handlePostClick = (post: PostModel) => {
     setSelectedPost(post);
@@ -69,35 +72,58 @@ const Post = (props: PostProps) => {
   };
 
   const handleCloseModal = () => {
+    setIsLoginModalOpen(false);
     setIsModalOpen(false);
   };
 
-  const handleSubmit = (
-    values: AddCommentInputProps,
-    { setSubmitting, resetForm }: FormikHelpers<AddCommentInputProps>
-  ) => {
-    addCommentInfo(values, {
-      onSettled() {
-        setSubmitting(false);
-        resetForm();
-      },
-    });
-  };
+  // const handleSubmit = (
+  //   values: AddCommentInputProps,
+  //   { setSubmitting, resetForm }: FormikHelpers<AddCommentInputProps>
+  // ) => {
+  //   addCommentInfo(values, {
+  //     onSettled() {
+  //       setSubmitting(false);
+  //       resetForm();
+  //     },
+  //   });
+  // };
 
   const handleToggleLike = () => {
-    toggleLike(props.post._id);
-    setIsLiked(!isLiked);
-    setLikeCount(prevCount => (isLiked ? prevCount - 1 : prevCount + 1));
+    if (!isAuthenticated) {
+      toast.error(
+        <LoginToast
+          onClose={() => {
+            setIsLoginModalOpen(true);
+          }}
+        />,
+        { toastId: "auth" }
+      );
+    } else {
+      toggleLike(props.post._id);
+      setIsLiked(!isLiked);
+      setLikeCount(prevCount => (isLiked ? prevCount - 1 : prevCount + 1));
+    }
   };
 
   const handleToggleSave = () => {
-    toggleSave(props.post._id);
-    setIsSaved(!isSaved);
+    if (!isAuthenticated) {
+      toast.error(
+        <LoginToast
+          onClose={() => {
+            setIsLoginModalOpen(true);
+          }}
+        />,
+        { toastId: "auth" }
+      );
+    } else {
+      toggleSave(props.post._id);
+      setIsSaved(!isSaved);
+    }
   };
 
-  const handleCommentClick = () => {
-    commentInputRef.current?.focus();
-  };
+  // const handleCommentClick = () => {
+  //   commentInputRef.current?.focus();
+  // };
 
   const handleShareClick = () => {
     navigator.clipboard
@@ -114,7 +140,8 @@ const Post = (props: PostProps) => {
           <img
             src={props.post.images[0]}
             alt="Post"
-            className="object-cover w-full max-h-[450px]"
+            className="object-cover w-full max-h-[450px] cursor-pointer"
+            onClick={() => handlePostClick(props.post)}
           />
         );
       case "video":
@@ -126,12 +153,21 @@ const Post = (props: PostProps) => {
         );
       case "doc":
         return (
-          <iframe
-            src={props.post.postDocs}
-            title="Document"
-            height="500px"
-            width="100%"
-          />
+          <div
+            className="relative border rounded-lg overflow-hidden cursor-pointer"
+            onClick={() => window.open(props.post?.postDocs, "_blank")}
+          >
+            <img
+              src="https://techterms.com/img/lg/pdf_109.png"
+              alt="PDF Icon"
+              className="w-full h-[200px] md:h-[300px] object-contain"
+            />
+            <div className="absolute bottom-0 left-0 w-full bg-secondary bg-opacity-75 text-navBackground font-semibold text-center p-2">
+              {props.post?.postDocs
+                ? props.post?.postDocs.split("/").pop()
+                : "Document"}
+            </div>
+          </div>
         );
       default:
         return null;
@@ -139,8 +175,8 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <div className="border rounded-lg border-slate-200 mb-5 bg-white font-header w-full max-w-[620px]">
-      <div className="p-3 flex flex-row border-b border-gray-300">
+    <div className="border rounded-lg border-secondary mb-5 bg-white font-header w-full max-w-[620px]">
+      <div className="p-3 flex flex-row border-b border-secondary">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>
             <img
@@ -170,10 +206,10 @@ const Post = (props: PostProps) => {
                 <PiHandsClappingThin className="w-6 h-6" />
               )}
             </div>
-            <FaRegComment
+            {/* <FaRegComment
               className="w-6 h-6 cursor-pointer hover:text-gray-500"
               onClick={handleCommentClick}
-            />
+            /> */}
             <PiShareFatLight
               className="w-6 h-6 cursor-pointer hover:text-gray-500"
               onClick={handleShareClick}
@@ -246,8 +282,12 @@ const Post = (props: PostProps) => {
         <div className="text-gray-500 uppercase text-xs tracking-wide mt-2">
           23 hours
         </div>
-
         <div
+          className="text-sm text-gray-400 mt-1 cursor-pointer"
+          onClick={() => handlePostClick(props.post)}
+        >{`View details`}</div>
+
+        {/* <div
           className="text-sm text-gray-400 mt-1 cursor-pointer"
           onClick={() => handlePostClick(props.post)}
         >
@@ -303,7 +343,7 @@ const Post = (props: PostProps) => {
               </div>
             </form>
           )}
-        </Formik>
+        </Formik> */}
       </div>
 
       {selectedPost && (
@@ -318,6 +358,16 @@ const Post = (props: PostProps) => {
             currentUserId={props.currentUserId ?? ""}
             onClose={handleCloseModal}
           />
+        </Modal>
+      )}
+      {isLoginModalOpen && (
+        <Modal
+          isOpen={isLoginModalOpen}
+          setIsOpen={handleCloseModal}
+          title="LogIn"
+          size="md"
+        >
+          <LoginModalContent />
         </Modal>
       )}
     </div>

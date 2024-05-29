@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   editUserProfile,
   getUserById,
+  getUserByUserCategory,
   getUserByUserName,
   getUserLikedPosts,
   getUserSavedPosts,
@@ -19,6 +20,12 @@ const useGetUserByUserNameQuery = (userName: string) =>
     queryKey: ["get-user-userName"],
     queryFn: () => getUserByUserName(userName),
     enabled: !!userName,
+  });
+
+const useGetUserByUserCategoryQuery = (userCategory: string) =>
+  useQuery({
+    queryKey: ["get-user-userCategory"],
+    queryFn: () => getUserByUserCategory(userCategory),
   });
 
 const useGetUserLikedPostsQuery = () =>
@@ -73,4 +80,5 @@ export {
   useGetUserSavedPostsQuery,
   useGetUserByUserNameQuery,
   useToggleFollowMutaion,
+  useGetUserByUserCategoryQuery,
 };

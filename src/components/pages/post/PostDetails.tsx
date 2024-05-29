@@ -1,28 +1,30 @@
 import { useState, useEffect } from "react";
-import { Formik, FormikHelpers } from "formik";
+import { FormikHelpers } from "formik";
 import { SyncLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { FaRegBookmark, FaRegComment, FaBookmark } from "react-icons/fa";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+
 import {
-  useAddCommentMutaion,
   useDeletePostMutation,
   useEditPostMutation,
   useGetPostByIdQuery,
-  useGetPostCommentsQuery,
   useToggleLikeMutaion,
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
 
-import {
-  AddCommentInputProps,
-  PostInputProps,
-  PostModel,
-} from "../../../apis/posts/type";
+import { PostInputProps, PostModel } from "../../../apis/posts/type";
 import EditPostDetails from "./EditPostDetails";
 import OptionsModal from "./OptionsModal";
 import { Link } from "react-router-dom";
 import { PiHandsClappingFill, PiHandsClappingThin } from "react-icons/pi";
+import { toast } from "react-toastify";
+import LoginToast from "../../const/LoginToast";
+import { useAuth } from "../../../context/AuthContext";
+import Modal from "../../const/Modal";
+import LoginModalContent from "../../const/LoginModalContent";
+import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PostDetailsProps {
   selectedPost: PostModel;
@@ -35,17 +37,11 @@ const PostDetails = ({
   currentUserId,
   onClose,
 }: PostDetailsProps) => {
-  const { mutate: addCommentInfo } = useAddCommentMutaion();
+  const { isAuthenticated } = useAuth();
   const { mutate: toggleLike } = useToggleLikeMutaion();
   const { mutate: toggleSave } = useToggleSaveMutaion();
   const { mutate: editPostInfo } = useEditPostMutation();
   const { mutate: deletePostInfo } = useDeletePostMutation();
-
-  const {
-    data: comments,
-    isLoading,
-    isError,
-  } = useGetPostCommentsQuery(selectedPost._id);
 
   const {
     data: postInfo,
@@ -58,6 +54,7 @@ const PostDetails = ({
   const [isSaved, setIsSaved] = useState(false);
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     if (selectedPost.likes?.includes(currentUserId)) {
@@ -68,32 +65,41 @@ const PostDetails = ({
     }
   }, [selectedPost.likes, selectedPost.saves, currentUserId]);
 
-  const initialValues: AddCommentInputProps = {
-    text: "",
-    postId: selectedPost._id,
-  };
-
-  const handleSubmit = (
-    values: AddCommentInputProps,
-    { setSubmitting, resetForm }: FormikHelpers<AddCommentInputProps>
-  ) => {
-    addCommentInfo(values, {
-      onSettled() {
-        setSubmitting(false);
-        resetForm();
-      },
-    });
-  };
-
   const handleToggleLike = () => {
-    toggleLike(selectedPost._id);
-    setIsLiked(!isLiked);
-    setLikeCount(prevCount => (isLiked ? prevCount - 1 : prevCount + 1));
+    if (!isAuthenticated) {
+      toast.error(
+        <LoginToast
+          onClose={() => {
+            setIsLoginModalOpen(true);
+          }}
+        />,
+        { toastId: "auth" }
+      );
+    } else {
+      toggleLike(selectedPost._id);
+      setIsLiked(!isLiked);
+      setLikeCount(prevCount => (isLiked ? prevCount - 1 : prevCount + 1));
+    }
   };
 
   const handleToggleSave = () => {
-    toggleSave(selectedPost._id);
-    setIsSaved(!isSaved);
+    if (!isAuthenticated) {
+      toast.error(
+        <LoginToast
+          onClose={() => {
+            setIsLoginModalOpen(true);
+          }}
+        />,
+        { toastId: "auth" }
+      );
+    } else {
+      toggleSave(selectedPost._id);
+      setIsSaved(!isSaved);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsLoginModalOpen(false);
   };
 
   const handleEditPost = (
@@ -144,11 +150,25 @@ const PostDetails = ({
         );
       case "doc":
         return (
-          <iframe
-            src={postInfo.postDocs}
-            className="md:w-full md:h-full w-1/2 h-1/2 object-contain rounded-lg"
-            title="Document"
-          />
+          <div className="relative w-full h-full">
+            <a
+              href={postInfo.postDocs}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Document
+                file={postInfo.postDocs}
+                className="w-full h-[240px] border border-secondary"
+              >
+                <Page pageNumber={1} width={300} />
+              </Document>
+            </a>
+            <div className="absolute bottom-0 left-0 w-full text-center bg-secondary bg-opacity-50 text-navBackground text-sm py-1">
+              {postInfo.postDocs
+                ? postInfo.postDocs.split("/").pop()
+                : "Document"}
+            </div>
+          </div>
         );
       default:
         return null;
@@ -216,6 +236,15 @@ const PostDetails = ({
               <p className="mt-1">{` ${postInfo?.link}`}</p>
             </Link>
           )}
+          {postInfo?.tags && postInfo.tags.length > 0 && (
+            <div className="flex flex-row space-x-1 mt-2">
+              {postInfo.tags.map((tag, index) => (
+                <p key={index} className="text-xs text-blue-700 font-semibold">
+                  {tag}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex space-x-4 mb-2 justify-between">
@@ -227,14 +256,13 @@ const PostDetails = ({
                 <PiHandsClappingThin className="w-5 h-5" />
               )}
             </div>
-            <FaRegComment className="w-5 h-5 cursor-pointer" />
-          </div>
-          <div onClick={handleToggleSave} className="cursor-pointer">
-            {isSaved ? (
-              <FaBookmark className="w-5 h-5   text-secondary" />
-            ) : (
-              <FaRegBookmark className="w-5 h-5" />
-            )}
+            <div onClick={handleToggleSave} className="cursor-pointer">
+              {isSaved ? (
+                <BsBookmarkCheckFill className="w-5 h-5   text-secondary" />
+              ) : (
+                <BsBookmark className="w-5 h-5" />
+              )}
+            </div>
           </div>
         </div>
         <div className="text-start mb-4 ">
@@ -244,78 +272,16 @@ const PostDetails = ({
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="text-center flex flex-col justify-center items-center">
-            <SyncLoader size={20} />
-          </div>
-        ) : isError ? (
-          <div>Error!!</div>
-        ) : (
-          <div className="flex flex-col space-y-4 overflow-y-scroll no-scrollbar mb-12 md:max-h-32 max-h-24 ">
-            {comments &&
-              (comments.length > 0 ? (
-                comments.map((comment, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center space-x-2 font-header"
-                  >
-                    <img
-                      src={
-                        comment.user.profileImage ??
-                        "https://via.placeholder.com/30"
-                      }
-                      alt="Commenter"
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <p className="text-sm text-start ">
-                      <strong>{comment.user.fullName}</strong> {comment.text}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <div>No comments yet</div>
-              ))}
-          </div>
+        {isLoginModalOpen && (
+          <Modal
+            isOpen={isLoginModalOpen}
+            setIsOpen={handleCloseModal}
+            title="LogIn"
+            size="md"
+          >
+            <LoginModalContent />
+          </Modal>
         )}
-
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              className="absolute bottom-0 md:w-[370px] w-[300px] flex items-center p-4 bg-white border-t border-gray-300"
-            >
-              <input
-                id="text"
-                name="text"
-                type="text"
-                placeholder="Add a comment..."
-                className="flex-grow p-2 border border-gray-300 rounded"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.text ?? ""}
-              />
-              {errors.text && touched.text && (
-                <div className="text-red-500 text-xs mt-1">{errors.text}</div>
-              )}
-              <button
-                className="ml-2 p-2 text-blue-500"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                <FontAwesomeIcon icon={faPaperPlane} />
-              </button>
-            </form>
-          )}
-        </Formik>
-
         {postInfo && (
           <>
             <OptionsModal

@@ -1,4 +1,4 @@
-import logo from "../../assets/logo_sii.png";
+import logo from "../../assets/logo_sii_new_2.png";
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { useSignUpMutation } from "../../apis/auth/queries";
 import { SignUpValues } from "../../apis/auth/type";
 import { PulseLoader } from "react-spinners";
+import { MdArrowRightAlt } from "react-icons/md";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -139,7 +140,7 @@ const Signup = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="text-sm font-header bg-navBackground text-secondary py-1 rounded font-medium flex items-center justify-center"
+                  className="text-sm font-header bg-secondary text-navBackground py-1 rounded font-medium flex items-center justify-center hover:bg-navBackground hover:text-secondary transform duration-200"
                 >
                   {isSubmitting ? (
                     <PulseLoader size={20} color="white" />
@@ -153,13 +154,13 @@ const Signup = () => {
           <div className="mt-8 text-gray-600 text-center">
             Already have an account?
             <Link
-              to="/"
+              to="/login"
               className="font-semibold text-blue-500 hover:underline"
             >
               Log in
             </Link>
           </div>{" "}
-          <div className="w-full">
+          <div className="w-full flex flex-col">
             <div className="flex items-center my-6">
               <div className="border-t border-gray-300 flex-grow"></div>
               <div className="mx-4 text-sm text-gray-500">Or</div>
@@ -172,6 +173,31 @@ const Signup = () => {
               <FontAwesomeIcon icon={faSquareFacebook} color="white" />
               <p>Log In with Facebook</p>
             </button>
+            <button
+              type="button"
+              className="bg-gray-500 text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-red-700 focus:outline-none"
+            >
+              Log In with Google
+            </button>
+            <button
+              type="button"
+              className="bg-black text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-gray-800 focus:outline-none"
+            >
+              Log In with Apple
+            </button>
+            <div className="flex items-center mt-6">
+              <div className="border-t border-gray-300 flex-grow"></div>
+              <div className="mx-4 text-sm text-gray-500">Or</div>
+              <div className="border-t border-gray-300 flex-grow"></div>
+            </div>
+            <Link to={`/`} replace>
+              <div className="cursor-pointer text-center mt-5 bg-secondary rounded-lg shadow-lg shadow-navBackground/20 py-1 space-x-1 flex flex-row justify-center items-center">
+                <p className="capitalize font-semibold font-header">
+                  Skip to home
+                </p>
+                <MdArrowRightAlt size={25} />
+              </div>
+            </Link>
           </div>
         </div>
         <div className="flex flex-col justify-center items-center space-y-3">

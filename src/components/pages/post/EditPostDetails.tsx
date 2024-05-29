@@ -1,6 +1,7 @@
 import { Formik, FormikHelpers } from "formik";
 import { PostInputProps, PostModel } from "../../../apis/posts/type";
 import Modal from "../../const/Modal";
+import HashtagsInput from "../../const/HashtagsInput";
 
 interface EditPostDetailsProps {
   isOpen: boolean;
@@ -49,7 +50,7 @@ const EditPostDetails = ({
   };
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={onClose} title="Edit Info">
+    <Modal isOpen={isOpen} setIsOpen={onClose} title="Edit Your Post">
       <Formik initialValues={selectedPost} onSubmit={onEdit}>
         {({
           values,
@@ -58,14 +59,15 @@ const EditPostDetails = ({
           handleChange,
           handleBlur,
           handleSubmit,
+          setFieldValue,
           isSubmitting,
         }) => (
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 md:space-y-0 md:grid md:grid-cols-2 gap-x-4 font-header"
+            className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar  md:space-y-0 md:grid md:grid-cols-2 gap-x-4 font-header"
           >
             <div className="flex justify-center">{renderPostMedia()}</div>
-            <div className="flex flex-col items-start justify-start w-full relative">
+            <div className="flex flex-col items-start justify-start w-full relative py-1 px-2">
               <div className="flex items-center mb-5">
                 <img
                   src={
@@ -85,9 +87,8 @@ const EditPostDetails = ({
               <textarea
                 id="caption"
                 name="caption"
-                minLength={4}
                 placeholder="Edit caption"
-                className="p-2 border mb-2 border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 border h-32 mb-2 border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.caption}
@@ -149,8 +150,20 @@ const EditPostDetails = ({
               {errors.link && touched.link && (
                 <div className="text-red-500 text-xs mt-1">{errors.link}</div>
               )}
+              <div className="mb-5 items-start flex flex-col">
+                <label
+                  className="  text-sm font-medium text-gray-700"
+                  htmlFor="HashTags"
+                >
+                  HashTags
+                </label>
+                <HashtagsInput
+                  value={values.tags ?? []}
+                  onChange={newTags => setFieldValue("tags", newTags)}
+                />
+              </div>
               <button
-                className="w-full p-2 bg-navBackground text-secondary font-semibold rounded-xl hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 bg-secondary text-navBackground font-semibold rounded-xl hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
                 type="submit"
                 disabled={isSubmitting}
               >

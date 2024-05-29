@@ -149,7 +149,7 @@ const GetSiiCard = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-navBackground text-secondary font-semibold rounded-lg hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {isSubmitting ? "Saving..." : "Save"}
               </button>

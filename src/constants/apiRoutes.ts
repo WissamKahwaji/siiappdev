@@ -22,6 +22,7 @@ const POST = {
 const SII_CARD = {
   ADD: "/sii-card/add",
   GET_USER_CARD: "/sii-card/user-card",
+  EDIT_CARD: "/sii-card/edit",
 };
 
 const USER = {
@@ -29,7 +30,10 @@ const USER = {
   EDIT: "/users/edit-profile",
   GET_LIKED_POSTS: "/users/user-liked-posts",
   GET_SAVED_POSTS: "/users/user-saved-posts",
-  GET_BY_USERNAEM: (userName: string) => `/users/by-userName/${userName}`,
+  GET_BY_USERNAME: (userName: string) => `/users/by-userName/${userName}`,
+  GET_BY_USERCATEGORY: (userCategory: string) =>
+    `/users/userCategory/${userCategory}`,
+
   TOGGLE_FOLLOW: (id: string | undefined) => `/users/toggle-follow/${id}`,
 };
 

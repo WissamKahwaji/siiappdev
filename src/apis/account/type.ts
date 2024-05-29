@@ -12,6 +12,12 @@ export type UserModel = {
   profileImage?: string;
   mobileNumber?: string;
   siiCard?: string;
+  userCategory?: string | undefined;
+  userAbout?: {
+    aboutUs?: string;
+    ourMission?: string;
+    ourVision?: string;
+  };
   socialMedia?: {
     webSite?: string;
     whatsApp?: string;
@@ -29,6 +35,12 @@ export type EditProfileProps = {
   mobileNumber: string;
   bio?: string | null;
   profileImage?: File | undefined;
+  userAbout?: {
+    aboutUs: string;
+    ourMission: string;
+    ourVision: string;
+  };
+  userCategory?: string | undefined;
   socialMedia?: {
     webSite: string;
     whatsApp: string;

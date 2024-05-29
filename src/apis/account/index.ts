@@ -10,7 +10,14 @@ const getUserById = async () => {
 };
 const getUserByUserName = async (userName: string) => {
   const res = await publicInstance.get<UserModel>(
-    API_ROUTES.USER.GET_BY_USERNAEM(userName)
+    API_ROUTES.USER.GET_BY_USERNAME(userName)
+  );
+  return res.data;
+};
+
+const getUserByUserCategory = async (userCategory: string) => {
+  const res = await publicInstance.get<UserModel[]>(
+    API_ROUTES.USER.GET_BY_USERCATEGORY(userCategory)
   );
   return res.data;
 };
@@ -46,4 +53,5 @@ export {
   getUserSavedPosts,
   getUserByUserName,
   toggleFollow,
+  getUserByUserCategory,
 };

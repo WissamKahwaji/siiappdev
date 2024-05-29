@@ -18,6 +18,7 @@ export type PostModel = {
   postType?: string | undefined;
   postVideo?: string | undefined;
   postDocs?: string | undefined;
+  coverVideoImage?: string | undefined;
 };
 
 export type PostInputProps = {

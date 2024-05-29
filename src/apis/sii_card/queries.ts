@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addSiiCard, getUserSiiCard } from ".";
-import { SiiCardModel } from "./type";
+import { addSiiCard, editSiiCard, getUserSiiCard } from ".";
+import { EditCardParams, SiiCardModel } from "./type";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const useAddSiiCardMutaion = () => {
         queryKey: ["get-user-byId"],
       });
 
-      navigate("/account", { replace: true });
+      navigate("/", { replace: true });
     },
     onError() {
       toast.error(`failed to add sii-card`);
@@ -30,4 +30,21 @@ const useAddSiiCardMutaion = () => {
   });
 };
 
-export { useGetUserSiiCardQuery, useAddSiiCardMutaion };
+const useEditSiiCardMutaion = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["edit-sii-card"],
+    mutationFn: (payload: EditCardParams) => editSiiCard(payload),
+    onSuccess() {
+      toast.success(`edit sii-card successfully.`);
+      queryClient.invalidateQueries({
+        queryKey: ["get-user-card"],
+      });
+    },
+    onError() {
+      toast.error(`failed to edit sii-card`);
+    },
+  });
+};
+
+export { useGetUserSiiCardQuery, useAddSiiCardMutaion, useEditSiiCardMutaion };

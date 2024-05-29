@@ -18,6 +18,8 @@ import GetSiiCard from "./pages/profile/GetSiiCard";
 import Home from "./pages/home";
 import ProtectedRoute from "./components/const/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
+import AboutUsPage from "./components/pages/profile/AboutUsPage";
+import UsersByCategoriesPage from "./pages/profile/UsersByCategoriesPage";
 // Import your authentication-related utilities
 
 const Routes = () => {
@@ -38,12 +40,20 @@ const Routes = () => {
           />
 
           <Route path="/" element={<App />}>
+            <Route path="/" element={<Home />} />
+            <Route path=":userName" element={<Profile />} />
+
+            <Route path=":userName/:postId" element={<Profile />} />
+            <Route path=":userName/about" element={<AboutUsPage />} />
+            <Route
+              path="users/:userCategory"
+              element={<UsersByCategoriesPage />}
+            />
+
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Home />} />
               <Route path="sii-card" element={<SiiCardInfo />} />
               <Route path="get-sii-card/:userName" element={<GetSiiCard />} />
-              <Route path=":userName" element={<Profile />} />
-              <Route path=":userName/:postId" element={<Profile />} />
+
               <Route
                 path="account/edit-profile"
                 element={<EditProfilePage />}

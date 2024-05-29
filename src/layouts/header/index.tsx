@@ -1,8 +1,10 @@
 import { AiOutlineCloseSquare, AiOutlineMenu } from "react-icons/ai";
-import logo_black from "../../assets/logo_sii.png";
+import logo_black from "../../assets/logo_sii_new_2.png";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 const Navbar = () => {
+  const { isAuthenticated } = useAuth();
   const [showDrawer, setShowDrawer] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
@@ -41,7 +43,7 @@ const Navbar = () => {
                 item.path === currentPath ? "text-secondary" : "text-white"
               }`}
               key={index}
-              to={item.path}
+              to={isAuthenticated ? item.path : "/login"}
             >
               {item.title}
             </Link>

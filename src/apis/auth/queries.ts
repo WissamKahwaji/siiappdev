@@ -35,7 +35,7 @@ const useSignUpMutation = () => {
       login(data.token);
       localStorage.setItem("userId", data.result._id);
       localStorage.setItem("userName", data.result.userName);
-      navigate("/account", { replace: true });
+      navigate(`/${data.result.userName}`, { replace: true });
     },
     onError: data => {
       toast.error(data.message);
