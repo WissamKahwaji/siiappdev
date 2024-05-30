@@ -210,7 +210,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         <Modal
           isOpen={isModalOpen}
           setIsOpen={() => handleCloseModal(selectedPost)}
-          title="Your Post"
+          title="Post Info"
           size="md"
         >
           <PostDetails

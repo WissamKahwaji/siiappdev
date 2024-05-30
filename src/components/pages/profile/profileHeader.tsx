@@ -8,6 +8,7 @@ import {
   FaLinkedin,
   FaSnapchat,
   FaTiktok,
+  FaPaintBrush,
 } from "react-icons/fa";
 import { FaThreads, FaX } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -86,6 +87,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       icon: <FaTiktok className="w-5 h-5 md:w-9 md:h-9" />,
       field: "tikTok",
     },
+    {
+      icon: <FaX className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "xPlatform",
+    },
+    {
+      icon: <FaPaintBrush className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "painterest",
+    },
+
     { icon: <MdAdd className="w-5 h-5 md:w-9 md:h-9" />, field: "add" },
   ];
   const filterSocialMediaIcons = (user: UserModel): typeof socialMediaIcons => {

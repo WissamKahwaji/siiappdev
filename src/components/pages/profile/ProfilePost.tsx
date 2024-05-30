@@ -61,8 +61,10 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
 
   return (
     <div
-      className={`relative overflow-hidden w-full ${
-        post.postType === "video" ? "h-[200px] md:h-[400px]" : ""
+      className={`relative overflow-hidden  ${
+        post.postType === "video"
+          ? "h-[200px] md:h-[400px] md:w-[226px] w-[114px]"
+          : "w-full"
       } pt-[100%]`}
       onMouseEnter={() => setShowOverlay(true)}
       onMouseLeave={() => setShowOverlay(false)}

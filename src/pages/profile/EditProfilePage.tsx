@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
     ourVision: Yup.string(),
   }),
   socialMedia: Yup.object().shape({
-    webSite: Yup.string().url("Invalid URL"),
+    webSite: Yup.string(),
     whatsApp: Yup.string(),
     faceBook: Yup.string(),
     linkedIn: Yup.string(),
@@ -28,6 +28,8 @@ const validationSchema = Yup.object().shape({
     threads: Yup.string(),
     snapChat: Yup.string(),
     youtube: Yup.string(),
+    xPlatform: Yup.string(),
+    painterest: Yup.string(),
   }),
 });
 
@@ -77,6 +79,8 @@ const EditProfilePage: React.FC = () => {
       threads: userInfo?.socialMedia?.threads ?? "",
       snapChat: userInfo?.socialMedia?.snapChat ?? "",
       youtube: userInfo?.socialMedia?.youtube ?? "",
+      painterest: userInfo?.socialMedia?.painterest ?? "",
+      xPlatform: userInfo?.socialMedia?.xPlatform ?? "",
     },
   };
 
@@ -387,7 +391,40 @@ const EditProfilePage: React.FC = () => {
                       value={values.socialMedia?.youtube}
                     />
                   </div>
-
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.xPlatform"
+                    >
+                      xPlatform
+                    </label>
+                    <input
+                      id="socialMedia.xPlatform"
+                      name="socialMedia.xPlatform"
+                      type="text"
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.socialMedia?.xPlatform}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.painterest"
+                    >
+                      painterest
+                    </label>
+                    <input
+                      id="socialMedia.painterest"
+                      name="socialMedia.painterest"
+                      type="text"
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.socialMedia?.painterest}
+                    />
+                  </div>
                   {/* Add other social media fields similarly */}
                 </div>
                 <p className="text-navBackground bg-secondary font-serif font-semibold px-3 w-fit rounded py-1">

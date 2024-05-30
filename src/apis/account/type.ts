@@ -27,6 +27,8 @@ export type UserModel = {
     threads?: string;
     snapChat?: string;
     youtube?: string;
+    painterest: string;
+    xPlatform: string;
   };
 };
 
@@ -50,5 +52,7 @@ export type EditProfileProps = {
     threads: string;
     snapChat: string;
     youtube: string;
+    painterest: string;
+    xPlatform: string;
   };
 };
