@@ -188,7 +188,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
           }
           alt="profile"
-          className="md:hidden rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+          className="md:hidden object-contain rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
         />
         <div className="hidden md:flex md:flex-col">
           <img
@@ -197,7 +197,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
             }
             alt="profile"
-            className="rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+            className="rounded-lg object-contain  border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
           <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>

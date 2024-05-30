@@ -185,7 +185,7 @@ const Post = (props: PostProps) => {
             <img
               src={props.post.owner.profileImage}
               alt=""
-              className="rounded-full w-8 inline"
+              className="rounded-full w-8 h-8 inline"
             />
             <span className="font-medium text-sm ml-2">
               {props.post.owner.fullName}
