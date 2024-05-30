@@ -266,10 +266,12 @@ const Post = (props: PostProps) => {
             </p>
           )}
           {props.post?.mobileNumber && (
-            <p className="text-sm mt-1">
-              <span className="font-bold">Mobile Number:</span>
-              {` ${props.post?.mobileNumber}`}
-            </p>
+            <Link to={`tel:${props.post?.mobileNumber}`}>
+              <p className="text-sm mt-2">
+                <span className="font-bold">Mobile Number:</span>
+                {` ${props.post?.mobileNumber}`}
+              </p>
+            </Link>
           )}
           {props.post?.link && (
             <Link
@@ -277,7 +279,7 @@ const Post = (props: PostProps) => {
               target="_blank"
               className="cursor-pointer font-bold text-sm text-blue-500"
             >
-              <p className="mt-1">{` ${props.post?.link}`}</p>
+              <p className="mt-2">{` ${props.post?.link}`}</p>
             </Link>
           )}
         </div>

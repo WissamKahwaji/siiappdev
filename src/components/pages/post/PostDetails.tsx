@@ -55,7 +55,11 @@ const PostDetails = ({
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
+  const [showFullBrief, setShowFullBrief] = useState(false);
+  const [shouldShowToggle, setShouldShowToggle] = useState(false);
+  const toggleBrief = () => {
+    setShowFullBrief(!showFullBrief);
+  };
   useEffect(() => {
     if (selectedPost.likes?.includes(currentUserId)) {
       setIsLiked(true);
@@ -63,7 +67,13 @@ const PostDetails = ({
     if (selectedPost.saves?.includes(currentUserId)) {
       setIsSaved(true);
     }
-  }, [selectedPost.likes, selectedPost.saves, currentUserId]);
+    const element = document.getElementById(`post-caption-${postInfo?._id}`);
+    if (element && element.scrollHeight > element.clientHeight) {
+      setShouldShowToggle(true);
+    } else {
+      setShouldShowToggle(false);
+    }
+  }, [selectedPost.likes, selectedPost.saves, currentUserId, postInfo?._id]);
 
   const handleToggleLike = () => {
     if (!isAuthenticated) {
@@ -142,7 +152,7 @@ const PostDetails = ({
         return (
           <video
             controls
-            className="md:w-full md:h-full w-1/2 h-1/2 object-contain rounded-lg"
+            className="md:w-full md:h-full w-full h-full object-contain rounded-lg"
           >
             <source src={postInfo.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
@@ -220,8 +230,26 @@ const PostDetails = ({
         </div>
         <hr className="mb-4" />
 
-        <div className="mb-4 text-start whitespace-pre-wrap  md:max-h-32 max-h-24 justify-start items-start overflow-y-scroll no-scrollbar ">
-          <p> {postInfo?.caption}</p>
+        <div className="mb-4 text-start whitespace-pre-wrap   justify-start items-start ">
+          {/* <p> {postInfo?.caption}</p> */}
+
+          <div
+            id={`post-caption-${postInfo?._id}`}
+            className={`text-gray-600 whitespace-pre-wrap font-serif text-sm ${
+              !showFullBrief ? "clamp-3-lines" : ""
+            }`}
+          >
+            {postInfo?.caption}
+          </div>
+          {shouldShowToggle && (
+            <span
+              className="cursor-pointer text-gray-400 text-xs"
+              onClick={toggleBrief}
+            >
+              {showFullBrief ? " Show Less" : " Show More"}
+            </span>
+          )}
+
           {postInfo?.whatsAppNumber && (
             <p
               className="cursor-pointer text-sm"
@@ -237,10 +265,12 @@ const PostDetails = ({
             </p>
           )}
           {postInfo?.mobileNumber && (
-            <p className=" text-sm mt-1">
-              <span className="font-bold">Mobile Number:</span>
-              {` ${postInfo?.mobileNumber}`}
-            </p>
+            <Link to={`tel:${postInfo.mobileNumber}`}>
+              <p className=" text-sm mt-2">
+                <span className="font-bold">Mobile Number:</span>
+                {` ${postInfo?.mobileNumber}`}
+              </p>
+            </Link>
           )}
           {postInfo?.link && (
             <Link
@@ -248,7 +278,7 @@ const PostDetails = ({
               target="_blank"
               className="cursor-pointer font-bold text-sm "
             >
-              <p className="mt-1">{` ${postInfo?.link}`}</p>
+              <p className="mt-2">{` ${postInfo?.link}`}</p>
             </Link>
           )}
           {postInfo?.tags && postInfo.tags.length > 0 && (
