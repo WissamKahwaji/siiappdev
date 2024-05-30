@@ -204,7 +204,7 @@ const Post = (props: PostProps) => {
               className="cursor-pointer hover:text-gray-500"
             >
               {isLiked ? (
-                <PiHandsClappingFill className="w-6 h-6 text-red-500" />
+                <PiHandsClappingFill className="w-6 h-6 text-secondary" />
               ) : (
                 <PiHandsClappingThin className="w-6 h-6" />
               )}

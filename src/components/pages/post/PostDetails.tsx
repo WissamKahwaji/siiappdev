@@ -296,7 +296,7 @@ const PostDetails = ({
           <div className="flex space-x-5">
             <div onClick={handleToggleLike} className="cursor-pointer">
               {isLiked ? (
-                <PiHandsClappingFill className="w-5 h-5 text-red-500" />
+                <PiHandsClappingFill className="w-5 h-5 text-secondary" />
               ) : (
                 <PiHandsClappingThin className="w-5 h-5" />
               )}
