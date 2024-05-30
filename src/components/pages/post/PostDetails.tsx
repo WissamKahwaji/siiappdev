@@ -23,8 +23,8 @@ import { useAuth } from "../../../context/AuthContext";
 import Modal from "../../const/Modal";
 import LoginModalContent from "../../const/LoginModalContent";
 import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
-import { Document, Page, pdfjs } from "react-pdf";
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+// import { Document, Page, pdfjs } from "react-pdf";
+// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 interface PostDetailsProps {
   selectedPost: PostModel;
@@ -135,7 +135,7 @@ const PostDetails = ({
           <img
             src={postInfo.images[0]}
             alt="Post"
-            className="md:w-full md:h-full w-1/2 h-1/2 object-contain rounded-lg"
+            className="md:w-full md:h-full w-full h-full object-contain rounded-lg"
           />
         );
       case "video":
@@ -150,25 +150,40 @@ const PostDetails = ({
         );
       case "doc":
         return (
-          <div className="relative w-full h-full">
-            <a
-              href={postInfo.postDocs}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Document
-                file={postInfo.postDocs}
-                className="w-full h-[240px] border border-secondary"
-              >
-                <Page pageNumber={1} width={300} />
-              </Document>
-            </a>
-            <div className="absolute bottom-0 left-0 w-full text-center bg-secondary bg-opacity-50 text-navBackground text-sm py-1">
+          <div
+            className="relative border rounded-lg overflow-hidden cursor-pointer w-[320px] md:w-full"
+            onClick={() => window.open(postInfo.postDocs, "_blank")}
+          >
+            <img
+              src="https://techterms.com/img/lg/pdf_109.png"
+              alt="PDF Icon"
+              className="w-full h-[200px] md:h-[300px] object-contain"
+            />
+            <div className="absolute bottom-0 left-0 w-full bg-secondary bg-opacity-75 text-xs text-navBackground font-semibold text-center p-2">
               {postInfo.postDocs
                 ? postInfo.postDocs.split("/").pop()
                 : "Document"}
             </div>
           </div>
+          // <div className="relative w-full h-full">
+          //   <a
+          //     href={postInfo.postDocs}
+          //     target="_blank"
+          //     rel="noopener noreferrer"
+          //   >
+          //     <Document
+          //       file={postInfo.postDocs}
+          //       className="w-full h-[240px] border border-secondary"
+          //     >
+          //       <Page pageNumber={1} width={300} />
+          //     </Document>
+          //   </a>
+          //   <div className="absolute bottom-0 left-0 w-full text-center bg-secondary bg-opacity-50 text-navBackground text-sm py-1">
+          //     {postInfo.postDocs
+          //       ? postInfo.postDocs.split("/").pop()
+          //       : "Document"}
+          //   </div>
+          // </div>
         );
       default:
         return null;

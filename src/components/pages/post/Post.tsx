@@ -140,13 +140,16 @@ const Post = (props: PostProps) => {
           <img
             src={props.post.images[0]}
             alt="Post"
-            className="object-cover w-full max-h-[450px] cursor-pointer"
+            className="object-contain w-full max-h-[450px] cursor-pointer"
             onClick={() => handlePostClick(props.post)}
           />
         );
       case "video":
         return (
-          <video controls className="object-cover w-full max-h-[450px]">
+          <video
+            controls
+            className="object-contain bg-transparent w-full max-h-[450px]"
+          >
             <source src={props.post?.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

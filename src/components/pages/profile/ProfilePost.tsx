@@ -20,7 +20,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
           <img
             src={post.images[0]}
             alt="post"
-            className="absolute inset-0 object-contain w-full h-full"
+            className="absolute inset-0 object-contain w-full h-full bg-secondary/70"
           />
         );
       case "video":
@@ -30,7 +30,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
               <img
                 src={post.coverVideoImage}
                 alt="coverVideo"
-                className="absolute inset-0 object-contain w-full h-full"
+                className="absolute inset-0 object-contain w-full h-full bg-secondary/70"
               />
             ) : (
               <video

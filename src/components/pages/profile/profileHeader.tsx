@@ -199,7 +199,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             alt="profile"
             className="rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
-          <div className="font-header mt-4 text-lg md:max-h-[112px] w-[240px] overflow-hidden whitespace-pre-wrap">
+          <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
             <Link to={`/users/${user.user.userCategory}`} className="w-auto">
               <p className="text-sm font-header text-blue-500 font-bold cursor-pointer w-auto">
@@ -210,13 +210,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               {user?.user?.bio ? user.user.bio : "write your bio in settings"}
             </p>
           </div>
-          {user.user.userAbout && (
-            <Link to={`/${user.user.userName}/about`}>
-              <p className="underline text-secondary font-serif font-semibold text-sm my-2 cursor-pointer w-fit">
-                Read more About us
-              </p>
-            </Link>
-          )}
+          {user.user.userAbout &&
+            user.user.userAbout.aboutUs &&
+            user.user.userAbout.ourMission &&
+            user.user.userAbout.ourVision && (
+              <Link to={`/${user.user.userName}/about`}>
+                <p className="underline text-secondary font-serif font-semibold text-sm my-2 cursor-pointer w-fit">
+                  Read more About us
+                </p>
+              </Link>
+            )}
         </div>
         <div className="flex flex-col w-full md:w-auto">
           {userId === user.user._id ? (
@@ -256,7 +259,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={handleToggleFollow}
                 >
-                  <p className="font-serif text-navBackground font-semibold text-sm">
+                  <p className="font-serif text-navBackground font-semibold text-xs md:text-sm">
                     {isFollowed ? "Following" : "Follow"}
                   </p>
                 </div>
@@ -372,17 +375,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           </div>
         </div>
       </div>
-      <div className="md:hidden font-header mt-4 text-lg md:h-[135px] w-[140px] overflow-ellipsis">
+      <div className="md:hidden font-header mt-4 text-lg md:h-[135px] w-full overflow-ellipsis">
         {/* <p className="text-sm  font-semibold">wissam_98</p> */}
-        <p className="md:text-2xl text-lg   font-header font-semibold min-w-[270px]">
+        <p className="md:text-2xl text-base   font-header font-semibold min-w-[270px]">
           {user.user.fullName}
         </p>
         <Link to={`/users/${user.user.userCategory}`}>
-          <p className="text-sm font-header text-blue-500 font-bold cursor-pointer">
+          <p className="text-xs font-header text-blue-500 font-bold cursor-pointer">
             {user.user.userCategory}
           </p>
         </Link>
-        <p className="text-base whitespace-pre-wrap">{user.user.bio}</p>
+        <p className="text-sm whitespace-pre-wrap ">{user.user.bio}</p>
         {user.user.userAbout &&
           user.user.userAbout.aboutUs &&
           user.user.userAbout.ourMission &&
@@ -506,7 +509,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           title="Options"
           size="md"
         >
-          <div className="flex flex-col space-y-2 font-semibold font-serif">
+          <div className="flex flex-col space-y-2 font-semibold font-serif w-[300px] md:w-full">
             <p
               className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
               onClick={handleShareClick}
