@@ -149,7 +149,7 @@ const Post = (props: PostProps) => {
         return (
           <video
             controls
-            className="object-contain bg-transparent w-full max-h-[450px]"
+            className="object-cover bg-transparent w-full max-h-[450px]"
           >
             <source src={props.post?.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
@@ -179,8 +179,8 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <div className="border rounded-lg border-secondary mb-5 bg-white font-header w-full max-w-[620px]">
-      <div className="p-3 flex flex-row border-b border-secondary">
+    <div className="border-2 rounded-lg border-secondary mb-5 bg-white font-header w-full max-w-[620px]">
+      <div className="p-3 flex flex-row">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>
             <img
@@ -234,7 +234,7 @@ const Post = (props: PostProps) => {
         <div className="font-medium text-sm">{likeCount} Likes</div>
 
         <div className="text-sm">
-          <div className="flex flex-row items-end">
+          <div className="flex flex-col mb-2">
             <div
               id={`post-caption-${props.post._id}`}
               className={`text-gray-600 whitespace-pre-wrap font-serif text-sm ${

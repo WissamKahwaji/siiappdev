@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsWhatsapp } from "react-icons/bs";
 import {
@@ -25,7 +26,7 @@ import * as Yup from "yup";
 import qrCode from "../../../assets/qrCode.png";
 import yellowCardBack from "../../../assets/card.png";
 import logo from "../../../assets/logo_sii_black.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdAdd } from "react-icons/md";
 
 import { UserModel } from "../../../apis/account/type";
@@ -41,7 +42,7 @@ import { useAuth } from "../../../context/AuthContext";
 import LoginToast from "../../const/LoginToast";
 import LoginModalContent from "../../const/LoginModalContent";
 import HashtagsInput from "../../const/HashtagsInput";
-
+import defaultImage from "../../../assets/guest-01-01.png";
 interface ProfileHeaderProps {
   user: UserModel;
 }
@@ -122,6 +123,64 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [showVideoPreview, setShowVideoPreview] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleVideoUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setFieldValue: any
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+      setFieldValue("video", file);
+      setShowVideoPreview(true);
+    }
+  };
+  // const handleImageUpload = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   setFieldValue: any
+  // ) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     setCoverImage(file);
+  //     setFieldValue("coverVideoImage", file);
+  //   }
+  // };
+  const captureFrame = (time: number, setFieldValue: any) => {
+    if (videoRef.current && canvasRef.current) {
+      videoRef.current.currentTime = time;
+      videoRef.current.onseeked = () => {
+        const context = canvasRef.current!.getContext("2d");
+        if (context) {
+          context.drawImage(
+            videoRef.current!,
+            0,
+            0,
+            canvasRef.current!.width,
+            canvasRef.current!.height
+          );
+          const dataUrl = canvasRef.current!.toDataURL("image/jpeg");
+          fetch(dataUrl)
+            .then(res => res.blob())
+            .then(blob => {
+              const file = new File([blob], "cover.jpg", {
+                type: "image/jpeg",
+              });
+              setCoverImage(file);
+              setFieldValue("coverVideoImage", file);
+            });
+        }
+      };
+    }
+  };
+
+  const handleSelectCover = (setFieldValue: any) => {
+    if (videoRef.current) {
+      captureFrame(videoRef.current.currentTime, setFieldValue);
+    }
+  };
   // const handleCoverImageChange = (
   //   event: React.ChangeEvent<HTMLInputElement>
   // ) => {
@@ -193,21 +252,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
       <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center w-full">
         <img
-          src={
-            user.user?.profileImage ??
-            "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-          }
+          src={user.user?.profileImage ?? defaultImage}
           alt="profile"
-          className="md:hidden object-contain rounded-lg border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+          className="md:hidden object-contain rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
         />
         <div className="hidden md:flex md:flex-col">
           <img
-            src={
-              user.user?.profileImage ??
-              "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-            }
+            src={user.user?.profileImage ?? defaultImage}
             alt="profile"
-            className="rounded-lg object-contain  border border-gray-300 shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+            className="rounded-lg object-contain  border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
           />
           <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
@@ -267,14 +320,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               <div className="flex flex-row space-x-2 md:space-x-3">
                 <div
                   className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
-                  onClick={handleToggleFollow}
-                >
-                  <p className="font-serif text-navBackground font-semibold text-xs md:text-sm">
-                    {isFollowed ? "Following" : "Follow"}
-                  </p>
-                </div>
-                <div
-                  className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={() => {
                     setIsMoreModalOpen(true);
                   }}
@@ -299,13 +344,33 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="font-semibold text-sm">
                   {user.user?.followings.length}
                 </p>
-                <p className="text-xs">followings</p>
+                <p className="text-xs">following</p>
               </div>
               <div className="text-primary font-header flex flex-col items-center justify-center">
                 <p className="font-semibold text-sm">{followersCount}</p>
                 <p className="text-xs">followers</p>
               </div>
             </div>
+            {userId !== user.user._id && (
+              <div className="flex flex-row justify-center mt-3 capitalize space-x-8 w-full">
+                <div
+                  className="  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleShareClick}
+                >
+                  <p className="font-serif  font-semibold text-xs">
+                    Share Profile
+                  </p>
+                </div>
+                <div
+                  className="   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleToggleFollow}
+                >
+                  <p className="font-serif  font-semibold text-xs md:text-sm">
+                    {isFollowed ? "Following" : "Follow"}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
           <div className="hidden md:flex md:flex-col  group perspective-1000  items-center justify-center my-2 md:min-w-[530px]">
             <div
@@ -322,7 +387,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   <p className="font-semibold">
                     {user?.user?.followings.length}
                   </p>
-                  <p className="text-sm">followings</p>
+                  <p className="text-sm">following</p>
                 </div>
                 <div className="text-primary font-header flex flex-col items-center justify-center">
                   <p className="font-semibold">{followersCount}</p>
@@ -374,12 +439,20 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 </div>
                 <div
                   className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleToggleFollow}
+                >
+                  <p className="font-serif  font-semibold text-xs md:text-sm">
+                    {isFollowed ? "Following" : "Follow"}
+                  </p>
+                </div>
+                {/* <div
+                  className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={() => {
                     setIsMoreModalOpen(true);
                   }}
                 >
                   <p className="font-serif font-semibold text-sm ">Message</p>
-                </div>
+                </div> */}
               </div>
             )}
           </div>
@@ -594,7 +667,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           setFileType("image");
                           setFieldValue("postType", "image");
                         }}
-                        className="form-radio h-4 w-4 text-blue-600 "
+                        className="form-radio h-4 w-4 text-blue-600"
                       />
                       <span className="text-gray-700 font-medium">Image</span>
                     </label>
@@ -649,20 +722,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         type="file"
                         accept="video/*"
                         onBlur={handleBlur}
-                        onChange={event => {
-                          setFieldValue(
-                            "video",
-                            event.currentTarget.files![0] ?? null
-                          );
-                          setVideoFile(event.currentTarget.files![0] ?? null);
-                          setShowVideoPreview(true);
-                        }}
+                        onChange={event =>
+                          handleVideoUpload(event, setFieldValue)
+                        }
                         className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       {showVideoPreview && videoFile && (
                         <div className="flex flex-col md:flex-row md:items-center gap-2 mt-2 border border-secondary p-2 md:max-h-[450px]">
                           <div className="mb-4 flex-1">
                             <video
+                              ref={videoRef}
                               controls
                               className="object-contain w-full md:max-h-[350px]"
                             >
@@ -679,30 +748,57 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                 htmlFor="coverVideoImage"
                                 className="block font-medium mb-2"
                               >
-                                Cover Video Image
+                                Select Cover Image
                               </label>
-                              <input
-                                id="coverVideoImage"
-                                name="coverVideoImage"
-                                type="file"
-                                accept="image/*"
-                                onChange={event => {
-                                  const file = event.target.files?.[0];
-                                  setFieldValue("coverVideoImage", file);
-                                  setCoverImage(file ?? null);
-                                }}
-                                className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              />
-                            </div>
-                            {coverImage && (
-                              <div className="mb-4">
-                                <img
-                                  src={URL.createObjectURL(coverImage)}
-                                  alt="Cover Image"
-                                  className="w-full h-full md:h-auto object-contain border border-secondary"
-                                />
+                              <div className="flex justify-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    handleSelectCover(setFieldValue);
+                                  }}
+                                  className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded"
+                                >
+                                  Capture Frame
+                                </button>
+                                <label className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded cursor-pointer">
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={event =>
+                                      // handleImageUpload(event, setFieldValue)
+                                      {
+                                        const file = event.target.files?.[0];
+
+                                        if (file) {
+                                          setCoverImage(file);
+                                          setFieldValue(
+                                            "coverVideoImage",
+                                            file
+                                          );
+                                        }
+                                      }
+                                    }
+                                  />
+                                  Upload Image
+                                </label>
                               </div>
-                            )}
+                              <canvas
+                                ref={canvasRef}
+                                width="640"
+                                height="360"
+                                className="hidden"
+                              />
+                              {coverImage && (
+                                <div className="mt-4">
+                                  <img
+                                    src={URL.createObjectURL(coverImage)}
+                                    alt="Cover Image"
+                                    className="w-full h-full md:h-auto object-contain border border-secondary mt-4"
+                                  />
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       )}

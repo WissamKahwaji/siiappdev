@@ -216,7 +216,7 @@ const PostDetails = ({
               alt="User"
               className="w-10 h-10 rounded-full mr-3"
             />
-            <p className="text-navBackground font-serif">
+            <p className="text-navBackground text-xs md:text-base font-serif">
               {postInfo?.owner.fullName}
             </p>
           </div>
@@ -282,7 +282,7 @@ const PostDetails = ({
             </Link>
           )}
           {postInfo?.tags && postInfo.tags.length > 0 && (
-            <div className="flex flex-row space-x-1 mt-2">
+            <div className="flex flex-row space-x-1 mt-2 flex-wrap">
               {postInfo.tags.map((tag, index) => (
                 <p key={index} className="text-xs text-blue-700 font-semibold">
                   {tag}

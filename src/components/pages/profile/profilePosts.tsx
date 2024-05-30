@@ -151,7 +151,13 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           </div>
         ))}
       </div>
-      <div className="grid md:grid-cols-4 grid-cols-3 gap-2 lg:gap-1 py-3 md:py-5">
+      <div
+        className={`grid ${
+          activeTab === "video"
+            ? "md:grid-cols-5 grid-cols-3"
+            : "md:grid-cols-4 grid-cols-3"
+        } gap-1 lg:gap-1 py-3 md:py-5`}
+      >
         {activeTab === "posts" &&
           postsInfo &&
           postsInfo.map((post, index) => (

@@ -44,6 +44,7 @@ const Navbar = () => {
               }`}
               key={index}
               to={isAuthenticated ? item.path : "/login"}
+              reloadDocument
             >
               {item.title}
             </Link>
