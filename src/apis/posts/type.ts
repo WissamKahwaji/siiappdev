@@ -19,6 +19,7 @@ export type PostModel = {
   postVideo?: string | undefined;
   postDocs?: string | undefined;
   coverVideoImage?: string | undefined;
+  createdAt?: Date;
 };
 
 export type PostInputProps = {

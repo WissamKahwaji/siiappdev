@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import LoginToast from "../../const/LoginToast";
 import LoginModalContent from "../../const/LoginModalContent";
+import { formatDate } from "../../../utils";
 
 type PostProps = {
   post: PostModel;
@@ -284,9 +285,11 @@ const Post = (props: PostProps) => {
           )}
         </div>
 
-        <div className="text-gray-500 uppercase text-xs tracking-wide mt-2">
-          23 hours
-        </div>
+        {props.post.createdAt && (
+          <div className="text-gray-500 uppercase text-xs tracking-wide mt-2">
+            {formatDate(props.post.createdAt.toString())}
+          </div>
+        )}
         <div
           className="text-sm text-gray-400 mt-1 cursor-pointer"
           onClick={() => handlePostClick(props.post)}
