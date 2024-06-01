@@ -4,13 +4,17 @@ import {
   getUserById,
   getUserByUserCategory,
   getUserByUserName,
+  getUserFollowers,
+  getUserFollowings,
   getUserLikedPosts,
   getUserSavedPosts,
+  getUserSearch,
   toggleFollow,
 } from ".";
 
 import { EditProfileProps } from "./type";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const useGetUserByIdQuery = () =>
   useQuery({ queryKey: ["get-user-byId"], queryFn: () => getUserById() });
@@ -41,15 +45,16 @@ const useGetUserSavedPostsQuery = () =>
   });
 
 const useEditProfileMutation = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit-profile"],
     mutationFn: (payload: EditProfileProps) => editUserProfile(payload),
     onSuccess(_, variable) {
       toast.success(`edit ${variable.fullName} successfully.`);
+      queryClient.invalidateQueries({ queryKey: ["get-user-userName"] });
       queryClient.invalidateQueries({ queryKey: ["get-user-byId"] });
-      // navigate("/account", { replace: true });
+      navigate(`/${variable.userName}`, { replace: true });
     },
     onError(_, variable) {
       toast.error(`failed to edit ${variable.fullName}`);
@@ -73,6 +78,25 @@ const useToggleFollowMutaion = () => {
   });
 };
 
+const useGetUserFollowersQuery = () =>
+  useQuery({
+    queryKey: ["get-user-followers"],
+    queryFn: () => getUserFollowers(),
+  });
+
+const useGetUserFollowingsQuery = () =>
+  useQuery({
+    queryKey: ["get-user-followings"],
+    queryFn: () => getUserFollowings(),
+  });
+
+const useGetUserSearchQuery = (query: string) =>
+  useQuery({
+    queryKey: ["get-user-search"],
+    queryFn: () => getUserSearch(query),
+    enabled: false,
+  });
+
 export {
   useGetUserByIdQuery,
   useEditProfileMutation,
@@ -81,4 +105,7 @@ export {
   useGetUserByUserNameQuery,
   useToggleFollowMutaion,
   useGetUserByUserCategoryQuery,
+  useGetUserFollowersQuery,
+  useGetUserFollowingsQuery,
+  useGetUserSearchQuery,
 };

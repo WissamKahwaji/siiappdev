@@ -7,13 +7,15 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import LoginToast from "../../components/const/LoginToast";
 import Modal from "../../components/const/Modal";
-
 import LoginModalContent from "../../components/const/LoginModalContent";
+// import logo from "../../assets/logo_sii_new.png";
+import logo_video from "../../assets/video_logo.mp4";
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true); // State to manage splash screen
   const {
     data: postsInfo,
     isLoading: isLoadingPosts,
@@ -32,7 +34,32 @@ const Home = () => {
         { toastId: "auth" }
       );
     }
+
+    const splashTimeout = setTimeout(() => {
+      setShowSplash(false);
+    }, 3100);
+
+    return () => clearTimeout(splashTimeout);
   }, [isAuthenticated, navigate]);
+
+  if (showSplash) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        {/* <img
+          src={logo}
+          alt="Splash Screen"
+          className="w-1/2 h-1/2 object-contain"
+        /> */}
+        <video
+          src={logo_video}
+          autoPlay
+          muted
+          loop
+          className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 object-contain"
+        />
+      </div>
+    );
+  }
 
   if (isLoadingPosts) {
     return (

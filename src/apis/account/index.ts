@@ -2,7 +2,7 @@ import API_ROUTES from "../../constants/apiRoutes";
 import { createFormData } from "../../utils";
 import { PostModel } from "../posts/type";
 import publicInstance from "../publicInstance";
-import { EditProfileProps, UserModel } from "./type";
+import { EditProfileProps, SearchResult, UserModel } from "./type";
 
 const getUserById = async () => {
   const res = await publicInstance.get<UserModel>(API_ROUTES.USER.BYID);
@@ -46,6 +46,28 @@ const toggleFollow = async (id: string | undefined) => {
   const res = await publicInstance.post(API_ROUTES.USER.TOGGLE_FOLLOW(id));
   return res.data;
 };
+
+const getUserFollowers = async () => {
+  const res = await publicInstance.get<UserModel[]>(
+    API_ROUTES.USER.GET_FOLLOWERS
+  );
+  return res.data;
+};
+
+const getUserFollowings = async () => {
+  const res = await publicInstance.get<UserModel[]>(
+    API_ROUTES.USER.GET_FOLLOWINGS
+  );
+  return res.data;
+};
+
+const getUserSearch = async (query: string) => {
+  const res = await publicInstance.get<SearchResult>(
+    API_ROUTES.USER.USER_SEARCH(query)
+  );
+  return res.data;
+};
+
 export {
   getUserById,
   editUserProfile,
@@ -54,4 +76,7 @@ export {
   getUserByUserName,
   toggleFollow,
   getUserByUserCategory,
+  getUserFollowers,
+  getUserFollowings,
+  getUserSearch,
 };

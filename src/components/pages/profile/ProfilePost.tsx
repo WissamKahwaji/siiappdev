@@ -45,11 +45,11 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
           <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full bg-navBackground/25">
             <Document
               file={{ url: post.postDocs ?? "" }}
-              className="w-full h-full"
+              className="w-full h-full border-2 border-secondary"
             >
-              <Page pageNumber={1} width={300} />
+              <Page pageNumber={1} width={280} />
             </Document>
-            <div className="absolute bottom-0 left-0 w-full text-center bg-secondary   text-navBackground text-sm py-1">
+            <div className="absolute bottom-0 left-0 w-full text-center bg-secondary text-navBackground text-xs md:text-sm py-1 line-clamp-1">
               {post.postDocs ? post.postDocs.split("/").pop() : "Document"}
             </div>
           </div>

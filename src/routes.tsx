@@ -20,6 +20,7 @@ import ProtectedRoute from "./components/const/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import AboutUsPage from "./components/pages/profile/AboutUsPage";
 import UsersByCategoriesPage from "./pages/profile/UsersByCategoriesPage";
+import UserFollowingsPage from "./pages/profile/UserFollowingsPage";
 // Import your authentication-related utilities
 
 const Routes = () => {
@@ -57,6 +58,14 @@ const Routes = () => {
               <Route
                 path="account/edit-profile"
                 element={<EditProfilePage />}
+              />
+              <Route
+                path="account/followings"
+                element={<UserFollowingsPage type="followings" />}
+              />
+              <Route
+                path="account/followers"
+                element={<UserFollowingsPage type="followers" />}
               />
               <Route path="courses" element={<CoursesMainPage />} />
               <Route path="courses/category" element={<CoursesPage />} />

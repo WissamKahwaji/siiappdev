@@ -19,6 +19,8 @@ export type PostModel = {
   postVideo?: string | undefined;
   postDocs?: string | undefined;
   coverVideoImage?: string | undefined;
+  coverPdfImage?: string | undefined;
+
   createdAt?: Date;
 };
 

@@ -138,12 +138,14 @@ const Post = (props: PostProps) => {
     switch (props.post?.postType) {
       case "image":
         return (
-          <img
-            src={props.post.images[0]}
-            alt="Post"
-            className="object-contain w-full max-h-[450px] cursor-pointer"
-            onClick={() => handlePostClick(props.post)}
-          />
+          <div className="p-2 justify-center flex">
+            <img
+              src={props.post.images[0]}
+              alt="Post"
+              className="object-cover  border border-secondary rounded-lg md:w-full w-full  cursor-pointer"
+              onClick={() => handlePostClick(props.post)}
+            />
+          </div>
         );
       case "video":
         return (
@@ -162,11 +164,19 @@ const Post = (props: PostProps) => {
             onClick={() => window.open(props.post?.postDocs, "_blank")}
           >
             <img
-              src="https://techterms.com/img/lg/pdf_109.png"
+              src={
+                props.post.coverPdfImage ??
+                "https://techterms.com/img/lg/pdf_109.png"
+              }
               alt="PDF Icon"
               className="w-full h-[200px] md:h-[300px] object-contain"
             />
-            <div className="absolute bottom-0 left-0 w-full bg-secondary bg-opacity-75 text-navBackground font-semibold text-center p-2">
+            <div className="absolute bottom-0 flex items-center justify-center left-0 w-full bg-secondary bg-opacity-75 text-navBackground font-semibold text-center p-2 text-sm md:text-base">
+              <img
+                src="https://techterms.com/img/lg/pdf_109.png"
+                alt=""
+                className="md:w-7 md:h-7 md:mr-2 w-5 h-5 mr-1"
+              />
               {props.post?.postDocs
                 ? props.post?.postDocs.split("/").pop()
                 : "Document"}
@@ -179,14 +189,14 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <div className="border-2 rounded-lg border-secondary mb-5 bg-white font-header w-full max-w-[620px]">
+    <div className="border-2 rounded-lg border-secondary shadow-sm shadow-secondary mb-5 bg-white font-header w-full max-w-[550px]">
       <div className="p-3 flex flex-row">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>
             <img
               src={props.post.owner.profileImage}
               alt=""
-              className="rounded-full w-8 h-8 inline"
+              className="rounded-full border border-secondary w-8 h-8 inline"
             />
             <span className="font-medium text-sm ml-2">
               {props.post.owner.fullName}
@@ -282,6 +292,15 @@ const Post = (props: PostProps) => {
             >
               <p className="mt-2">{` ${props.post?.link}`}</p>
             </Link>
+          )}
+          {props.post.tags && props.post.tags.length > 0 && (
+            <div className="flex flex-row space-x-1 mt-2 flex-wrap">
+              {props.post.tags.map((tag, index) => (
+                <p key={index} className="text-xs text-blue-700 font-bold">
+                  {tag}
+                </p>
+              ))}
+            </div>
           )}
         </div>
 

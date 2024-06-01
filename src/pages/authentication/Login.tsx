@@ -1,4 +1,4 @@
-import logo from "../../assets/logo_sii_new_2.png";
+// import logo from "../../assets/logo_sii_new_2.png";
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";
 import { Link } from "react-router-dom";
@@ -8,6 +8,10 @@ import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { PulseLoader } from "react-spinners";
 import { MdArrowRightAlt } from "react-icons/md";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import logo_video from "../../assets/video_logo.mp4";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("Please enter your email"),
@@ -18,7 +22,7 @@ const validationSchema = Yup.object().shape({
 
 const Login = () => {
   const { mutate: signIn } = useSignInMutation();
-
+  const [showPassword, setShowPassword] = useState(false);
   const handleSignIn = (
     values: SignInValues,
     { setSubmitting }: FormikHelpers<SignInValues>
@@ -32,8 +36,15 @@ const Login = () => {
 
   return (
     <div className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20">
-      <div className="md:w-64 w-32 h-auto">
-        <img src={logo} alt="Logo" className="object-contain" />
+      <div className="md:w-96 w-52 h-auto">
+        {/* <img src={logo} alt="Logo" className="object-contain" /> */}
+        <video
+          src={logo_video}
+          autoPlay
+          muted
+          loop
+          className="object-cover w-full h-full"
+        ></video>
       </div>
       <Formik
         initialValues={{ email: "", password: "" }}
@@ -71,15 +82,28 @@ const Login = () => {
                 </div>
 
                 <div>
-                  <input
-                    type="password"
-                    name="password"
-                    className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                    placeholder="Your Password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.password}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
+                      placeholder="Password"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.password}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 bottom-2 right-0 pr-3 flex items-center text-sm leading-5"
+                    >
+                      {showPassword ? (
+                        <FontAwesomeIcon icon={faEyeSlash} />
+                      ) : (
+                        <FontAwesomeIcon icon={faEye} />
+                      )}
+                    </button>
+                  </div>
                   {errors.password && touched.password && (
                     <div className="text-red-500 text-xs">
                       {errors.password}

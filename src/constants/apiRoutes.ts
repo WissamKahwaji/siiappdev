@@ -33,6 +33,9 @@ const USER = {
   GET_BY_USERNAME: (userName: string) => `/users/by-userName/${userName}`,
   GET_BY_USERCATEGORY: (userCategory: string) =>
     `/users/userCategory/${userCategory}`,
+  GET_FOLLOWERS: "/users/user-followers",
+  GET_FOLLOWINGS: "/users/user-followings",
+  USER_SEARCH: (query: string) => `users/search?query=${query}`,
 
   TOGGLE_FOLLOW: (id: string | undefined) => `/users/toggle-follow/${id}`,
 };

@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from "react";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import {
@@ -6,8 +7,9 @@ import {
   useGetUserByIdQuery,
 } from "../../apis/account/queries";
 import { EditProfileProps } from "../../apis/account/type";
-import ImageDragDropField from "../../components/const/ImageDragDrop";
+
 import { SyncLoader } from "react-spinners";
+import ImageCropper from "../../components/const/ImageCropper";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
@@ -30,6 +32,7 @@ const validationSchema = Yup.object().shape({
     youtube: Yup.string(),
     xPlatform: Yup.string(),
     painterest: Yup.string(),
+    otherLink: Yup.string(),
   }),
 });
 
@@ -59,8 +62,21 @@ const userCategories = [
 const EditProfilePage: React.FC = () => {
   const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
   const { mutate: editProfileInfo } = useEditProfileMutation();
+  const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
+  const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
 
+  const handleCropComplete = (croppedFile: File, setFieldValue: any) => {
+    setCroppedImageFile(croppedFile);
+    console.log(croppedImageFile?.name);
+    setFieldValue("profileImage", croppedFile);
+    const reader = new FileReader();
+    reader.readAsDataURL(croppedFile);
+    reader.onloadend = () => {
+      setCroppedImageDataUrl(reader.result as string);
+    };
+  };
   const initialValues: EditProfileProps = {
+    userName: userInfo?.userName ?? "",
     mobileNumber: userInfo?.mobileNumber ?? "",
     fullName: userInfo?.fullName ?? "",
     bio: userInfo?.bio ?? "",
@@ -81,6 +97,7 @@ const EditProfilePage: React.FC = () => {
       youtube: userInfo?.socialMedia?.youtube ?? "",
       painterest: userInfo?.socialMedia?.painterest ?? "",
       xPlatform: userInfo?.socialMedia?.xPlatform ?? "",
+      otherLink: userInfo?.socialMedia?.otherLink ?? "",
     },
   };
 
@@ -110,10 +127,10 @@ const EditProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto py-12">
-      <h1 className="text-3xl font-bold text-center mb-8">Edit Profile</h1>
-      <div className="flex justify-center">
-        <div className="bg-white p-10 rounded-lg shadow-lg border border-secondary">
+    <div className="container mx-auto py-12 ">
+      <h1 className="text-3xl font-bold text-center mb-8 ">Edit Profile</h1>
+      <div className="flex justify-center md:w-1/2 md:mx-auto">
+        <div className="bg-white p-10 rounded-lg shadow-lg border border-secondary w-full mx-2 ">
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -126,15 +143,37 @@ const EditProfilePage: React.FC = () => {
               handleChange,
               handleBlur,
               handleSubmit,
+              setFieldValue,
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex flex-col">
-                  <ImageDragDropField
+                  {/* <ImageDragDropField
                     name="profileImage"
                     label="Change your profile photo"
                     oldImg={userInfo?.profileImage}
-                  />
+                  /> */}
+                  <div className=" ">
+                    <label className="block mb-2 text-sm font-medium text-gray-700">
+                      Profile Picture
+                    </label>
+                    <div className="flex flex-row w-full">
+                      <img
+                        src={
+                          croppedImageDataUrl != ""
+                            ? croppedImageDataUrl
+                            : userInfo?.profileImage
+                        }
+                        alt="Cropped"
+                        className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
+                      />
+                      <ImageCropper
+                        onCropComplete={croppedFile => {
+                          handleCropComplete(croppedFile, setFieldValue);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid md:grid-cols-1 gap-3 grid-cols-1">
@@ -423,6 +462,23 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.painterest}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.otherLink"
+                    >
+                      other Link
+                    </label>
+                    <input
+                      id="socialMedia.otherLink"
+                      name="socialMedia.otherLink"
+                      type="text"
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.socialMedia?.otherLink}
                     />
                   </div>
                   {/* Add other social media fields similarly */}

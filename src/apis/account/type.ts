@@ -1,3 +1,5 @@
+import { PostModel } from "../posts/type";
+
 export type UserModel = {
   _id: string;
   userName: string;
@@ -29,11 +31,13 @@ export type UserModel = {
     youtube?: string;
     painterest: string;
     xPlatform: string;
+    otherLink: string;
   };
 };
 
 export type EditProfileProps = {
   fullName: string;
+  userName: string;
   mobileNumber: string;
   bio?: string | null;
   profileImage?: File | undefined;
@@ -54,5 +58,12 @@ export type EditProfileProps = {
     youtube: string;
     painterest: string;
     xPlatform: string;
+    otherLink: string;
   };
+};
+
+export type SearchResult = {
+  users: UserModel[];
+  posts: PostModel[];
+  query: string;
 };

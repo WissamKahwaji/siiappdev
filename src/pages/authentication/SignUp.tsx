@@ -1,4 +1,7 @@
-import logo from "../../assets/logo_sii_new_2.png";
+import React, { useState } from "react";
+// import logo from "../../assets/logo_sii_new_2.png";
+import logo_video from "../../assets/video_logo.mp4";
+
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,12 +13,15 @@ import { useSignUpMutation } from "../../apis/auth/queries";
 import { SignUpValues } from "../../apis/auth/type";
 import { PulseLoader } from "react-spinners";
 import { MdArrowRightAlt } from "react-icons/md";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .required("Please enter your email")
     .email("Invalid email format"),
-  userName: Yup.string().required("Please enter your username"),
+  userName: Yup.string()
+    .required("Please enter your username")
+    .matches(/^\S*$/, "Username should not contain spaces"),
   fullName: Yup.string().required("Please enter your full name"),
   password: Yup.string()
     .required("Please enter your password")
@@ -39,12 +45,23 @@ const Signup = () => {
     });
   };
 
+  // State to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   return (
     <div className="py-10 w-full flex items-center justify-center">
       <div className="flex flex-col justify-center items-center">
         <div className="bg-white p-8 rounded-lg border shadow-md max-w-sm flex flex-col justify-center items-center">
-          <div className="mb-8">
-            <img src={logo} alt="Instagram" className="w-36" />
+          <div className="">
+            {/* <img src={logo} alt="Logo" className="object-contain" /> */}
+            <video
+              src={logo_video}
+              autoPlay
+              muted
+              loop
+              className="object-cover w-full h-full mb-7"
+            ></video>
           </div>
           <Formik
             initialValues={{
@@ -109,28 +126,54 @@ const Signup = () => {
                   <div className="text-red-500 text-xs">{errors.fullName}</div>
                 )}
 
-                <input
-                  type="password"
-                  name="password"
-                  className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                  placeholder="Password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.password}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
+                    placeholder="Password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.password}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute bottom-2 inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                  >
+                    {showPassword ? (
+                      <FontAwesomeIcon icon={faEyeSlash} />
+                    ) : (
+                      <FontAwesomeIcon icon={faEye} />
+                    )}
+                  </button>
+                </div>
                 {errors.password && touched.password && (
                   <div className="text-red-500 text-xs">{errors.password}</div>
                 )}
 
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                  placeholder="Confirm Password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.confirmPassword}
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
+                    placeholder="Confirm Password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.confirmPassword}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute bottom-2 inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                  >
+                    {showConfirmPassword ? (
+                      <FontAwesomeIcon icon={faEyeSlash} />
+                    ) : (
+                      <FontAwesomeIcon icon={faEye} />
+                    )}
+                  </button>
+                </div>
                 {errors.confirmPassword && touched.confirmPassword && (
                   <div className="text-red-500 text-xs">
                     {errors.confirmPassword}

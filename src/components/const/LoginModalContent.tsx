@@ -45,14 +45,14 @@ const LoginModalContent = () => {
               <input
                 type="text"
                 name="email"
-                className="text-xs w-1/2 font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
+                className="text-xs md:w-1/2 w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
                 placeholder="Your Email or Phone Number"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
               />
               {errors.email && touched.email && (
-                <div className="text-red-500 text-xs">{errors.email}</div>
+                <div className="text-red-500 text-xs ">{errors.email}</div>
               )}
             </div>
 
@@ -60,7 +60,7 @@ const LoginModalContent = () => {
               <input
                 type="password"
                 name="password"
-                className="text-xs w-1/2 font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
+                className="text-xs md:w-1/2 w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
                 placeholder="Your Password"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -74,7 +74,7 @@ const LoginModalContent = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="text-sm font-header mx-auto w-1/2 bg-navBackground text-secondary py-1 rounded font-medium"
+              className="text-sm font-header mx-auto md:w-1/2 w-full bg-navBackground text-secondary py-1 rounded font-medium"
             >
               {isSubmitting ? <PulseLoader size={5} color="white" /> : "Log In"}
             </button>

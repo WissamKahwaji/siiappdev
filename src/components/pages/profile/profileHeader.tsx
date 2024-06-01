@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BsWhatsapp } from "react-icons/bs";
+import { GiWorld } from "react-icons/gi";
 import {
   FaFacebook,
   FaInstagram,
@@ -18,6 +19,7 @@ import {
   faAdd,
   faArrowRight,
   faBell,
+  faCamera,
   faEdit,
   faList,
   faQrcode,
@@ -32,7 +34,6 @@ import { MdAdd } from "react-icons/md";
 import { UserModel } from "../../../apis/account/type";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../const/Modal";
-import ImageDragDropField from "../../const/ImageDragDrop";
 import { PostInputProps } from "../../../apis/posts/type";
 import { useAddPostMutation } from "../../../apis/posts/queries";
 import { Formik, FormikHelpers } from "formik";
@@ -43,6 +44,7 @@ import LoginToast from "../../const/LoginToast";
 import LoginModalContent from "../../const/LoginModalContent";
 import HashtagsInput from "../../const/HashtagsInput";
 import defaultImage from "../../../assets/guest-01-01.png";
+import ImageCropper from "../../const/ImageCropper";
 interface ProfileHeaderProps {
   user: UserModel;
 }
@@ -58,9 +60,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
 
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
+  const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
+
+  const handleCropComplete = (croppedFile: File, setFieldValue: any) => {
+    setCroppedImageFile(croppedFile);
+    console.log(croppedImageFile?.name);
+    if (!croppedFile) {
+      return;
+    }
+    setFieldValue("postImages", croppedFile);
+    const reader = new FileReader();
+    reader.readAsDataURL(croppedFile);
+    reader.onloadend = () => {
+      setCroppedImageDataUrl(reader.result as string);
+    };
+  };
 
   const socialMediaIcons = [
-    { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, field: "webSite" },
+    { icon: <GiWorld className="w-5 h-5 md:w-9 md:h-9" />, field: "webSite" },
     {
       icon: <BsWhatsapp className="w-5 h-5 md:w-9 md:h-9" />,
       field: "whatsApp",
@@ -96,7 +114,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       icon: <FaPaintBrush className="w-5 h-5 md:w-9 md:h-9" />,
       field: "painterest",
     },
-
+    { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, field: "otherLink" },
     { icon: <MdAdd className="w-5 h-5 md:w-9 md:h-9" />, field: "add" },
   ];
   const filterSocialMediaIcons = (user: UserModel): typeof socialMediaIcons => {
@@ -122,6 +140,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [pdfImage, setPdfImage] = useState<File | null>(null);
+  const [pdfShowImage, setPdfShowImage] = useState(false);
+
   const [showVideoPreview, setShowVideoPreview] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -228,6 +249,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     addPostInfo(values, {
       onSettled() {
         setSubmitting(false);
+        setCroppedImageFile(null);
+        setCroppedImageDataUrl("");
+        setIsModalOpen(false);
       },
     });
   };
@@ -251,17 +275,35 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   return (
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
       <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center w-full">
-        <img
-          src={user.user?.profileImage ?? defaultImage}
-          alt="profile"
-          className="md:hidden object-contain rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
-        />
-        <div className="hidden md:flex md:flex-col">
+        <div className="md:hidden relative">
           <img
             src={user.user?.profileImage ?? defaultImage}
             alt="profile"
-            className="rounded-lg object-contain  border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px]"
+            className=" object-contain rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
           />
+          {user.user._id === userId && (
+            <Link to={"/account/edit-profile"}>
+              <div className="absolute bottom-0 p-1 rounded-lg  bg-gray-200  opacity-35 right-0">
+                <FontAwesomeIcon icon={faCamera} width={14} height={14} />
+              </div>
+            </Link>
+          )}
+        </div>
+        <div className="hidden md:flex md:flex-col">
+          <div className="relative rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px]">
+            <img
+              src={user.user?.profileImage ?? defaultImage}
+              alt="profile"
+              className=" object-contain  md:h-full md:w-full"
+            />
+            {user.user._id === userId && (
+              <Link to={"/account/edit-profile"}>
+                <div className="absolute bottom-0 p-1 rounded-lg bg-gray-200  opacity-60 right-0 cursor-pointer">
+                  <FontAwesomeIcon icon={faCamera} width={14} height={14} />
+                </div>
+              </Link>
+            )}
+          </div>
           <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
             <Link to={`/users/${user.user.userCategory}`} className="w-auto">
@@ -291,33 +333,42 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 {user.user?.userName}
               </p>
 
-              <div className="flex flex-row md:space-x-5 space-x-2">
-                <Link to="/account/edit-profile">
-                  <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
-                    <FontAwesomeIcon icon={faEdit} className="" />
+              <div className="flex flex-row md:space-x-4 space-x-2">
+                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+                  <FontAwesomeIcon icon={faBell} className="" />
+                </div>
+                <div className="relative group">
+                  <div
+                    className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                    onClick={() => setIsQrModalOpen(true)}
+                  >
+                    <FontAwesomeIcon icon={faQrcode} className="" />
                   </div>
-                </Link>
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    QR Code
+                  </div>
+                </div>
+
                 <div
                   className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={() => setIsModalOpen(true)}
                 >
                   <FontAwesomeIcon icon={faAdd} className="" />
                 </div>
-                <div
-                  className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
-                  onClick={() => setIsQrModalOpen(true)}
-                >
-                  <FontAwesomeIcon icon={faQrcode} className="" />
-                </div>
-                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
-                  <FontAwesomeIcon icon={faBell} className="" />
-                </div>
+                <Link to="/account/edit-profile">
+                  <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
+                    <FontAwesomeIcon icon={faEdit} className="" />
+                  </div>
+                </Link>
               </div>
             </div>
           ) : (
             <div className="flex flex-row justify-between items-center">
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
               <div className="flex flex-row space-x-2 md:space-x-3">
+                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+                  <FontAwesomeIcon icon={faBell} className="" />
+                </div>
                 <div
                   className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={() => {
@@ -325,9 +376,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   }}
                 >
                   <FontAwesomeIcon icon={faList} className="" />
-                </div>
-                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
-                  <FontAwesomeIcon icon={faBell} className="" />
                 </div>
               </div>
             </div>
@@ -340,7 +388,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 </p>
                 <p className="text-xs">posts</p>
               </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
+              <div
+                className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
+                onClick={() => {
+                  if (user.user._id === userId) {
+                    navigate("/account/followings");
+                  }
+                }}
+              >
                 <p className="font-semibold text-sm">
                   {user.user?.followings.length}
                 </p>
@@ -354,19 +409,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             {userId !== user.user._id && (
               <div className="flex flex-row justify-center mt-3 capitalize space-x-8 w-full">
                 <div
-                  className="  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
-                  onClick={handleShareClick}
-                >
-                  <p className="font-serif  font-semibold text-xs">
-                    Share Profile
-                  </p>
-                </div>
-                <div
                   className="   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
                     {isFollowed ? "Following" : "Follow"}
+                  </p>
+                </div>
+                <div
+                  className="  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleShareClick}
+                >
+                  <p className="font-serif  font-semibold text-xs">
+                    Share Profile
                   </p>
                 </div>
               </div>
@@ -378,18 +433,32 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 userId === user.user._id ? "justify-center" : "md:justify-start"
               } md:w-full items-start md:flex md:mt-2`}
             >
-              <div className="flex flex-row space-x-12  mb-2 capitalize">
+              <div className="flex flex-row items-center justify-center w-full space-x-12  mb-2 capitalize">
                 <div className="text-primary font-header flex flex-col items-center justify-center">
                   <p className="font-semibold">{user?.user?.posts.length}</p>
                   <p className="text-sm">posts</p>
                 </div>
-                <div className="text-primary font-header flex flex-col items-center justify-center">
+                <div
+                  className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
+                  onClick={() => {
+                    if (user.user._id === userId) {
+                      navigate("/account/followings");
+                    }
+                  }}
+                >
                   <p className="font-semibold">
                     {user?.user?.followings.length}
                   </p>
                   <p className="text-sm">following</p>
                 </div>
-                <div className="text-primary font-header flex flex-col items-center justify-center">
+                <div
+                  className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
+                  onClick={() => {
+                    if (user.user._id === userId) {
+                      navigate("/account/followers");
+                    }
+                  }}
+                >
                   <p className="font-semibold">{followersCount}</p>
                   <p className="text-sm">followers</p>
                 </div>
@@ -428,21 +497,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-row space-x-8 mt-10 w-full">
-                <div
-                  className="w-40  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
-                  onClick={handleShareClick}
-                >
-                  <p className="font-serif  font-semibold text-sm">
-                    Share Profile
-                  </p>
-                </div>
+              <div className="flex flex-row justify-center items-center space-x-8 mt-10 w-full">
                 <div
                   className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
                     {isFollowed ? "Following" : "Follow"}
+                  </p>
+                </div>
+                <div
+                  className="w-40  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleShareClick}
+                >
+                  <p className="font-serif  font-semibold text-sm">
+                    Share Profile
                   </p>
                 </div>
                 {/* <div
@@ -631,7 +700,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             setIsModalOpen(false);
             setVideoFile(null);
             setCoverImage(null);
+            setPdfImage(null);
             setShowVideoPreview(false);
+            setCroppedImageFile(null);
+            setCroppedImageDataUrl("");
           }}
           title="Create Post"
           size="md"
@@ -655,7 +727,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 onSubmit={handleSubmit}
                 className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar"
               >
-                <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2 md:mx-2 mx-0">
                   <div className="flex justify-around space-x-4 mb-4 bg-secondary p-4 rounded-lg shadow-md">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
@@ -702,11 +774,23 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   </div>
 
                   {fileType === "image" && (
-                    <ImageDragDropField
-                      name="postImages"
-                      label="Add post image"
-                      oldImg=""
-                    />
+                    <div className="w-[340px] md:w-full">
+                      <label className="block mb-2 text-sm font-medium text-gray-700">
+                        Post Image
+                      </label>
+                      <div className="flex flex-row w-full">
+                        <img
+                          src={croppedImageDataUrl}
+                          alt="Cropped"
+                          className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
+                        />
+                        <ImageCropper
+                          onCropComplete={croppedFile => {
+                            handleCropComplete(croppedFile, setFieldValue);
+                          }}
+                        />
+                      </div>
+                    </div>
                   )}
                   {fileType === "video" && (
                     <div className="flex flex-col">
@@ -807,10 +891,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   {fileType === "doc" && (
                     <div className="flex flex-col">
                       <label
-                        className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="postPDF"
+                        className="mb-2 text-sm font-medium text-gray-700"
                       >
-                        Add post doc
+                        Add post PDF
                       </label>
                       <input
                         id="postPDF"
@@ -818,14 +902,51 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         type="file"
                         accept="application/pdf"
                         onBlur={handleBlur}
-                        onChange={event =>
+                        onChange={event => {
                           setFieldValue(
                             "doc",
                             event.currentTarget.files![0] ?? null
-                          )
-                        }
+                          );
+                          setPdfShowImage(true);
+                        }}
                         className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                    </div>
+                  )}
+                  {fileType === "doc" && pdfShowImage && (
+                    <div className="flex md:flex-row flex-col justify-between items-center  ">
+                      <div className="flex flex-col">
+                        <label
+                          htmlFor="coverPdfImage"
+                          className="mb-2 text-sm font-medium text-gray-700"
+                        >
+                          Select Cover Image for PDF
+                        </label>
+                        <input
+                          id="coverPdfImage"
+                          name="coverPdfImage"
+                          type="file"
+                          accept="image/*"
+                          onBlur={handleBlur}
+                          onChange={event => {
+                            setPdfImage(event.currentTarget.files![0]);
+                            setFieldValue(
+                              "coverPdfImage",
+                              event.currentTarget.files![0] ?? null
+                            );
+                          }}
+                          className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      {pdfImage && (
+                        <div className="mt-4">
+                          <img
+                            src={URL.createObjectURL(pdfImage)}
+                            alt="pdfImage"
+                            className="w-80 h-56 md:h-auto object-contain border border-secondary mt-4"
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
 
