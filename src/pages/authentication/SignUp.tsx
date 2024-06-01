@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 // import logo from "../../assets/logo_sii_new_2.png";
 import logo_video from "../../assets/video_logo.mp4";
 
