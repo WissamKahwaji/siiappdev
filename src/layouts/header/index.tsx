@@ -41,7 +41,7 @@ const Navbar = () => {
   const { data: suggestions, refetch } = useGetUserSearchQuery(searchQuery);
 
   useEffect(() => {
-    if (searchQuery.length > 2) {
+    if (searchQuery.length > 2 && searchQuery != "") {
       refetch();
       setShowSuggestions(true);
     } else {
@@ -88,30 +88,32 @@ const Navbar = () => {
           {showSuggestions && suggestions && (
             <div className="absolute top-full left-0 w-full font-body bg-white border border-gray-300 rounded-b-lg shadow-lg z-10">
               {suggestions.users.map((user, index) => (
-                // <Link to={`/${user.userName}`} reloadDocument>
-                <div
-                  key={index}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => {
-                    setShowSuggestions(false);
-                    setSearchQuery("");
-                  }}
-                >
-                  {user.fullName}
-                </div>
-                // </Link>
+                <Link to={`/${user.userName}`} reloadDocument>
+                  <div
+                    key={index}
+                    className="p-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => {
+                      setShowSuggestions(false);
+                      setSearchQuery("");
+                    }}
+                  >
+                    {user.fullName}
+                  </div>
+                </Link>
               ))}
               {suggestions.posts.map((post, index) => (
-                <div
-                  key={index}
-                  className="p-2 hover:bg-gray-200 cursor-pointer line-clamp-2"
-                  onClick={() => {
-                    setSearchQuery(post.caption); // Adjust based on post model
-                    setShowSuggestions(false);
-                  }}
-                >
-                  {post.caption} {/* Adjust based on post model */}
-                </div>
+                <Link to={`/${post.owner.userName}/${post._id}`} reloadDocument>
+                  <div
+                    key={index}
+                    className="p-2 hover:bg-gray-200 cursor-pointer line-clamp-2"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    {post.caption} {/* Adjust based on post model */}
+                  </div>
+                </Link>
               ))}
             </div>
           )}
@@ -166,7 +168,7 @@ const Navbar = () => {
                   muted
                   className="h-auto w-16 sm:h-auto sm:w-24 md:h-auto md:w-24 lg:h-auto lg:w-20 object-cover mb-4"
                 ></video>
-                <div className="flex items-center w-full bg-white rounded p-2">
+                <div className="flex items-center w-full bg-white rounded p-2 ">
                   <input
                     type="text"
                     placeholder="Search"
@@ -176,7 +178,7 @@ const Navbar = () => {
                   />
                   <button
                     onClick={handleSearch}
-                    className="bg-secondary text-white px-4 py-2 rounded-lg"
+                    className="bg-secondary text-white px-4 py-2 rounded-lg mr-2"
                   >
                     <AiOutlineSearch className="text-navBackground" />
                   </button>

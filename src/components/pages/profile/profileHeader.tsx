@@ -588,23 +588,23 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             breakpoints={{
               0: {
                 spaceBetween: 4,
-                slidesPerView: 4,
+                slidesPerView: 5.5,
               },
               468: {
                 spaceBetween: 4,
-                slidesPerView: 4,
+                slidesPerView: 5.5,
               },
               768: {
                 spaceBetween: 4,
-                slidesPerView: 4,
+                slidesPerView: 5.5,
               },
               1024: {
                 spaceBetween: 1,
-                slidesPerView: 6,
+                slidesPerView: 6.2,
               },
               1280: {
                 spaceBetween: 1,
-                slidesPerView: 6,
+                slidesPerView: 6.2,
               },
             }}
           >

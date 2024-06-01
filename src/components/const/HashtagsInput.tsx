@@ -9,9 +9,9 @@ const HashtagsInput: React.FC<HashtagsInputProps> = ({ value, onChange }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === " " || event.key === "Enter") {
+    if ((event.key === " " || event.key === "Enter") && inputValue.trim()) {
       event.preventDefault();
-      if (inputValue.trim()) {
+      if (value.length < 5) {
         const newHashtag = `#${inputValue.trim()}`;
         onChange([...value, newHashtag]);
         setInputValue("");
@@ -41,16 +41,18 @@ const HashtagsInput: React.FC<HashtagsInputProps> = ({ value, onChange }) => {
           </button>
         </div>
       ))}
-      <input
-        type="text"
-        className="flex-grow p-2 outline-none"
-        value={inputValue}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          setInputValue(e.target.value)
-        }
-        onKeyDown={handleKeyDown}
-        placeholder="Add hashtags"
-      />
+      {value.length < 5 && (
+        <input
+          type="text"
+          className="flex-grow p-2 outline-none"
+          value={inputValue}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setInputValue(e.target.value)
+          }
+          onKeyDown={handleKeyDown}
+          placeholder="Add hashtags"
+        />
+      )}
     </div>
   );
 };
