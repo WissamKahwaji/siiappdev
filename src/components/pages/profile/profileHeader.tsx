@@ -279,7 +279,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           <img
             src={user.user?.profileImage ?? defaultImage}
             alt="profile"
-            className=" object-contain rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+            className=" object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
           />
           {user.user._id === userId && (
             <Link to={"/account/edit-profile"}>
