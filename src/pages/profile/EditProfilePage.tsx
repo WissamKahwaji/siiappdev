@@ -168,6 +168,7 @@ const EditProfilePage: React.FC = () => {
                         className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
                       />
                       <ImageCropper
+                        aspect={1}
                         onCropComplete={croppedFile => {
                           handleCropComplete(croppedFile, setFieldValue);
                         }}

@@ -34,6 +34,12 @@ const Home = () => {
         { toastId: "auth" }
       );
     }
+    const video = document.getElementById("logoVideo") as HTMLVideoElement;
+    if (video) {
+      video.play().catch(error => {
+        console.log("Auto-play was prevented, trying to play manually", error);
+      });
+    }
 
     const splashTimeout = setTimeout(() => {
       setShowSplash(false);
@@ -51,12 +57,16 @@ const Home = () => {
           className="w-1/2 h-1/2 object-contain"
         /> */}
         <video
-          src={logo_video}
+          id="logoVideo"
           autoPlay
           muted
           loop
+          playsInline
           className="w-3/4 h-3/4 md:w-1/2 md:h-1/2 object-contain"
-        />
+        >
+          <source src={logo_video} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import logo from "../../assets/logo_sii_new_2.png";
 import logo_video from "../../assets/video_logo.mp4";
 
@@ -32,6 +32,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const Signup = () => {
+  useEffect(() => {
+    const video = document.getElementById("logoVideo") as HTMLVideoElement;
+    if (video) {
+      video.play().catch(error => {
+        console.log("Auto-play was prevented, trying to play manually", error);
+      });
+    }
+  }, []);
+
   const { mutate: signUp } = useSignUpMutation();
 
   const handleSignUp = (
@@ -56,12 +65,15 @@ const Signup = () => {
           <div className="">
             {/* <img src={logo} alt="Logo" className="object-contain" /> */}
             <video
-              src={logo_video}
+              id="logoVideo"
               autoPlay
               muted
               loop
+              playsInline
               className="object-cover w-full h-full mb-7"
-            ></video>
+            >
+              <source src={logo_video} type="video/mp4" />
+            </video>
           </div>
           <Formik
             initialValues={{

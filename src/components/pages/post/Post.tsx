@@ -10,7 +10,7 @@ import {
   useToggleLikeMutaion,
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Modal from "../../const/Modal";
 import PostDetails from "./PostDetails";
@@ -40,7 +40,7 @@ const Post = (props: PostProps) => {
   const [selectedPost, setSelectedPost] = useState<PostModel | null>(null);
   const [showFullBrief, setShowFullBrief] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
-
+  const videoRef = useRef<HTMLVideoElement>(null);
   // const commentInputRef = useRef<HTMLInputElement>(null);
 
   const toggleBrief = () => {
@@ -60,6 +60,41 @@ const Post = (props: PostProps) => {
     } else {
       setShouldShowToggle(false);
     }
+
+    // Event listeners for full-screen change
+    const handleFullScreenChange = () => {
+      const videoElement = videoRef.current;
+      if (videoElement) {
+        if (document.fullscreenElement) {
+          videoElement.classList.remove("object-cover");
+          videoElement.classList.add("object-contain");
+        } else {
+          videoElement.classList.remove("object-contain");
+          videoElement.classList.add("object-cover");
+        }
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullScreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullScreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullScreenChange
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullScreenChange
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullScreenChange
+      );
+    };
   }, [props.post.likes, props.post.saves, props.currentUserId, props.post._id]);
 
   // const initialValues: AddCommentInputProps = {
@@ -150,6 +185,7 @@ const Post = (props: PostProps) => {
       case "video":
         return (
           <video
+            ref={videoRef}
             controls
             className="object-cover bg-transparent w-full max-h-[450px]"
           >

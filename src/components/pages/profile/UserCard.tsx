@@ -1,12 +1,11 @@
 import { UserModel } from "../../../apis/account/type";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type UserCardProps = {
   user: UserModel;
 };
 
 const UserCard = (props: UserCardProps) => {
-  const navigate = useNavigate();
   return (
     <div
       key={props.user._id}
@@ -21,14 +20,11 @@ const UserCard = (props: UserCardProps) => {
         {props.user.fullName}
       </h2>
       <p className="text-gray-500 mb-2">@{props.user.userName}</p>
-      <button
-        className="px-4 py-2 mt-4 text-navBackground font-semibold bg-secondary rounded hover:bg-navBackground hover:text-secondary"
-        onClick={() => {
-          navigate(`/${props.user.userName}`);
-        }}
-      >
-        View Profile
-      </button>
+      <Link to={`/${props.user.userName}`} reloadDocument>
+        <button className="px-4 py-2 mt-4 text-navBackground font-semibold bg-secondary rounded hover:bg-navBackground hover:text-secondary">
+          View Profile
+        </button>
+      </Link>
     </div>
   );
 };

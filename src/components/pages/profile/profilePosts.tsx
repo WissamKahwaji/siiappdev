@@ -162,7 +162,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           postsInfo &&
           postsInfo.map((post, index) => (
             <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost post={post} />
+              <ProfilePost isVideo={false} post={post} />
             </div>
           ))}
         {activeTab === "video" &&
@@ -170,7 +170,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           !isErrorVideos &&
           vidoePostsInfo?.map((post: PostModel, index: number) => (
             <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost post={post} />
+              <ProfilePost isVideo={true} post={post} />
             </div>
           ))}
         {activeTab === "video" && isLoadingVideos && <p>Loading...</p>}
@@ -182,7 +182,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           !isErrorDocs &&
           docsPostsInfo?.map((post: PostModel, index: number) => (
             <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost post={post} />
+              <ProfilePost isVideo={false} post={post} />
             </div>
           ))}
         {activeTab === "docs" && isLoadingDocs && <p>Loading...</p>}
@@ -194,7 +194,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           !isError &&
           likedPosts?.map((post: PostModel, index: number) => (
             <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost post={post} />
+              <ProfilePost isVideo={false} post={post} />
             </div>
           ))}
         {activeTab === "likes" && isLoading && <p>Loading...</p>}
@@ -204,7 +204,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           !isErrorSavedPosts &&
           savedPosts?.map((post: PostModel, index: number) => (
             <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost post={post} />
+              <ProfilePost isVideo={false} post={post} />
             </div>
           ))}
         {activeTab === "saves" && isLoadingSavedPosts && <p>Loading...</p>}

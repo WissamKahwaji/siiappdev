@@ -12,7 +12,7 @@ import {
   FaTiktok,
   FaPaintBrush,
 } from "react-icons/fa";
-import { FaThreads, FaX } from "react-icons/fa6";
+import { FaThreads, FaX, FaXTwitter } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import {
@@ -63,17 +63,22 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
 
-  const handleCropComplete = (croppedFile: File, setFieldValue: any) => {
+  const handleCropComplete = (
+    croppedFile: File,
+    setFieldValue: any,
+    fieldValue: string
+  ) => {
     setCroppedImageFile(croppedFile);
     console.log(croppedImageFile?.name);
     if (!croppedFile) {
       return;
     }
-    setFieldValue("postImages", croppedFile);
+    setFieldValue(fieldValue, croppedFile);
     const reader = new FileReader();
     reader.readAsDataURL(croppedFile);
     reader.onloadend = () => {
       setCroppedImageDataUrl(reader.result as string);
+      // setIsCropperOpen(false);
     };
   };
 
@@ -107,7 +112,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       field: "tikTok",
     },
     {
-      icon: <FaX className="w-5 h-5 md:w-9 md:h-9" />,
+      icon: <FaXTwitter className="w-5 h-5 md:w-9 md:h-9" />,
       field: "xPlatform",
     },
     {
@@ -137,10 +142,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [followersCount, setFollowersCount] = useState<number>(
     user.user.followers.length ?? 0
   );
-
+  // const [isCropperOpen, setIsCropperOpen] = useState(false);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [pdfImage, setPdfImage] = useState<File | null>(null);
+  // const [pdfImage, setPdfImage] = useState<File | null>(null);
   const [pdfShowImage, setPdfShowImage] = useState(false);
 
   const [showVideoPreview, setShowVideoPreview] = useState(false);
@@ -191,6 +196,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               });
               setCoverImage(file);
               setFieldValue("coverVideoImage", file);
+              // setIsCropperOpen(true);
             });
         }
       };
@@ -409,7 +415,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             {userId !== user.user._id && (
               <div className="flex flex-row justify-center mt-3 capitalize space-x-8 w-full">
                 <div
-                  className="   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  className="  w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
@@ -417,7 +423,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   </p>
                 </div>
                 <div
-                  className="  px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  className="w-28   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleShareClick}
                 >
                   <p className="font-serif  font-semibold text-xs">
@@ -700,7 +706,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             setIsModalOpen(false);
             setVideoFile(null);
             setCoverImage(null);
-            setPdfImage(null);
+            // setPdfImage(null);
             setShowVideoPreview(false);
             setCroppedImageFile(null);
             setCroppedImageDataUrl("");
@@ -785,8 +791,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
                         />
                         <ImageCropper
+                          aspect={1}
                           onCropComplete={croppedFile => {
-                            handleCropComplete(croppedFile, setFieldValue);
+                            handleCropComplete(
+                              croppedFile,
+                              setFieldValue,
+                              "postImages"
+                            );
                           }}
                         />
                       </div>
@@ -837,35 +848,43 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                               <div className="flex justify-center gap-2">
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    handleSelectCover(setFieldValue);
-                                  }}
+                                  onClick={() =>
+                                    handleSelectCover(setFieldValue)
+                                  }
                                   className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded"
                                 >
                                   Capture Frame
                                 </button>
-                                <label className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded cursor-pointer">
+                                {/* <label className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded cursor-pointer">
                                   <input
                                     type="file"
                                     accept="image/*"
                                     className="hidden"
-                                    onChange={event =>
-                                      // handleImageUpload(event, setFieldValue)
-                                      {
-                                        const file = event.target.files?.[0];
-
-                                        if (file) {
-                                          setCoverImage(file);
-                                          setFieldValue(
-                                            "coverVideoImage",
-                                            file
-                                          );
-                                        }
+                                    onChange={event => {
+                                      const file = event.target.files![0];
+                                      if (file) {
+                                        setCoverImage(file);
+                                        setFieldValue("coverVideoImage", file);
+                                        setIsCropperOpen(true); // Open cropper when image is uploaded
                                       }
-                                    }
+                                    }}
                                   />
                                   Upload Image
-                                </label>
+                                </label> */}
+                                <div className="bg-secondary px-2 rounded-md py-1 cursor-pointer">
+                                  <p>Upload Image</p>
+                                  <ImageCropper
+                                    onCropComplete={croppedFile => {
+                                      setCoverImage(croppedFile);
+                                      handleCropComplete(
+                                        croppedFile,
+                                        setFieldValue,
+                                        "coverVideoImage"
+                                      );
+                                    }}
+                                    aspect={9 / 16} // Aspect ratio for cover image
+                                  />
+                                </div>
                               </div>
                               <canvas
                                 ref={canvasRef}
@@ -878,7 +897,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                   <img
                                     src={URL.createObjectURL(coverImage)}
                                     alt="Cover Image"
-                                    className="w-full h-full md:h-auto object-contain border border-secondary mt-4"
+                                    className="w-full max-h-[200px] md:max-h-[200px] md:w-full object-contain border border-secondary mt-4"
                                   />
                                 </div>
                               )}
@@ -922,7 +941,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         >
                           Select Cover Image for PDF
                         </label>
-                        <input
+                        <ImageCropper
+                          aspect={1}
+                          onCropComplete={croppedFile => {
+                            handleCropComplete(
+                              croppedFile,
+                              setFieldValue,
+                              "coverPdfImage"
+                            );
+                          }}
+                        />
+                        {/* <input
                           id="coverPdfImage"
                           name="coverPdfImage"
                           type="file"
@@ -936,12 +965,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             );
                           }}
                           className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        /> */}
                       </div>
-                      {pdfImage && (
+                      {croppedImageDataUrl && (
                         <div className="mt-4">
                           <img
-                            src={URL.createObjectURL(pdfImage)}
+                            src={croppedImageDataUrl}
                             alt="pdfImage"
                             className="w-80 h-56 md:h-auto object-contain border border-secondary mt-4"
                           />

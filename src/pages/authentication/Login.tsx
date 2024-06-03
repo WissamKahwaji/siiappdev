@@ -8,7 +8,7 @@ import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { PulseLoader } from "react-spinners";
 import { MdArrowRightAlt } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import logo_video from "../../assets/video_logo.mp4";
@@ -34,17 +34,29 @@ const Login = () => {
     });
   };
 
+  useEffect(() => {
+    const video = document.getElementById("logoVideo") as HTMLVideoElement;
+    if (video) {
+      video.play().catch(error => {
+        console.log("Auto-play was prevented, trying to play manually", error);
+      });
+    }
+  }, []);
+
   return (
     <div className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20">
       <div className="md:w-96 w-52 h-auto">
         {/* <img src={logo} alt="Logo" className="object-contain" /> */}
         <video
-          src={logo_video}
+          id="logoVideo"
           autoPlay
+          playsInline
           muted
           loop
           className="object-cover w-full h-full"
-        ></video>
+        >
+          <source src={logo_video} type="video/mp4" />
+        </video>
       </div>
       <Formik
         initialValues={{ email: "", password: "" }}

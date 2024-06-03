@@ -8,9 +8,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 interface ProfilePostProps {
   post: PostModel;
+  isVideo: boolean;
 }
 
-const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
+const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   const renderPostContent = () => {
@@ -20,7 +21,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
           <img
             src={post.images[0]}
             alt="post"
-            className="absolute inset-0 object-contain w-full h-full bg-secondary/70"
+            className="absolute inset-0 object-contain w-full h-full "
           />
         );
       case "video":
@@ -30,12 +31,12 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
               <img
                 src={post.coverVideoImage}
                 alt="coverVideo"
-                className="absolute inset-0 object-contain w-full h-full bg-secondary/70"
+                className="absolute inset-0 object-fill w-full h-full"
               />
             ) : (
               <video
                 src={post.postVideo}
-                className="absolute inset-0 object-contain w-full h-full bg-secondary"
+                className="absolute inset-0 object-fill w-full h-full"
               />
             )}
           </div>
@@ -62,9 +63,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post }) => {
   return (
     <div
       className={`relative overflow-hidden  ${
-        post.postType === "video"
-          ? "h-[200px] md:h-[400px] md:w-[226px] w-[114px]"
-          : "w-full"
+        isVideo ? "h-[200px] md:h-[400px] md:w-[226px] w-[114px]" : "w-full"
       } pt-[100%]`}
       onMouseEnter={() => setShowOverlay(true)}
       onMouseLeave={() => setShowOverlay(false)}

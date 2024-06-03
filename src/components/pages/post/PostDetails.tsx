@@ -132,7 +132,7 @@ const PostDetails = ({
 
   if (isLoadingPost)
     return (
-      <div className="text-center h-fit flex flex-col justify-center items-center">
+      <div className="text-center h-fit w-[120px] md:w-full flex flex-col justify-center items-center">
         <SyncLoader size={20} />
       </div>
     );

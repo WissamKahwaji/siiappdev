@@ -6,9 +6,13 @@ import getCroppedImg from "./CropImageHelper";
 
 interface ImageCropperProps {
   onCropComplete: (croppedFile: File) => void;
+  aspect?: number | undefined;
 }
 
-const ImageCropper: React.FC<ImageCropperProps> = ({ onCropComplete }) => {
+const ImageCropper: React.FC<ImageCropperProps> = ({
+  onCropComplete,
+  aspect,
+}) => {
   const [image, setImage] = useState<string | null>(null);
   const [croppedArea, setCroppedArea] = useState<Area | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -56,7 +60,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({ onCropComplete }) => {
                   image={image}
                   crop={crop}
                   zoom={zoom}
-                  aspect={1}
+                  aspect={aspect}
                   onCropChange={setCrop}
                   onZoomChange={setZoom}
                   onCropComplete={handleCropComplete}
