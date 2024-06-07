@@ -1,18 +1,13 @@
-// import logo from "../../assets/logo_sii_new_2.png";
-import googlePlayImg from "../../assets/google play.png";
-import appleStoreImg from "../../assets/apple_store_2.png";
-import { Link } from "react-router-dom";
-import { useSignInMutation } from "../../apis/auth/queries";
-import { SignInValues } from "../../apis/auth/type";
-import { Formik, FormikHelpers } from "formik";
+import { useState } from "react";
+
+import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import { PulseLoader } from "react-spinners";
-import { MdArrowRightAlt } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { SignInValues } from "../../../apis/auth/type";
+import { Formik, FormikHelpers } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import logo_video from "../../assets/video_logo.mp4";
-import { useTranslation } from "react-i18next";
+import { PulseLoader } from "react-spinners";
+import { useSwitchAccountMutation } from "../../../apis/account/queries";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("please_enter_your_email"),
@@ -20,11 +15,9 @@ const validationSchema = Yup.object().shape({
     .required("Please enter your password")
     .min(8, "Password must be at least 8 characters long"),
 });
-const Login = () => {
+const LogInModalForm = () => {
   const { t } = useTranslation();
-
-  // const selectedLang = i18n.language;
-  const { mutate: signIn } = useSignInMutation();
+  const { mutate: signIn } = useSwitchAccountMutation();
   const [showPassword, setShowPassword] = useState(false);
   const handleSignIn = (
     values: SignInValues,
@@ -36,36 +29,8 @@ const Login = () => {
       },
     });
   };
-
-  useEffect(() => {
-    const video = document.getElementById("logoVideo") as HTMLVideoElement;
-    if (video) {
-      video.play().catch(error => {
-        console.log("Auto-play was prevented, trying to play manually", error);
-      });
-    }
-  }, []);
-
   return (
-    <div
-      className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20 capitalize"
-      style={{
-        direction: "ltr",
-      }}
-    >
-      <div className="md:w-96 w-52 h-auto">
-        {/* <img src={logo} alt="Logo" className="object-contain" /> */}
-        <video
-          id="logoVideo"
-          autoPlay
-          playsInline
-          muted
-          loop
-          className="object-cover w-full h-full"
-        >
-          <source src={logo_video} type="video/mp4" />
-        </video>
-      </div>
+    <div>
       <Formik
         initialValues={{
           email: localStorage.getItem("email") ?? "",
@@ -180,47 +145,6 @@ const Login = () => {
               >
                 {t("login_with_apple")}
               </button>
-
-              <div className="mt-8 text-gray-600 text-center">
-                {t("don't_have_any_account")}
-                <Link
-                  to="/register"
-                  className="font-semibold text-blue-500 hover:underline"
-                >
-                  {t("signup")}
-                </Link>
-              </div>
-              <div className="flex items-center mt-6">
-                <div className="border-t border-gray-300 flex-grow"></div>
-                <div className="mx-4 text-sm text-gray-500">{t("or")}</div>
-                <div className="border-t border-gray-300 flex-grow"></div>
-              </div>
-              <Link to={`/home`} replace>
-                <div className="cursor-pointer text-center mt-5 bg-secondary rounded-lg shadow-lg shadow-navBackground/20 py-1 space-x-1 flex flex-row justify-center items-center">
-                  <p className="font-semibold font-header">
-                    {t("skip_to_home")}
-                  </p>
-                  <MdArrowRightAlt size={25} />
-                </div>
-              </Link>
-            </div>
-
-            <div className="flex flex-col justify-center items-center space-y-3 mt-6">
-              <p className="text-primary font-header text-lg">
-                {t("get_the_app")}
-              </p>
-              <div className="flex flex-row space-x-2">
-                <img
-                  src={googlePlayImg}
-                  alt="Google Play"
-                  className="w-32 h-auto"
-                />
-                <img
-                  src={appleStoreImg}
-                  alt="Apple Store"
-                  className="w-32 h-auto"
-                />
-              </div>
             </div>
           </form>
         )}
@@ -229,4 +153,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LogInModalForm;

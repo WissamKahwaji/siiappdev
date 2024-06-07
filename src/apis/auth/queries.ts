@@ -30,15 +30,17 @@ const useSignUpMutation = () => {
   return useMutation({
     mutationKey: ["sign-up"],
     mutationFn: (data: SignUpValues) => signUp(data),
-    onSuccess: data => {
+    onSuccess: (data, variables) => {
       localStorage.setItem("token", data.token);
       login(data.token);
       localStorage.setItem("userId", data.result._id);
       localStorage.setItem("userName", data.result.userName);
+      localStorage.setItem("email", variables.email);
+      localStorage.setItem("password", variables.password);
       navigate(`/${data.result.userName}`, { replace: true });
     },
-    onError: data => {
-      toast.error(data.message);
+    onError: () => {
+      toast.error("User already exist, change username or email");
     },
   });
 };

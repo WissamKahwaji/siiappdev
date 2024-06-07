@@ -1,5 +1,6 @@
 import API_ROUTES from "../../constants/apiRoutes";
 import { createFormData } from "../../utils";
+import { SignUpValues } from "../auth/type";
 import { PostModel } from "../posts/type";
 import publicInstance from "../publicInstance";
 import { EditProfileProps, SearchResult, UserModel } from "./type";
@@ -68,6 +69,23 @@ const getUserSearch = async (query: string) => {
   return res.data;
 };
 
+const getUserAccounts = async () => {
+  const res = await publicInstance.get<UserModel[]>(
+    API_ROUTES.USER.USER_ACCOUNTS
+  );
+  return res.data;
+};
+
+const signUpWithAdd = async (data: SignUpValues) => {
+  const res = await publicInstance.post(API_ROUTES.USER.SIGNUP_WITH_ADD, data);
+  return res.data;
+};
+
+const switchAccount = async (data: { email: string }) => {
+  const res = await publicInstance.post(API_ROUTES.USER.SWITCH_ACCOUNT, data);
+  return res.data;
+};
+
 export {
   getUserById,
   editUserProfile,
@@ -79,4 +97,7 @@ export {
   getUserFollowers,
   getUserFollowings,
   getUserSearch,
+  signUpWithAdd,
+  getUserAccounts,
+  switchAccount,
 };

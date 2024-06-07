@@ -4,6 +4,7 @@ import { SignInValues } from "../../apis/auth/type";
 import { useSignInMutation } from "../../apis/auth/queries";
 import { PulseLoader } from "react-spinners";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("Please enter your email"),
@@ -12,6 +13,7 @@ const validationSchema = Yup.object().shape({
     .min(8, "Password must be at least 8 characters long"),
 });
 const LoginModalContent = () => {
+  const { t } = useTranslation();
   const { mutate: signIn } = useSignInMutation();
   const handleSignIn = (
     values: SignInValues,
@@ -46,7 +48,7 @@ const LoginModalContent = () => {
                 type="text"
                 name="email"
                 className="text-xs md:w-1/2 w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                placeholder="Your Email or Phone Number"
+                placeholder={t("your_email_or_phone_number")}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.email}
@@ -61,7 +63,7 @@ const LoginModalContent = () => {
                 type="password"
                 name="password"
                 className="text-xs md:w-1/2 w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                placeholder="Your Password"
+                placeholder={t("password")}
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.password}
@@ -76,15 +78,19 @@ const LoginModalContent = () => {
               disabled={isSubmitting}
               className="text-sm font-header mx-auto md:w-1/2 w-full bg-navBackground text-secondary py-1 rounded font-medium"
             >
-              {isSubmitting ? <PulseLoader size={5} color="white" /> : "Log In"}
+              {isSubmitting ? (
+                <PulseLoader size={5} color="white" />
+              ) : (
+                t("login")
+              )}
             </button>
             <div className="mt-8 text-gray-600 text-center">
-              Don't have an account?{" "}
+              {t("don't_have_any_account")}{" "}
               <Link
                 to="/register"
                 className="font-semibold text-blue-500 hover:underline"
               >
-                Sign up
+                {t("signup")}
               </Link>
             </div>
           </div>

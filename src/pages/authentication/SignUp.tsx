@@ -14,6 +14,7 @@ import { SignUpValues } from "../../apis/auth/type";
 import { PulseLoader } from "react-spinners";
 import { MdArrowRightAlt } from "react-icons/md";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,6 +33,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const Signup = () => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const video = document.getElementById("logoVideo") as HTMLVideoElement;
     if (video) {
@@ -59,7 +62,12 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
-    <div className="py-10 w-full flex items-center justify-center">
+    <div
+      className="py-10 w-full flex items-center justify-center"
+      style={{
+        direction: "ltr",
+      }}
+    >
       <div className="flex flex-col justify-center items-center">
         <div className="bg-white p-8 rounded-lg border shadow-md max-w-sm flex flex-col justify-center items-center">
           <div className="">
@@ -103,7 +111,7 @@ const Signup = () => {
                   type="text"
                   name="email"
                   className="text-xs w-full font-header rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                  placeholder="Your Email Or Phone Number"
+                  placeholder={t("your_email_or_phone_number")}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.email}
@@ -116,7 +124,7 @@ const Signup = () => {
                   type="text"
                   name="userName"
                   className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                  placeholder="Username"
+                  placeholder={t("username")}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.userName}
@@ -129,7 +137,7 @@ const Signup = () => {
                   type="text"
                   name="fullName"
                   className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                  placeholder="Full Name"
+                  placeholder={t("fullname")}
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.fullName}
@@ -143,7 +151,7 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                    placeholder="Password"
+                    placeholder={t("password")}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.password}
@@ -169,7 +177,7 @@ const Signup = () => {
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     className="text-xs w-full font-header mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                    placeholder="Confirm Password"
+                    placeholder={t("confirm_password")}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.confirmPassword}
@@ -200,25 +208,25 @@ const Signup = () => {
                   {isSubmitting ? (
                     <PulseLoader size={20} color="white" />
                   ) : (
-                    "Sign Up"
+                    t("signup")
                   )}
                 </button>
               </form>
             )}
           </Formik>
           <div className="mt-8 text-gray-600 text-center">
-            Already have an account?
+            {t("already_have_an_account")}
             <Link
               to="/login"
               className="font-semibold text-blue-500 hover:underline"
             >
-              Log in
+              {t("login")}
             </Link>
           </div>{" "}
           <div className="w-full flex flex-col">
             <div className="flex items-center my-6">
               <div className="border-t border-gray-300 flex-grow"></div>
-              <div className="mx-4 text-sm text-gray-500">Or</div>
+              <div className="mx-4 text-sm text-gray-500">{t("or")}</div>
               <div className="border-t border-gray-300 flex-grow"></div>
             </div>
             <button
@@ -226,29 +234,29 @@ const Signup = () => {
               className="w-full flex flex-row justify-center items-center space-x-2 bg-blue-800 text-white text-sm font-semibold rounded-full py-2 transition duration-300 hover:bg-blue-900 focus:outline-none"
             >
               <FontAwesomeIcon icon={faSquareFacebook} color="white" />
-              <p>Log In with Facebook</p>
+              <p> {t("login_with_facebook")}</p>
             </button>
             <button
               type="button"
               className="bg-gray-500 text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-red-700 focus:outline-none"
             >
-              Log In with Google
+              {t("login_with_google")}
             </button>
             <button
               type="button"
               className="bg-black text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-gray-800 focus:outline-none"
             >
-              Log In with Apple
+              {t("login_with_apple")}
             </button>
             <div className="flex items-center mt-6">
               <div className="border-t border-gray-300 flex-grow"></div>
-              <div className="mx-4 text-sm text-gray-500">Or</div>
+              <div className="mx-4 text-sm text-gray-500">{t("or")}</div>
               <div className="border-t border-gray-300 flex-grow"></div>
             </div>
             <Link to={`/`} replace>
               <div className="cursor-pointer text-center mt-5 bg-secondary rounded-lg shadow-lg shadow-navBackground/20 py-1 space-x-1 flex flex-row justify-center items-center">
                 <p className="capitalize font-semibold font-header">
-                  Skip to home
+                  {t("skip_to_home")}
                 </p>
                 <MdArrowRightAlt size={25} />
               </div>
@@ -256,7 +264,10 @@ const Signup = () => {
           </div>
         </div>
         <div className="flex flex-col justify-center items-center space-y-3">
-          <p className="mt-4 text-primary font-header text-lg">Get The App</p>
+          <p className="mt-4 text-primary font-header text-lg">
+            {" "}
+            {t("get_the_app")}
+          </p>
           <div className="flex flex-row space-x-2">
             <img
               src={googlePlayImg}

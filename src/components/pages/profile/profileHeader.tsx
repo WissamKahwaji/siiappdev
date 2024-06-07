@@ -10,7 +10,7 @@ import {
   FaLinkedin,
   FaSnapchat,
   FaTiktok,
-  FaPaintBrush,
+  FaPinterest,
 } from "react-icons/fa";
 import { FaThreads, FaX, FaXTwitter } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -45,6 +45,12 @@ import LoginModalContent from "../../const/LoginModalContent";
 import HashtagsInput from "../../const/HashtagsInput";
 import defaultImage from "../../../assets/guest-01-01.png";
 import ImageCropper from "../../const/ImageCropper";
+import { useTranslation } from "react-i18next";
+import SignUpModal from "./SignUpModal";
+import UserAccountsModal from "./UserAccountsModal";
+import LogInModalForm from "./LogInModalForm";
+import { PiUserSwitchFill } from "react-icons/pi";
+import ImagePopup from "../../const/ImagePopup";
 interface ProfileHeaderProps {
   user: UserModel;
 }
@@ -54,12 +60,17 @@ const validationSchema = Yup.object().shape({
 });
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   // const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMoreModalOpen, setIsMoreModalOpen] = useState(false);
 
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [isAddAccountModalOpen, setIsAddAccountModalOpen] = useState(false);
+  const [isNewAccountModalOpen, setIsNewAccountModalOpen] = useState(false);
+  const [isNewLoginModalOpen, setIsNewLoginModalOpen] = useState(false);
+  const [isNewLoginFormModalOpen, setIsNewLoginFormModalOpen] = useState(false);
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
 
@@ -103,20 +114,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       field: "faceBook",
     },
     { icon: <FaYoutube className="w-5 h-5 md:w-9 md:h-9" />, field: "youtube" },
+
     {
       icon: <FaSnapchat className="w-5 h-5 md:w-9 md:h-9" />,
       field: "snapChat",
     },
     {
       icon: <FaTiktok className="w-5 h-5 md:w-9 md:h-9" />,
-      field: "tikTok",
+      field: "tiktok",
     },
     {
       icon: <FaXTwitter className="w-5 h-5 md:w-9 md:h-9" />,
       field: "xPlatform",
     },
     {
-      icon: <FaPaintBrush className="w-5 h-5 md:w-9 md:h-9" />,
+      icon: <FaPinterest className="w-5 h-5 md:w-9 md:h-9" />,
       field: "painterest",
     },
     { icon: <FaLink className="w-5 h-5 md:w-9 md:h-9" />, field: "otherLink" },
@@ -280,12 +292,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   return (
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
-      <div className="flex flex-row space-x-1 md:space-x-8 md:justify-center w-full">
+      <div className="flex flex-row gap-x-1 md:gap-x-8 md:justify-center w-full">
         <div className="md:hidden relative">
-          <img
+          {/* <img
             src={user.user?.profileImage ?? defaultImage}
             alt="profile"
             className=" object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+          /> */}
+          <ImagePopup
+            src={user.user?.profileImage ?? defaultImage}
+            alt="profile"
+            smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+            largeClassName="h-[300px] w-[300px]"
           />
           {user.user._id === userId && (
             <Link to={"/account/edit-profile"}>
@@ -297,10 +315,34 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         </div>
         <div className="hidden md:flex md:flex-col">
           <div className="relative rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px]">
-            <img
+            {/* <img
               src={user.user?.profileImage ?? defaultImage}
               alt="profile"
               className=" object-contain  md:h-full md:w-full"
+              onClick={handleImageClick}
+            />
+            {isPopupOpen && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                <div className="relative">
+                  <img
+                    src={user.user?.profileImage ?? defaultImage}
+                    alt="profile enlarged"
+                    className="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 h-[300px] w-[300px]"
+                  />
+                  <button
+                    className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2"
+                    onClick={closePopup}
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
+            )} */}
+            <ImagePopup
+              src={user.user?.profileImage ?? defaultImage}
+              alt="profile"
+              smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+              largeClassName="h-[300px] w-[300px]"
             />
             {user.user._id === userId && (
               <Link to={"/account/edit-profile"}>
@@ -312,34 +354,42 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           </div>
           <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
-            <Link to={`/users/${user.user.userCategory}`} className="w-auto">
-              <p className="text-sm font-header text-blue-500 font-bold cursor-pointer w-auto">
-                {user.user.userCategory}
-              </p>
-            </Link>
+            {user.user.isBusiness && (
+              <Link to={`/users/${user.user.userCategory}`} className="w-auto">
+                <p className="text-sm font-header text-blue-500 font-bold cursor-pointer w-auto">
+                  {user.user.userCategory}
+                </p>
+              </Link>
+            )}
             <p className="text-base">
               {user?.user?.bio ? user.user.bio : "write your bio in settings"}
             </p>
           </div>
           {user.user.userAbout &&
-            user.user.userAbout.aboutUs &&
-            user.user.userAbout.ourMission &&
-            user.user.userAbout.ourVision && (
+            (user.user.userAbout.aboutUs ||
+              user.user.userAbout.ourMission ||
+              user.user.userAbout.ourVision) && (
               <Link to={`/${user.user.userName}/about`}>
                 <p className="underline text-secondary font-serif font-semibold text-sm my-2 cursor-pointer w-fit">
-                  Read more About us
+                  {t("read_more_About_us")}
                 </p>
               </Link>
             )}
         </div>
         <div className="flex flex-col w-full md:w-auto">
           {userId === user.user._id ? (
-            <div className="flex flex-row  md:space-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
-              <p className="text-sm ml-4 md:ml-0 font-semibold ">
-                {user.user?.userName}
-              </p>
+            <div className="flex flex-row  md:gap-x-10 h-fit md:items-center md:justify-between items-center  justify-between  cursor-pointer">
+              <div
+                className="flex flex-row justify-center items-center md:gap-x-2 gap-x-1"
+                onClick={() => setIsAddAccountModalOpen(true)}
+              >
+                <p className="text-sm ml-4 md:ml-0 font-semibold ">
+                  {user.user?.userName}
+                </p>
+                <PiUserSwitchFill className="text-secondary md:w-6 md:h-6 w-5 h-5" />
+              </div>
 
-              <div className="flex flex-row md:space-x-4 space-x-2">
+              <div className="flex flex-row md:gap-x-4 gap-x-2">
                 <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div>
@@ -371,7 +421,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           ) : (
             <div className="flex flex-row justify-between items-center">
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
-              <div className="flex flex-row space-x-2 md:space-x-3">
+              <div className="flex flex-row gap-x-2 md:gap-x-3">
                 <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div>
@@ -387,12 +437,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             </div>
           )}
           <div className="md:hidden justify-start items-start mt-3">
-            <div className="flex flex-row justify-center mt-3 capitalize space-x-8 w-full">
+            <div className="flex flex-row justify-center mt-3 capitalize gap-x-8 w-full">
               <div className="text-primary font-header flex flex-col items-center justify-center">
                 <p className="font-semibold text-sm">
                   {user.user?.posts.length}
                 </p>
-                <p className="text-xs">posts</p>
+                <p className="text-xs">{t("posts")}</p>
               </div>
               <div
                 className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
@@ -405,21 +455,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="font-semibold text-sm">
                   {user.user?.followings.length}
                 </p>
-                <p className="text-xs">following</p>
+                <p className="text-xs">{t("follows")}</p>
               </div>
               <div className="text-primary font-header flex flex-col items-center justify-center">
                 <p className="font-semibold text-sm">{followersCount}</p>
-                <p className="text-xs">followers</p>
+                <p className="text-xs">{t("followers")}</p>
               </div>
             </div>
             {userId !== user.user._id && (
-              <div className="flex flex-row justify-center mt-3 capitalize space-x-8 w-full">
+              <div className="flex flex-row justify-center mt-3 capitalize gap-x-3 w-full">
                 <div
                   className="  w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
-                    {isFollowed ? "Following" : "Follow"}
+                    {isFollowed ? t("following") : t("follow")}
                   </p>
                 </div>
                 <div
@@ -427,7 +477,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   onClick={handleShareClick}
                 >
                   <p className="font-serif  font-semibold text-xs">
-                    Share Profile
+                    {t("share_profile")}
                   </p>
                 </div>
               </div>
@@ -439,10 +489,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 userId === user.user._id ? "justify-center" : "md:justify-start"
               } md:w-full items-start md:flex md:mt-2`}
             >
-              <div className="flex flex-row items-center justify-center w-full space-x-12  mb-2 capitalize">
+              <div className="flex flex-row items-center justify-center w-full gap-x-12  mb-2 capitalize">
                 <div className="text-primary font-header flex flex-col items-center justify-center">
                   <p className="font-semibold">{user?.user?.posts.length}</p>
-                  <p className="text-sm">posts</p>
+                  <p className="text-sm">{t("posts")}</p>
                 </div>
                 <div
                   className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
@@ -455,7 +505,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   <p className="font-semibold">
                     {user?.user?.followings.length}
                   </p>
-                  <p className="text-sm">following</p>
+                  <p className="text-sm">{t("following")}</p>
                 </div>
                 <div
                   className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
@@ -466,7 +516,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   }}
                 >
                   <p className="font-semibold">{followersCount}</p>
-                  <p className="text-sm">followers</p>
+                  <p className="text-sm">{t("followers")}</p>
                 </div>
               </div>
             </div>
@@ -476,15 +526,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <div className="flex flex-row justify-between items-center">
                   <div className="flex flex-col w-1/2">
                     <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
-                      <img src={logo} alt="" className="w-7 h-7 mr-1" /> Premiem
-                      Card
+                      <img src={logo} alt="" className="w-7 h-7 mr-1" />{" "}
+                      {t("premium_card")}
                     </h2>
                     <p className="text-navBackground text-base font-semibold mt-1">
-                      improve your life, and get the sii card now to make your
-                      life easier
+                      {t("premium_card_info")}
                     </p>
                     <div
-                      className="mt-3 text-sm flex items-center space-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
+                      className="mt-3 text-sm flex items-center gap-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
                       onClick={() => {
                         user.user?.siiCard
                           ? navigate("/sii-card")
@@ -493,8 +542,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                     >
                       <p>
                         {user.user?.siiCard
-                          ? "Show Details .."
-                          : "Get Sii Card Now"}
+                          ? t("show_details")
+                          : t("get_sii_card_now")}
                       </p>
                       <FontAwesomeIcon icon={faArrowRight} />
                     </div>
@@ -503,13 +552,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-row justify-center items-center space-x-8 mt-10 w-full">
+              <div className="flex flex-row justify-center items-center gap-x-8 mt-10 w-full">
                 <div
                   className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
-                    {isFollowed ? "Following" : "Follow"}
+                    {isFollowed ? t("follows") : t("follow")}
                   </p>
                 </div>
                 <div
@@ -517,7 +566,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   onClick={handleShareClick}
                 >
                   <p className="font-serif  font-semibold text-sm">
-                    Share Profile
+                    {t("share_profile")}
                   </p>
                 </div>
                 {/* <div
@@ -545,12 +594,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         </Link>
         <p className="text-sm whitespace-pre-wrap ">{user.user.bio}</p>
         {user.user.userAbout &&
-          user.user.userAbout.aboutUs &&
-          user.user.userAbout.ourMission &&
-          user.user.userAbout.ourVision && (
+          (user.user.userAbout.aboutUs ||
+            user.user.userAbout.ourMission ||
+            user.user.userAbout.ourVision) && (
             <Link to={`/${user.user.userName}/about`}>
               <p className="underline text-secondary font-serif font-semibold text-xs my-1 cursor-pointer w-fit">
-                read more About us
+                {t("read_more_About_us")}
               </p>
             </Link>
           )}
@@ -560,14 +609,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col w-1/2">
               <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
-                <img src={logo} alt="" className="w-7 h-7 mr-1" /> Premiem Card
+                <img src={logo} alt="" className="w-7 h-7 mr-1" />{" "}
+                {t("premium_card")}
               </h2>
               <p className="text-navBackground text-base font-semibold mt-1">
-                improve your life, and get the sii card now to make your life
-                easier
+                {t("premium_card_info")}
               </p>
               <div
-                className="mt-3 text-sm flex items-center space-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
+                className="mt-3 text-sm flex items-center gap-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
                 onClick={() => {
                   user.user?.siiCard
                     ? navigate("/sii-card")
@@ -664,7 +713,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <Modal
           isOpen={isMoreModalOpen}
           setIsOpen={setIsMoreModalOpen}
-          title="Options"
+          title={t("options")}
           size="md"
         >
           <div className="flex flex-col space-y-2 font-semibold font-serif w-[300px] md:w-full">
@@ -672,11 +721,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
               onClick={handleShareClick}
             >
-              Share
+              {t("share")}
             </p>
             <Link to={`tel:${user.user.mobileNumber}`}>
               <p className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out">
-                Call
+                {t("call")}
               </p>
             </Link>
             <p
@@ -688,11 +737,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 );
               }}
             >
-              WhatsApp
+              {t("whatsapp")}
             </p>
             <Link to={`mailto:${user.user.email}`}>
               <p className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out">
-                Email
+                {t("email")}
               </p>
             </Link>
           </div>
@@ -711,7 +760,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             setCroppedImageFile(null);
             setCroppedImageDataUrl("");
           }}
-          title="Create Post"
+          title={t("create_post")}
           size="md"
         >
           <Formik
@@ -734,8 +783,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar"
               >
                 <div className="flex flex-col space-y-2 md:mx-2 mx-0">
-                  <div className="flex justify-around space-x-4 mb-4 bg-secondary p-4 rounded-lg shadow-md">
-                    <label className="flex items-center space-x-2 cursor-pointer">
+                  <div className="flex justify-around gap-x-4 mb-4 bg-secondary p-4 rounded-lg shadow-md">
+                    <label className="flex items-center gap-x-2 cursor-pointer">
                       <input
                         type="radio"
                         name="fileType"
@@ -747,9 +796,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         }}
                         className="form-radio h-4 w-4 text-blue-600"
                       />
-                      <span className="text-gray-700 font-medium">Image</span>
+                      <span className="text-gray-700 font-medium">
+                        {t("image")}
+                      </span>
                     </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
+                    <label className="flex items-center gap-x-2 cursor-pointer">
                       <input
                         type="radio"
                         name="fileType"
@@ -761,9 +812,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         }}
                         className="form-radio h-4 w-4 text-blue-600"
                       />
-                      <span className="text-gray-700 font-medium">Video</span>
+                      <span className="text-gray-700 font-medium">
+                        {t("video")}
+                      </span>
                     </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
+                    <label className="flex items-center gap-x-2 cursor-pointer">
                       <input
                         type="radio"
                         name="fileType"
@@ -775,14 +828,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         }}
                         className="form-radio h-4 w-4 text-blue-600"
                       />
-                      <span className="text-gray-700 font-medium">Doc</span>
+                      <span className="text-gray-700 font-medium">
+                        {t("doc")}
+                      </span>
                     </label>
                   </div>
 
                   {fileType === "image" && (
                     <div className="w-[340px] md:w-full">
                       <label className="block mb-2 text-sm font-medium text-gray-700">
-                        Post Image
+                        {t("post_image")}
                       </label>
                       <div className="flex flex-row w-full">
                         <img
@@ -809,7 +864,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="postVideo"
                       >
-                        Add post video
+                        {t("add_post_video")}
                       </label>
                       <input
                         id="postVideo"
@@ -843,7 +898,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                 htmlFor="coverVideoImage"
                                 className="block font-medium mb-2"
                               >
-                                Select Cover Image
+                                {t("select_cover_image")}
                               </label>
                               <div className="flex justify-center gap-2">
                                 <button
@@ -853,7 +908,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                   }
                                   className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded"
                                 >
-                                  Capture Frame
+                                  {t("capture_frame")}
                                 </button>
                                 {/* <label className="bg-secondary text-navBackground text-sm transform ease-in-out duration-300 hover:text-secondary hover:bg-navBackground px-4 py-2 rounded cursor-pointer">
                                   <input
@@ -872,7 +927,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                   Upload Image
                                 </label> */}
                                 <div className="bg-secondary px-2 rounded-md py-1 cursor-pointer">
-                                  <p>Upload Image</p>
+                                  <p>{t("upload_image")}</p>
                                   <ImageCropper
                                     onCropComplete={croppedFile => {
                                       setCoverImage(croppedFile);
@@ -888,8 +943,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                               </div>
                               <canvas
                                 ref={canvasRef}
-                                width="640"
-                                height="360"
+                                width="400"
+                                height="700"
                                 className="hidden"
                               />
                               {coverImage && (
@@ -913,7 +968,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         htmlFor="postPDF"
                         className="mb-2 text-sm font-medium text-gray-700"
                       >
-                        Add post PDF
+                        {t("add_post_pdf")}
                       </label>
                       <input
                         id="postPDF"
@@ -939,7 +994,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           htmlFor="coverPdfImage"
                           className="mb-2 text-sm font-medium text-gray-700"
                         >
-                          Select Cover Image for PDF
+                          {t("select_cover_image_for_PDF")}
                         </label>
                         <ImageCropper
                           aspect={1}
@@ -985,7 +1040,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="caption"
                       >
-                        Caption
+                        {t("caption")}
                       </label>
                       <textarea
                         id="caption"
@@ -1007,7 +1062,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="link"
                       >
-                        Link
+                        {t("link")}
                       </label>
                       <input
                         id="link"
@@ -1030,7 +1085,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="whatsAppNumber"
                       >
-                        WhatsApp Number
+                        {t("whatsApp_number")}
                       </label>
                       <input
                         id="whatsAppNumber"
@@ -1053,7 +1108,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="mobileNumber"
                       >
-                        Mobile Number
+                        {t("mobile_number")}
                       </label>
                       <input
                         id="mobileNumber"
@@ -1076,13 +1131,40 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="HashTags"
                       >
-                        HashTags
+                        {t("hashTags")}
                       </label>
                       <HashtagsInput
                         value={values.tags ?? []}
                         onChange={newTags => setFieldValue("tags", newTags)}
                       />
                     </div>
+                    {user.user.isBusiness && (
+                      <div className="flex flex-col items-start justify-start w-full">
+                        <label
+                          className="mb-1 text-sm font-medium text-gray-700"
+                          htmlFor="discountPercentage"
+                        >
+                          {t("discount_percentage")}
+                        </label>
+                        <p className="text-xs mb-1 text-blue-500">
+                          {t(
+                            "This discount for this service will be given to all users who have a Sii card"
+                          )}
+                        </p>
+                        <input
+                          id="discountPercentage"
+                          name="discountPercentage"
+                          placeholder="Enter discount percentage"
+                          type="number"
+                          min={1}
+                          max={100}
+                          className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.discountPercentage ?? ""}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button
@@ -1090,7 +1172,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   disabled={isSubmitting}
                   className="w-full py-3 bg-navBackground text-secondary font-semibold rounded-lg hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {isSubmitting ? "Saving..." : "Save"}
+                  {isSubmitting ? `${t("saving")}..` : t("save")}
                 </button>
               </form>
             )}
@@ -1101,7 +1183,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <Modal
           isOpen={isLoginModalOpen}
           setIsOpen={handleCloseModal}
-          title="LogIn"
+          title={t("login")}
           size="md"
         >
           <LoginModalContent />
@@ -1111,18 +1193,86 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <Modal
           isOpen={isQrModalOpen}
           setIsOpen={setIsQrModalOpen}
-          title="Share Profile"
+          title={t("share_profile")}
           size="md"
         >
           <div className="flex flex-col justify-center items-center w-full">
             <img src={qrCode} alt="" className="w-52 h-fit" />
             <button
               onClick={handleShareClick}
-              className="flex items-center justify-center bg-secondary w-1/2 space-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"
+              className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"
             >
-              Share Profile
+              {t("share_profile")}
             </button>
           </div>
+        </Modal>
+      )}
+      {isAddAccountModalOpen && (
+        <Modal
+          isOpen={isAddAccountModalOpen}
+          setIsOpen={setIsAddAccountModalOpen}
+          title={t("add_account")}
+          size="md"
+        >
+          <div className="flex flex-col justify-center items-center w-full gap-y-4">
+            <div
+              className="w-full text-sm md:text-base md:w-1/2 bg-secondary text-navBackground font-serif px-3 py-2 rounded-lg shadow-md cursor-pointer"
+              onClick={() => {
+                setIsAddAccountModalOpen(false);
+                setIsNewLoginModalOpen(true);
+              }}
+            >
+              {t("log_in_to_one_of_your_accounts")}
+            </div>
+            <div
+              className="w-full text-sm md:text-base md:w-1/2 bg-navBackground text-secondary font-serif px-3 py-2 rounded-lg shadow-md cursor-pointer"
+              onClick={() => {
+                setIsAddAccountModalOpen(false);
+                setIsNewAccountModalOpen(true);
+              }}
+            >
+              {t("create_new_account")}
+            </div>
+          </div>
+        </Modal>
+      )}
+      {isNewAccountModalOpen && (
+        <Modal
+          isOpen={isNewAccountModalOpen}
+          setIsOpen={setIsNewAccountModalOpen}
+          title={t("signup")}
+          size="md"
+        >
+          <SignUpModal
+            onClose={() => {
+              setIsNewAccountModalOpen(false);
+            }}
+          />
+        </Modal>
+      )}
+      {isNewLoginModalOpen && (
+        <Modal
+          isOpen={isNewLoginModalOpen}
+          setIsOpen={setIsNewLoginModalOpen}
+          title={t("your_accounts")}
+          size="md"
+        >
+          <UserAccountsModal
+            onClose={() => {
+              setIsNewLoginModalOpen(false);
+              setIsNewLoginFormModalOpen(true);
+            }}
+          />
+        </Modal>
+      )}
+      {isNewLoginFormModalOpen && (
+        <Modal
+          isOpen={isNewLoginFormModalOpen}
+          setIsOpen={setIsNewLoginFormModalOpen}
+          title={t("switch_account")}
+          size="md"
+        >
+          <LogInModalForm />
         </Modal>
       )}
     </div>

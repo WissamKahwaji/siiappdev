@@ -38,6 +38,9 @@ const USER = {
   USER_SEARCH: (query: string) => `users/search?query=${query}`,
 
   TOGGLE_FOLLOW: (id: string | undefined) => `/users/toggle-follow/${id}`,
+  SIGNUP_WITH_ADD: "/users/signUpWithAdd",
+  USER_ACCOUNTS: "/users/user-accounts",
+  SWITCH_ACCOUNT: "/users/switchAccount",
 };
 
 const API_ROUTES = { AUTH, USER, POST, SII_CARD };

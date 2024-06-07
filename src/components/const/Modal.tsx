@@ -67,7 +67,7 @@ const Modal = (props: ModalProps) => {
                 } ${getSizeClass(size)}`}
               >
                 {title && (
-                  <div className="absolute top-0 w-full text-center border-b py-2 font-semibold">
+                  <div className="absolute top-0 w-full text-center border-b border-secondary py-2 font-semibold">
                     <Dialog.Title>{title}</Dialog.Title>
                   </div>
                 )}

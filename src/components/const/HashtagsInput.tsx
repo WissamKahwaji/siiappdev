@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from "react";
+import { useTranslation } from "react-i18next";
 
 interface HashtagsInputProps {
   value: string[];
@@ -23,7 +24,7 @@ const HashtagsInput: React.FC<HashtagsInputProps> = ({ value, onChange }) => {
     const newHashtags = value.filter((_, i) => i !== index);
     onChange(newHashtags);
   };
-
+  const { t } = useTranslation();
   return (
     <div className="flex flex-wrap items-center border rounded-lg p-2 w-full">
       {value.map((hashtag, index) => (
@@ -50,7 +51,7 @@ const HashtagsInput: React.FC<HashtagsInputProps> = ({ value, onChange }) => {
             setInputValue(e.target.value)
           }
           onKeyDown={handleKeyDown}
-          placeholder="Add hashtags"
+          placeholder={t("add_hashtag")}
         />
       )}
     </div>

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   editUserProfile,
+  getUserAccounts,
   getUserById,
   getUserByUserCategory,
   getUserByUserName,
@@ -9,12 +10,17 @@ import {
   getUserLikedPosts,
   getUserSavedPosts,
   getUserSearch,
+  signUpWithAdd,
+  switchAccount,
   toggleFollow,
 } from ".";
 
 import { EditProfileProps } from "./type";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { SignUpValues } from "../auth/type";
+import { ErrorMessage } from "../type";
 
 const useGetUserByIdQuery = () =>
   useQuery({ queryKey: ["get-user-byId"], queryFn: () => getUserById() });
@@ -97,6 +103,68 @@ const useGetUserSearchQuery = (query: string) =>
     enabled: false,
   });
 
+const useGetUserAccountsQuery = () =>
+  useQuery({
+    queryKey: ["get-user-accounts"],
+    queryFn: () => getUserAccounts(),
+  });
+
+const useSignUpWithAddMutation = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  return useMutation({
+    mutationKey: ["sign-up-with-add"],
+    mutationFn: (data: SignUpValues) => signUpWithAdd(data),
+    onSuccess: (data, variables) => {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+
+      localStorage.setItem("token", data.token);
+      login(data.token);
+      localStorage.setItem("userId", data.result._id);
+      localStorage.setItem("userName", data.result.userName);
+      localStorage.setItem("email", variables.email);
+      localStorage.setItem("password", variables.password);
+      navigate(`/`, { replace: true });
+    },
+    onError: () => {
+      toast.error("User already exist, change username or email");
+    },
+  });
+};
+const useSwitchAccountMutation = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  return useMutation({
+    mutationKey: ["switch-account"],
+    mutationFn: (data: { email: string }) => switchAccount(data),
+    onSuccess: (data, variables) => {
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+
+      localStorage.setItem("token", data.token);
+      login(data.token);
+      localStorage.setItem("userId", data.result._id);
+      localStorage.setItem("userName", data.result.userName);
+      localStorage.setItem("email", variables.email);
+      toast.success(`Switched To ${data.result.fullName}'s Account `);
+      navigate(`/`, { replace: true });
+    },
+    onError: (error: ErrorMessage) => {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to sign in, please enter the correct email or password";
+      toast.error(errorMessage);
+    },
+  });
+};
+
 export {
   useGetUserByIdQuery,
   useEditProfileMutation,
@@ -108,4 +176,7 @@ export {
   useGetUserFollowersQuery,
   useGetUserFollowingsQuery,
   useGetUserSearchQuery,
+  useSignUpWithAddMutation,
+  useGetUserAccountsQuery,
+  useSwitchAccountMutation,
 };

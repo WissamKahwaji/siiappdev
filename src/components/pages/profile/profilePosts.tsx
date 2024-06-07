@@ -24,14 +24,14 @@ import {
 } from "../../../apis/posts/queries";
 import { SyncLoader } from "react-spinners";
 import { useAuth } from "../../../context/AuthContext";
-
+import { useTranslation } from "react-i18next";
 interface ProfilePostsProps {
   userId: string;
 }
 
 const ProfilePosts = (props: ProfilePostsProps) => {
   const { isAuthenticated } = useAuth();
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem("userId");
   const [activeTab, setActiveTab] = useState("posts");
@@ -92,21 +92,21 @@ const ProfilePosts = (props: ProfilePostsProps) => {
   const tabs = isAuthenticated
     ? props.userId === currentUserId
       ? [
-          { tab: "posts", icon: faTable, label: "Posts" },
-          { tab: "video", icon: faVideo, label: "Videos" },
-          { tab: "docs", icon: faFile, label: "Docs" },
-          { tab: "saves", icon: faBookmark, label: "Saves" },
-          { tab: "likes", icon: faThumbsUp, label: "Likes" },
+          { tab: "posts", icon: faTable, label: "posts" },
+          { tab: "video", icon: faVideo, label: "videos" },
+          { tab: "docs", icon: faFile, label: "docs" },
+          { tab: "saves", icon: faBookmark, label: "saves" },
+          { tab: "likes", icon: faThumbsUp, label: "likes" },
         ]
       : [
-          { tab: "posts", icon: faTable, label: "Posts" },
-          { tab: "video", icon: faVideo, label: "Videos" },
-          { tab: "docs", icon: faFile, label: "Docs" },
+          { tab: "posts", icon: faTable, label: "posts" },
+          { tab: "video", icon: faVideo, label: "videos" },
+          { tab: "docs", icon: faFile, label: "docs" },
         ]
     : [
-        { tab: "posts", icon: faTable, label: "Posts" },
-        { tab: "video", icon: faVideo, label: "Videos" },
-        { tab: "docs", icon: faFile, label: "Docs" },
+        { tab: "posts", icon: faTable, label: "posts" },
+        { tab: "video", icon: faVideo, label: "videos" },
+        { tab: "docs", icon: faFile, label: "docs" },
       ];
 
   if (isLoadingPosts) {
@@ -136,7 +136,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
               activeTab === tab
                 ? "text-secondary border-t-2 border-secondary pt-2 md:pt-0"
                 : "text-black"
-            } flex justify-center items-center w-full h-full md:mr-16 mr-8 cursor-pointer`}
+            } flex justify-center items-center w-full h-full md:mr-16  cursor-pointer`}
             onClick={() => handleTabClick(tab)}
           >
             <div className="p-1 md:p-2 justify-center items-center flex rounded-sm">
@@ -145,7 +145,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
                 className="text-black w-4 h-4 md:w-6 md:h-6"
               />
               <span className="hidden lg:inline-block ml-2 text-black md:text-xs text-[10px]">
-                {label}
+                {t(label)}
               </span>
             </div>
           </div>
@@ -156,7 +156,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           activeTab === "video"
             ? "md:grid-cols-5 grid-cols-3"
             : "md:grid-cols-4 grid-cols-3"
-        } gap-1 lg:gap-1 py-3 md:py-5`}
+        } gap-1 lg:gap-1 my-3 md:my-5 py-1 md:py-2 px-1 md:px-2`}
       >
         {activeTab === "posts" &&
           postsInfo &&
@@ -216,7 +216,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         <Modal
           isOpen={isModalOpen}
           setIsOpen={() => handleCloseModal(selectedPost)}
-          title="Post Info"
+          title={t("post_info")}
           size="md"
         >
           <PostDetails

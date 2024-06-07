@@ -23,6 +23,7 @@ import { useAuth } from "../../../context/AuthContext";
 import Modal from "../../const/Modal";
 import LoginModalContent from "../../const/LoginModalContent";
 import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -37,6 +38,7 @@ const PostDetails = ({
   currentUserId,
   onClose,
 }: PostDetailsProps) => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const { mutate: toggleLike } = useToggleLikeMutaion();
   const { mutate: toggleSave } = useToggleSaveMutaion();
@@ -145,7 +147,7 @@ const PostDetails = ({
           <img
             src={postInfo.images[0]}
             alt="Post"
-            className="md:w-full md:h-full w-full h-full object-contain rounded-lg"
+            className="md:w-full md:h-full w-full h-full object-cover rounded-lg border-4 border-secondary"
           />
         );
       case "video":
@@ -161,7 +163,7 @@ const PostDetails = ({
       case "doc":
         return (
           <div
-            className="relative border rounded-lg overflow-hidden cursor-pointer w-[320px] md:w-full"
+            className="relative border rounded-lg overflow-hidden cursor-pointer w-[320px] md:w-full   border-secondary"
             onClick={() => window.open(postInfo.postDocs, "_blank")}
           >
             <img
@@ -208,13 +210,13 @@ const PostDetails = ({
 
       <div className="md:w-1/2 w-full flex flex-col p-4">
         <div className="flex items-center mb-4 justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-2">
             <img
               src={
                 postInfo?.owner.profileImage ?? "https://via.placeholder.com/40"
               }
               alt="User"
-              className="w-10 h-10 rounded-full mr-3"
+              className="w-10 h-10 rounded-full "
             />
             <p className="text-navBackground text-xs md:text-base font-serif">
               {postInfo?.owner.fullName}
@@ -228,7 +230,7 @@ const PostDetails = ({
             />
           )}
         </div>
-        <hr className="mb-4" />
+        <hr className="mb-4 bg-secondary/40 h-0.5" />
 
         <div className="mb-4 text-start whitespace-pre-wrap   justify-start items-start ">
           {/* <p> {postInfo?.caption}</p> */}
@@ -260,15 +262,27 @@ const PostDetails = ({
                 );
               }}
             >
-              <span className="font-bold">WhatsApp Number:</span>
-              {` ${postInfo?.whatsAppNumber}`}
+              <div className="flex flex-row">
+                <span className="font-bold">{`${t(
+                  "whatsApp_number"
+                )} : `}</span>
+                <p
+                  style={{ direction: "ltr" }}
+                >{`${postInfo?.whatsAppNumber}`}</p>
+              </div>
             </p>
           )}
           {postInfo?.mobileNumber && (
             <Link to={`tel:${postInfo.mobileNumber}`}>
               <p className=" text-sm mt-2">
-                <span className="font-bold">Mobile Number:</span>
-                {` ${postInfo?.mobileNumber}`}
+                <div className="flex flex-row">
+                  <span className="font-bold">{`${t(
+                    "mobile_number"
+                  )} : `}</span>
+                  <p style={{ direction: "ltr" }}>
+                    {` ${postInfo?.mobileNumber}`}
+                  </p>
+                </div>
               </p>
             </Link>
           )}
@@ -282,7 +296,7 @@ const PostDetails = ({
             </Link>
           )}
           {postInfo?.tags && postInfo.tags.length > 0 && (
-            <div className="flex flex-row space-x-1 mt-2 flex-wrap">
+            <div className="flex flex-row gap-x-1 mt-2 flex-wrap">
               {postInfo.tags.map((tag, index) => (
                 <p key={index} className="text-xs text-blue-700 font-semibold">
                   {tag}
@@ -290,10 +304,27 @@ const PostDetails = ({
               ))}
             </div>
           )}
+          {postInfo?.discountPercentage && postInfo?.discountPercentage > 0 ? (
+            <div className="flex flex-col items-start justify-start space-y-1">
+              <p className="text-blue-500 font-bold">
+                <span className="font-semibold text-black">
+                  {`${t("discount")} : `}
+                </span>{" "}
+                {postInfo?.discountPercentage}%
+              </p>
+              <p className="text-xs text-gray-600">
+                {t(
+                  "This discount for this service will be given to all users who have a Sii card"
+                )}
+              </p>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
 
-        <div className="flex space-x-4 mb-2 justify-between">
-          <div className="flex space-x-5">
+        <div className="flex gap-x-4 mb-2 justify-between">
+          <div className="flex gap-x-5">
             <div onClick={handleToggleLike} className="cursor-pointer">
               {isLiked ? (
                 <PiHandsClappingFill className="w-5 h-5 text-secondary" />
@@ -312,8 +343,10 @@ const PostDetails = ({
         </div>
         <div className="text-start mb-4 ">
           <p className="text-sm">
-            Liked by{" "}
-            <span className="font-semibold text-base">{likeCount} people</span>
+            {t("liked_by")}{" "}
+            <span className="font-semibold text-base">
+              {likeCount} {t("people")}
+            </span>
           </p>
         </div>
 
@@ -321,7 +354,7 @@ const PostDetails = ({
           <Modal
             isOpen={isLoginModalOpen}
             setIsOpen={handleCloseModal}
-            title="LogIn"
+            title={t("login")}
             size="md"
           >
             <LoginModalContent />

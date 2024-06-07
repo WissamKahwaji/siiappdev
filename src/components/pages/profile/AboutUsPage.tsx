@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useGetUserByUserNameQuery } from "../../../apis/account/queries";
 import { SyncLoader } from "react-spinners";
+import { useTranslation } from "react-i18next";
 
 const AboutUsPage = () => {
   const { userName } = useParams<{ userName: string }>();
-
+  const { t } = useTranslation();
   const {
     data: userInfo,
     isLoading: isLoadingUser,
@@ -35,7 +36,7 @@ const AboutUsPage = () => {
         {userInfo?.userAbout?.aboutUs && (
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-secondary mb-6 border-b border-secondary pb-2 ">
-              About Us
+              {t("about_us")}
             </h2>
             <p className="text-white whitespace-pre-wrap leading-relaxed">
               {userInfo.userAbout.aboutUs}
@@ -45,7 +46,7 @@ const AboutUsPage = () => {
         {userInfo?.userAbout?.ourMission && (
           <section className="mb-12">
             <h2 className="text-3xl font-bold text-secondary mb-6 border-b border-secondary pb-2">
-              Our Mission
+              {t("our_mission")}
             </h2>
             <p className="text-white whitespace-pre-wrap leading-relaxed">
               {userInfo.userAbout.ourMission}
@@ -55,7 +56,7 @@ const AboutUsPage = () => {
         {userInfo?.userAbout?.ourVision && (
           <section>
             <h2 className="text-3xl font-bold text-secondary mb-6 border-b border-secondary pb-2">
-              Our Vision
+              {t("our_vision")}
             </h2>
             <p className="text-white whitespace-pre-wrap leading-relaxed">
               {userInfo.userAbout.ourVision}

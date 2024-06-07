@@ -10,6 +10,8 @@ import { EditProfileProps } from "../../apis/account/type";
 
 import { SyncLoader } from "react-spinners";
 import ImageCropper from "../../components/const/ImageCropper";
+import ToggleSwitch from "../../components/const/ToggleSwitch";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
@@ -30,6 +32,7 @@ const validationSchema = Yup.object().shape({
     threads: Yup.string(),
     snapChat: Yup.string(),
     youtube: Yup.string(),
+    tiktok: Yup.string(),
     xPlatform: Yup.string(),
     painterest: Yup.string(),
     otherLink: Yup.string(),
@@ -44,7 +47,6 @@ const userCategories = [
   "Music",
   "Restaurants",
   "Business account",
-  "Personal account",
   "Makeup",
   "Agriculture",
   "Local service",
@@ -60,11 +62,21 @@ const userCategories = [
 ];
 
 const EditProfilePage: React.FC = () => {
+  const { t } = useTranslation();
   const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
   const { mutate: editProfileInfo } = useEditProfileMutation();
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
+  const [isBusinessAccount, setIsBusinessAccount] = useState(
+    userInfo?.isBusiness ?? false
+  );
 
+  const handleSwitchChange = (checked: boolean, setFieldValue: any) => {
+    setIsBusinessAccount(checked);
+
+    setFieldValue("isBusiness", checked);
+    // You can also make an API call here to update the user's account type
+  };
   const handleCropComplete = (croppedFile: File, setFieldValue: any) => {
     setCroppedImageFile(croppedFile);
     console.log(croppedImageFile?.name);
@@ -81,6 +93,7 @@ const EditProfilePage: React.FC = () => {
     fullName: userInfo?.fullName ?? "",
     bio: userInfo?.bio ?? "",
     userCategory: userInfo?.userCategory ?? "",
+    isBusiness: userInfo?.isBusiness ?? false,
     userAbout: {
       aboutUs: userInfo?.userAbout?.aboutUs ?? "",
       ourMission: userInfo?.userAbout?.ourMission ?? "",
@@ -96,6 +109,7 @@ const EditProfilePage: React.FC = () => {
       snapChat: userInfo?.socialMedia?.snapChat ?? "",
       youtube: userInfo?.socialMedia?.youtube ?? "",
       painterest: userInfo?.socialMedia?.painterest ?? "",
+      tiktok: userInfo?.socialMedia?.tiktok ?? "",
       xPlatform: userInfo?.socialMedia?.xPlatform ?? "",
       otherLink: userInfo?.socialMedia?.otherLink ?? "",
     },
@@ -128,7 +142,9 @@ const EditProfilePage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-12 ">
-      <h1 className="text-3xl font-bold text-center mb-8 ">Edit Profile</h1>
+      <h1 className="text-3xl font-bold text-center mb-8 ">
+        {t("edit_profile")}
+      </h1>
       <div className="flex justify-center md:w-1/2 md:mx-auto">
         <div className="bg-white p-10 rounded-lg shadow-lg border border-secondary w-full mx-2 ">
           <Formik
@@ -155,7 +171,7 @@ const EditProfilePage: React.FC = () => {
                   /> */}
                   <div className=" ">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
-                      Profile Picture
+                      {t("profile_picture")}
                     </label>
                     <div className="flex flex-row w-full">
                       <img
@@ -183,7 +199,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="fullName"
                     >
-                      Full Name
+                      {t("full_name")}
                     </label>
                     <input
                       id="fullName"
@@ -193,6 +209,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.fullName}
+                      style={{ direction: "ltr" }}
                     />
                     {errors.fullName && touched.fullName && (
                       <div className="text-red-500 text-xs mt-1">
@@ -206,7 +223,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="bio"
                     >
-                      Bio
+                      {t("bio")}
                     </label>
                     <textarea
                       id="bio"
@@ -215,6 +232,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.bio ?? ""}
+                      style={{ direction: "ltr" }}
                     />
                     {errors.bio && touched.bio && (
                       <div className="text-red-500 text-xs mt-1">
@@ -228,7 +246,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="mobileNumber"
                     >
-                      Phone Number
+                      {t("phone_number")}
                     </label>
                     <input
                       id="mobileNumber"
@@ -238,6 +256,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.mobileNumber}
+                      style={{ direction: "ltr" }}
                     />
                     {errors.mobileNumber && touched.mobileNumber && (
                       <div className="text-red-500 text-xs mt-1">
@@ -245,61 +264,71 @@ const EditProfilePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      className="mb-2 text-sm font-medium text-gray-700"
-                      htmlFor="userCategory"
-                    >
-                      User Category
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="userCategory"
-                        name="userCategory"
-                        className="block appearance-none w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.userCategory}
-                      >
-                        <option
-                          value=""
-                          label="Select category"
-                          className="text-secondary"
-                        />
-                        {userCategories.map(category => (
-                          <option
-                            key={category}
-                            value={category}
-                            className="text-xs"
-                          >
-                            {category}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg
-                          className="fill-current h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.userCategory && touched.userCategory && (
-                      <div className="text-red-500 text-xs mt-1">
-                        {errors.userCategory}
-                      </div>
-                    )}
+                  <div className="flex justify-between items-center my-2">
+                    <ToggleSwitch
+                      label={t("switch_to_business_account")}
+                      checked={values.isBusiness ?? isBusinessAccount}
+                      onChange={e => {
+                        handleSwitchChange(e, setFieldValue);
+                      }}
+                    />
                   </div>
+                  {isBusinessAccount && (
+                    <div className="flex flex-col">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="userCategory"
+                      >
+                        {t("user_category")}
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="userCategory"
+                          name="userCategory"
+                          className="block appearance-none w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.userCategory}
+                        >
+                          <option
+                            value=""
+                            label="Select category"
+                            className="text-secondary"
+                          />
+                          {userCategories.map(category => (
+                            <option
+                              key={category}
+                              value={category}
+                              className="text-xs"
+                            >
+                              {category}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                          <svg
+                            className="fill-current h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                          </svg>
+                        </div>
+                      </div>
+                      {errors.userCategory && touched.userCategory && (
+                        <div className="text-red-500 text-xs mt-1">
+                          {errors.userCategory}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <div className="flex flex-col">
                     <label
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.webSite"
                     >
-                      WebSite
+                      {t("website")}
                     </label>
                     <input
                       id="socialMedia.webSite"
@@ -309,6 +338,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.webSite}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
 
@@ -317,7 +347,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.whatsApp"
                     >
-                      WhatsApp
+                      {t("whatsApp")}
                     </label>
                     <input
                       id="socialMedia.whatsApp"
@@ -327,6 +357,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.whatsApp}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -334,7 +365,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.faceBook"
                     >
-                      faceBook
+                      {t("faceBook")}
                     </label>
                     <input
                       id="socialMedia.faceBook"
@@ -344,6 +375,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.faceBook}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -351,7 +383,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.linkedIn"
                     >
-                      linkedIn
+                      {t("linkedIn")}
                     </label>
                     <input
                       id="socialMedia.linkedIn"
@@ -361,6 +393,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.linkedIn}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -368,7 +401,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.instagram"
                     >
-                      instagram
+                      {t("instagram")}
                     </label>
                     <input
                       id="socialMedia.instagram"
@@ -378,6 +411,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.instagram}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -385,7 +419,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.threads"
                     >
-                      threads
+                      {t("threads")}
                     </label>
                     <input
                       id="socialMedia.threads"
@@ -395,6 +429,25 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.threads}
+                      style={{ direction: "ltr" }}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.tiktok"
+                    >
+                      {t("tiktok")}
+                    </label>
+                    <input
+                      id="socialMedia.tiktok"
+                      name="socialMedia.tiktok"
+                      type="text"
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.socialMedia?.tiktok}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -402,7 +455,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.snapChat"
                     >
-                      snapChat
+                      {t("snapChat")}
                     </label>
                     <input
                       id="socialMedia.snapChat"
@@ -412,6 +465,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.snapChat}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -419,7 +473,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.youtube"
                     >
-                      youtube
+                      {t("youtube")}
                     </label>
                     <input
                       id="socialMedia.youtube"
@@ -429,6 +483,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.youtube}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -436,7 +491,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.xPlatform"
                     >
-                      xPlatform
+                      {t("xPlatform")}
                     </label>
                     <input
                       id="socialMedia.xPlatform"
@@ -446,6 +501,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.xPlatform}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -453,7 +509,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.painterest"
                     >
-                      painterest
+                      {t("painterest")}
                     </label>
                     <input
                       id="socialMedia.painterest"
@@ -463,6 +519,7 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.painterest}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   <div className="flex flex-col">
@@ -470,7 +527,7 @@ const EditProfilePage: React.FC = () => {
                       className="mb-2 text-sm font-medium text-gray-700"
                       htmlFor="socialMedia.otherLink"
                     >
-                      other Link
+                      {t("other_link")}
                     </label>
                     <input
                       id="socialMedia.otherLink"
@@ -480,19 +537,20 @@ const EditProfilePage: React.FC = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.otherLink}
+                      style={{ direction: "ltr" }}
                     />
                   </div>
                   {/* Add other social media fields similarly */}
                 </div>
                 <p className="text-navBackground bg-secondary font-serif font-semibold px-3 w-fit rounded py-1">
-                  About Section
+                  {t("about_section")}
                 </p>
                 <div className="flex flex-col">
                   <label
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="userAbout.aboutUs"
                   >
-                    About Us
+                    {t("about_us")}
                   </label>
                   <textarea
                     id="userAbout.aboutUs"
@@ -508,7 +566,7 @@ const EditProfilePage: React.FC = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="userAbout.ourVision"
                   >
-                    Our Vision
+                    {t("our_vision")}
                   </label>
                   <textarea
                     id="userAbout.ourVision"
@@ -524,7 +582,7 @@ const EditProfilePage: React.FC = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="userAbout.ourMission"
                   >
-                    Our Mission
+                    {t("our_mission")}
                   </label>
                   <textarea
                     id="userAbout.ourMission"
@@ -540,7 +598,7 @@ const EditProfilePage: React.FC = () => {
                   disabled={isSubmitting}
                   className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary transform ease-in-out duration-300  focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {isSubmitting ? "Saving..." : "Save"}
+                  {isSubmitting ? t("Saving") : t("save")}
                 </button>
               </form>
             )}

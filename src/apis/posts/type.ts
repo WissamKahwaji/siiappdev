@@ -5,6 +5,7 @@ export type PostModel = {
     fullName: string;
     profileImage: string;
     userName: string;
+    isBusiness?: boolean;
   };
   images: string[];
   caption: string;
@@ -20,7 +21,7 @@ export type PostModel = {
   postDocs?: string | undefined;
   coverVideoImage?: string | undefined;
   coverPdfImage?: string | undefined;
-
+  discountPercentage?: number | undefined;
   createdAt?: Date;
 };
 
@@ -35,6 +36,7 @@ export type PostInputProps = {
   postType?: string | undefined;
   postVideo?: string | undefined;
   postDocs?: string | undefined;
+  discountPercentage?: number | undefined;
 };
 
 export type CommentModel = {

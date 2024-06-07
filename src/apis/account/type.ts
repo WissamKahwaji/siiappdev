@@ -15,6 +15,7 @@ export type UserModel = {
   mobileNumber?: string;
   siiCard?: string;
   userCategory?: string | undefined;
+  isBusiness?: boolean;
   userAbout?: {
     aboutUs?: string;
     ourMission?: string;
@@ -29,9 +30,10 @@ export type UserModel = {
     threads?: string;
     snapChat?: string;
     youtube?: string;
-    painterest: string;
-    xPlatform: string;
-    otherLink: string;
+    tiktok?: string;
+    painterest?: string;
+    xPlatform?: string;
+    otherLink?: string;
   };
 };
 
@@ -47,6 +49,7 @@ export type EditProfileProps = {
     ourVision: string;
   };
   userCategory?: string | undefined;
+  isBusiness?: boolean;
   socialMedia?: {
     webSite: string;
     whatsApp: string;
@@ -56,6 +59,7 @@ export type EditProfileProps = {
     threads: string;
     snapChat: string;
     youtube: string;
+    tiktok: string;
     painterest: string;
     xPlatform: string;
     otherLink: string;

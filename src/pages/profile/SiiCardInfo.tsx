@@ -1,6 +1,6 @@
 import { useState } from "react";
-import card from "../../assets/sii_card_back.png";
-import yellowCardBack from "../../assets/sii_card_front.png";
+import card from "../../assets/card_front_last.png";
+import yellowCardBack from "../../assets/card_back_last.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import * as Yup from "yup";
@@ -11,6 +11,7 @@ import {
 import { SyncLoader } from "react-spinners";
 import { EditCardParams } from "../../apis/sii_card/type";
 import { Formik, FormikHelpers } from "formik";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -20,6 +21,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const SiiCardInfo = () => {
+  const { t } = useTranslation();
   const { data: cardInfo, isLoading, isError } = useGetUserSiiCardQuery();
   const [isFlipped, setIsFlipped] = useState(false);
   const { mutate: editSiiCard } = useEditSiiCardMutaion();
@@ -75,7 +77,7 @@ const SiiCardInfo = () => {
         >
           <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start md:w-1/3 max-w-full w-full">
             <h2 className="text-2xl mb-8 bg-secondary px-3 py-1 rounded-sm shadow-sm text-navBackground">
-              Sii Card Info
+              {t("sii_card_info")}
             </h2>
 
             <div className="relative w-full justify-center flex h-[200px] md:h-[250px]  mb-10">
@@ -108,13 +110,16 @@ const SiiCardInfo = () => {
 
             <div className="grid grid-cols-1  gap-6 w-full">
               <div>
-                <p className="text-sm">Card Number</p>
-                <div className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed">
+                <p className="text-sm">{t("card_number")}</p>
+                <div
+                  className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed"
+                  style={{ direction: "ltr" }}
+                >
                   {cardInfo?._id}
                 </div>
               </div>
               <div>
-                <p className="text-sm">Your Email</p>
+                <p className="text-sm">{t("your_email")}</p>
                 <input
                   type="text"
                   name="email"
@@ -123,6 +128,7 @@ const SiiCardInfo = () => {
                   onChange={handleChange}
                   value={values.email}
                   className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/20 w-full"
+                  style={{ direction: "ltr" }}
                 />
                 {errors.email && touched.email && (
                   <div className="text-red-500 text-xs mt-1">
@@ -131,7 +137,7 @@ const SiiCardInfo = () => {
                 )}
               </div>
               <div>
-                <p className="text-sm">Mobile Number</p>
+                <p className="text-sm">{t("mobile_number")}</p>
                 <input
                   type="text"
                   name="mobileNumber"
@@ -140,6 +146,7 @@ const SiiCardInfo = () => {
                   onChange={handleChange}
                   value={values.mobileNumber}
                   className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/20 w-full"
+                  style={{ direction: "ltr" }}
                 />
                 {errors.mobileNumber && touched.mobileNumber && (
                   <div className="text-red-500 text-xs mt-1">
@@ -148,21 +155,30 @@ const SiiCardInfo = () => {
                 )}
               </div>
               <div>
-                <p className="text-sm">Full Name</p>
-                <div className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed">
+                <p className="text-sm">{t("full_name")}</p>
+                <div
+                  className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed"
+                  style={{ direction: "ltr" }}
+                >
                   {cardInfo?.fullName}
                 </div>
               </div>
               <div>
-                <p className="text-sm">User Name</p>
-                <div className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed">
+                <p className="text-sm">{t("user_name")}</p>
+                <div
+                  className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed"
+                  style={{ direction: "ltr" }}
+                >
                   {cardInfo?.userName}
                 </div>
               </div>
 
               <div>
-                <p className="text-sm">Qr Code Link</p>
-                <div className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-copy">
+                <p className="text-sm">{t("qr_code_link")}</p>
+                <div
+                  className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-copy"
+                  style={{ direction: "ltr" }}
+                >
                   {cardInfo?.qrCode ??
                     `https://www.siiapp.com/${cardInfo?.fullName}`}
                 </div>
@@ -173,7 +189,7 @@ const SiiCardInfo = () => {
               disabled={isSubmitting}
               className="w-full mt-6 py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary transform ease-in-out duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {isSubmitting ? "Saving..." : "Save"}
+              {isSubmitting ? t("Saving") : t("save")}
             </button>
           </div>
         </form>

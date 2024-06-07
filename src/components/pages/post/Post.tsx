@@ -1,9 +1,6 @@
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import {
-  PiHandsClappingFill,
-  PiHandsClappingThin,
-  PiShareFatLight,
-} from "react-icons/pi";
+import { FaBookmark } from "react-icons/fa";
+import { PiHandsClappingThin, PiShareFatLight } from "react-icons/pi";
+import { CiBookmark } from "react-icons/ci";
 import { PostModel } from "../../../apis/posts/type";
 import { Link } from "react-router-dom";
 import {
@@ -19,6 +16,8 @@ import { useAuth } from "../../../context/AuthContext";
 import LoginToast from "../../const/LoginToast";
 import LoginModalContent from "../../const/LoginModalContent";
 import { formatDate } from "../../../utils";
+import { useTranslation } from "react-i18next";
+import { FaHandsClapping } from "react-icons/fa6";
 
 type PostProps = {
   post: PostModel;
@@ -26,6 +25,7 @@ type PostProps = {
 };
 
 const Post = (props: PostProps) => {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   // const { mutate: addCommentInfo } = useAddCommentMutaion();
   const { mutate: toggleLike } = useToggleLikeMutaion();
@@ -186,12 +186,24 @@ const Post = (props: PostProps) => {
         return (
           <video
             ref={videoRef}
+            playsInline
+            muted
             controls
             className="object-cover bg-transparent w-full max-h-[450px]"
           >
             <source src={props.post?.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
+          // <video
+          //   id="logoVideo"
+          //   autoPlay
+          //   playsInline
+          //   muted
+          //   loop
+          //   className="object-cover w-full h-full"
+          // >
+          //   <source src={logo_video} type="video/mp4" />
+          // </video>
         );
       case "doc":
         return (
@@ -229,14 +241,16 @@ const Post = (props: PostProps) => {
       <div className="p-3 flex flex-row">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>
-            <img
-              src={props.post.owner.profileImage}
-              alt=""
-              className="rounded-full border border-secondary w-8 h-8 inline"
-            />
-            <span className="font-medium text-sm ml-2">
-              {props.post.owner.fullName}
-            </span>
+            <div className="flex gap-x-1 items-center">
+              <img
+                src={props.post.owner.profileImage}
+                alt=""
+                className="rounded-full border border-secondary w-8 h-8 inline"
+              />
+              <span className="font-medium text-sm ">
+                {props.post.owner.fullName}
+              </span>
+            </div>
           </Link>
         </div>
       </div>
@@ -244,14 +258,14 @@ const Post = (props: PostProps) => {
       {renderPostContent()}
 
       <div className="flex flex-col py-2 px-3">
-        <div className="flex space-x-4 mb-2 justify-between">
-          <div className="flex space-x-5">
+        <div className="flex gap-x-4 mb-2 justify-between">
+          <div className="flex gap-x-5">
             <div
               onClick={handleToggleLike}
               className="cursor-pointer hover:text-gray-500"
             >
               {isLiked ? (
-                <PiHandsClappingFill className="w-6 h-6 text-secondary" />
+                <FaHandsClapping className="w-6 h-6 text-secondary" />
               ) : (
                 <PiHandsClappingThin className="w-6 h-6" />
               )}
@@ -264,20 +278,30 @@ const Post = (props: PostProps) => {
               className="w-6 h-6 cursor-pointer hover:text-gray-500"
               onClick={handleShareClick}
             />
-          </div>
-          <div
-            onClick={handleToggleSave}
-            className="cursor-pointer hover:text-gray-500"
-          >
-            {isSaved ? (
-              <FaBookmark className="w-6 h-6 text-secondary" />
-            ) : (
-              <FaRegBookmark className="w-6 h-6" />
-            )}
+            <div
+              onClick={handleToggleSave}
+              className="cursor-pointer hover:text-gray-500"
+            >
+              {isSaved ? (
+                <FaBookmark className="w-6 h-6 text-secondary" />
+              ) : (
+                <CiBookmark className="w-6 h-6" />
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="font-medium text-sm">{likeCount} Likes</div>
+        {/* <div className="font-medium text-sm">
+          {likeCount} {t("likes")}
+        </div> */}
+        <div className="text-start mb-4 ">
+          <p className="text-sm">
+            {t("liked_by")}{" "}
+            <span className="font-semibold text-base">
+              {likeCount} {t("people")}
+            </span>
+          </p>
+        </div>
 
         <div className="text-sm">
           <div className="flex flex-col mb-2">
@@ -308,15 +332,27 @@ const Post = (props: PostProps) => {
                 )
               }
             >
-              <span className="font-bold">WhatsApp Number:</span>
-              {` ${props.post?.whatsAppNumber}`}
+              <div className="flex flex-row">
+                <span className="font-bold">{`${t(
+                  "whatsApp_number"
+                )} : `}</span>
+                <p
+                  style={{ direction: "ltr" }}
+                >{`${props.post.whatsAppNumber}`}</p>
+              </div>
             </p>
           )}
           {props.post?.mobileNumber && (
             <Link to={`tel:${props.post?.mobileNumber}`}>
               <p className="text-sm mt-2">
-                <span className="font-bold">Mobile Number:</span>
-                {` ${props.post?.mobileNumber}`}
+                <div className="flex flex-row">
+                  <span className="font-bold">{`${t(
+                    "mobile_number"
+                  )} : `}</span>
+                  <p style={{ direction: "ltr" }}>
+                    {` ${props.post?.mobileNumber}`}
+                  </p>
+                </div>
               </p>
             </Link>
           )}
@@ -330,7 +366,7 @@ const Post = (props: PostProps) => {
             </Link>
           )}
           {props.post.tags && props.post.tags.length > 0 && (
-            <div className="flex flex-row space-x-1 mt-2 flex-wrap">
+            <div className="flex flex-row gap-x-1 mt-2 flex-wrap">
               {props.post.tags.map((tag, index) => (
                 <p key={index} className="text-xs text-blue-700 font-bold">
                   {tag}
@@ -339,7 +375,23 @@ const Post = (props: PostProps) => {
             </div>
           )}
         </div>
-
+        {props.post.discountPercentage && props.post.discountPercentage > 0 ? (
+          <div className="flex flex-col items-start justify-start space-y-1">
+            <p className="text-blue-500 font-bold">
+              <span className="font-semibold text-black">
+                {`${t("discount")} : `}
+              </span>{" "}
+              {props.post.discountPercentage}%
+            </p>
+            <p className="text-xs text-gray-600">
+              {t(
+                "This discount for this service will be given to all users who have a Sii card"
+              )}
+            </p>
+          </div>
+        ) : (
+          <div></div>
+        )}
         {props.post.createdAt && (
           <div className="text-gray-500 uppercase text-xs tracking-wide mt-2">
             {formatDate(props.post.createdAt.toString())}
@@ -348,7 +400,9 @@ const Post = (props: PostProps) => {
         <div
           className="text-sm text-gray-400 mt-1 cursor-pointer"
           onClick={() => handlePostClick(props.post)}
-        >{`View details`}</div>
+        >
+          {t("view_details")}
+        </div>
 
         {/* <div
           className="text-sm text-gray-400 mt-1 cursor-pointer"
@@ -413,7 +467,7 @@ const Post = (props: PostProps) => {
         <Modal
           isOpen={isModalOpen}
           setIsOpen={handleCloseModal}
-          title="Your Post"
+          title={t("post_info")}
           size="md"
         >
           <PostDetails
@@ -427,7 +481,7 @@ const Post = (props: PostProps) => {
         <Modal
           isOpen={isLoginModalOpen}
           setIsOpen={handleCloseModal}
-          title="LogIn"
+          title={t("login")}
           size="md"
         >
           <LoginModalContent />

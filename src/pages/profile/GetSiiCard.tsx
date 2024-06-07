@@ -4,6 +4,7 @@ import { SiiCardModel } from "../../apis/sii_card/type";
 import * as Yup from "yup";
 import { useAddSiiCardMutaion } from "../../apis/sii_card/queries";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,7 +16,7 @@ const validationSchema = Yup.object().shape({
 
 const GetSiiCard = () => {
   const { userName } = useParams<string>();
-
+  const { t } = useTranslation();
   const initialValues: SiiCardModel = {
     fullName: "",
     email: "",
@@ -38,10 +39,9 @@ const GetSiiCard = () => {
   return (
     <div className="flex flex-col justify-center items-center font-header w-full h-full py-12 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start max-w-lg w-full">
-        <h2 className="text-2xl mb-3">Get Your Sii Card</h2>
+        <h2 className="text-2xl mb-3">{t("get_your_sii_card")}</h2>
         <p className="text-gray-700 text-sm mb-2">
-          Request Sii card and get a lot of offers and discounts from
-          everywhere!!
+          {t("get_your_sii_card_info")}
         </p>
         <hr className="w-full mb-6" />
         <Formik
@@ -68,7 +68,7 @@ const GetSiiCard = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="userName"
                   >
-                    User Name
+                    {t("user_name")}
                   </label>
                   <input
                     id="userName"
@@ -77,6 +77,7 @@ const GetSiiCard = () => {
                     type="text"
                     value={userName}
                     className="w-full p-2 border border-gray-400 rounded-lg bg-navBackground/20 cursor-not-allowed"
+                    style={{ direction: "ltr" }}
                   />
                 </div>
                 <div className="flex flex-col">
@@ -84,7 +85,7 @@ const GetSiiCard = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="fullName"
                   >
-                    Your Name
+                    {t("your_name")}
                   </label>
                   <input
                     id="fullName"
@@ -94,6 +95,7 @@ const GetSiiCard = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.fullName}
+                    style={{ direction: "ltr" }}
                   />
                   {errors.fullName && touched.fullName && (
                     <div className="text-red-500 text-xs mt-1">
@@ -106,7 +108,7 @@ const GetSiiCard = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="email"
                   >
-                    Your Email
+                    {t("your_email")}
                   </label>
                   <input
                     id="email"
@@ -116,6 +118,7 @@ const GetSiiCard = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
+                    style={{ direction: "ltr" }}
                   />
                   {errors.email && touched.email && (
                     <div className="text-red-500 text-xs mt-1">
@@ -128,7 +131,7 @@ const GetSiiCard = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="mobileNumber"
                   >
-                    Mobile Number
+                    {t("mobile_number")}
                   </label>
                   <input
                     id="mobileNumber"
@@ -138,6 +141,7 @@ const GetSiiCard = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.mobileNumber}
+                    style={{ direction: "ltr" }}
                   />
                   {errors.mobileNumber && touched.mobileNumber && (
                     <div className="text-red-500 text-xs mt-1">
@@ -151,7 +155,7 @@ const GetSiiCard = () => {
                 disabled={isSubmitting}
                 className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {isSubmitting ? "Saving..." : "Save"}
+                {isSubmitting ? t("Saveing") : t("save")}
               </button>
             </form>
           )}

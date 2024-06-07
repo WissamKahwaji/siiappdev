@@ -3,6 +3,7 @@ import Cropper from "react-easy-crop";
 import { Area } from "react-easy-crop";
 import { FiUpload } from "react-icons/fi";
 import getCroppedImg from "./CropImageHelper";
+import { useTranslation } from "react-i18next";
 
 interface ImageCropperProps {
   onCropComplete: (croppedFile: File) => void;
@@ -49,6 +50,8 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
     }
   }, [croppedArea, image, onCropComplete]);
 
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className="mb-4">
@@ -77,19 +80,19 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
                   className="w-full"
                 />
               </div>
-              <div className="mt-4 flex justify-end space-x-2">
+              <div className="mt-4 flex justify-end gap-x-2">
                 <button
                   className="px-4 py-2 bg-red-600 text-white rounded-md"
                   onClick={() => setImage(null)}
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="button"
                   className="px-4 py-2 bg-secondary text-navBackground rounded-md"
                   onClick={handleCropImage}
                 >
-                  Crop
+                  {t("crop")}
                 </button>
               </div>
             </div>
