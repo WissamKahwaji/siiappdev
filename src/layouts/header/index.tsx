@@ -252,7 +252,7 @@ const Navbar = () => {
                   <a
                     key={index}
                     href={item.path}
-                    className="text-white hover:text-hoverColor transition duration-300 text-lg border-b-2 w-full border-b-secondary/20"
+                    className="text-white hover:text-hoverColor transition duration-300 text-lg border-b-2 w-full border-b-secondary/20 capitalize"
                   >
                     {t(item.title)}
                   </a>

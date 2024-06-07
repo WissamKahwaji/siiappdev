@@ -63,9 +63,9 @@ const LogInModalForm = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
-                    // style={{
-                    //   direction: selectedLang == "en" ? "ltr" : "rtl",
-                    // }}
+                    style={{
+                      direction: "ltr",
+                    }}
                   />
                   {errors.email && touched.email && (
                     <div className="text-red-500 text-xs">{errors.email}</div>
@@ -82,6 +82,9 @@ const LogInModalForm = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.password}
+                      style={{
+                        direction: "ltr",
+                      }}
                     />
                     <button
                       type="button"

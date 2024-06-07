@@ -624,7 +624,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 }}
               >
                 <p>
-                  {user.user?.siiCard ? "Show Details .." : "Get Sii Card Now"}
+                  {user.user?.siiCard
+                    ? t("show_details")
+                    : t("get_sii_card_now")}
                 </p>
                 <FontAwesomeIcon icon={faArrowRight} />
               </div>
