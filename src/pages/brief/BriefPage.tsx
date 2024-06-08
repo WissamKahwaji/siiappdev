@@ -32,7 +32,7 @@ const BriefPage = () => {
           playsInline
           muted
           loop
-          className="object-cover w-full h-full"
+          className="object-contain w-full h-full"
         >
           <source src={logo_video} type="video/mp4" />
         </video>
@@ -42,6 +42,8 @@ const BriefPage = () => {
           <p>{t("second_brief")}</p>
           <br />
           <p>{t("third_brief")}</p>
+          <br />
+          <p>{t("forth_brief")}</p>
         </div>
       </div>
       <div className="bg-seconBackground my-16 py-12 px-10 ">
@@ -82,6 +84,8 @@ const BriefPage = () => {
             <p>{t("sii_brief")}</p>
             <br />
             <p>{t("sii_brief_second")}</p>
+            <br />
+            <p>{t("sii_brief_third")}</p>
           </div>
         </div>
       </div>
