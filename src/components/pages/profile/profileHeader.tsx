@@ -27,7 +27,7 @@ import {
 import * as Yup from "yup";
 import qrCode from "../../../assets/qrCode.png";
 import yellowCardBack from "../../../assets/card.png";
-import logo from "../../../assets/logo_sii_black.png";
+import logo from "../../../assets/logo_sii_new.png";
 import { useEffect, useRef, useState } from "react";
 import { MdAdd } from "react-icons/md";
 
@@ -341,7 +341,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             <ImagePopup
               src={user.user?.profileImage ?? defaultImage}
               alt="profile"
-              smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
+              smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] min-h-[100px] min-w-[130px]"
               largeClassName="h-[300px] w-[300px]"
             />
             {user.user._id === userId && (
@@ -457,7 +457,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 </p>
                 <p className="text-xs">{t("follows")}</p>
               </div>
-              <div className="text-primary font-header flex flex-col items-center justify-center">
+              <div
+                className="text-primary font-header flex flex-col items-center justify-center"
+                onClick={() => {
+                  if (user.user._id === userId) {
+                    navigate("/account/followers");
+                  }
+                }}
+              >
                 <p className="font-semibold text-sm">{followersCount}</p>
                 <p className="text-xs">{t("followers")}</p>
               </div>
@@ -526,7 +533,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <div className="flex flex-row justify-between items-center">
                   <div className="flex flex-col w-1/2">
                     <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
-                      <img src={logo} alt="" className="w-7 h-7 mr-1" />{" "}
+                      <img src={logo} alt="" className="w-12 h-auto mr-1" />{" "}
                       {t("premium_card")}
                     </h2>
                     <p className="text-navBackground text-base font-semibold mt-1">
@@ -608,11 +615,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <div className="md:hidden bg-secondary rounded-xl px-4 py-8 my-3">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col w-1/2">
-              <h2 className="text-navBackground font-serif text-lg font-bold flex items-center">
-                <img src={logo} alt="" className="w-7 h-7 mr-1" />{" "}
+              <h2 className="text-navBackground font-serif text-base font-bold flex items-center">
+                <img src={logo} alt="" className="w-10 h-auto mr-1" />{" "}
                 {t("premium_card")}
               </h2>
-              <p className="text-navBackground text-base font-semibold mt-1">
+              <p className="text-navBackground text-sm font-semibold mt-1">
                 {t("premium_card_info")}
               </p>
               <div

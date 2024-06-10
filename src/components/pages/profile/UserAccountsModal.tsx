@@ -39,7 +39,7 @@ const UserAccountsModal = ({ onClose }: UserAccountsModalProps) => {
               <img
                 src={user.profileImage ?? defaultImage}
                 alt="profile"
-                className=" object-cover rounded-full border-2 border-gray-200 shadow-md shadow-secondary/50 md:h-[40px] md:w-[40px] h-[40px] w-[40px]"
+                className=" object-cover rounded-md border-2 border-gray-200 shadow-md shadow-secondary/50 md:h-[40px] md:w-[40px] h-[40px] w-[40px]"
               />
               <p className="text-navBackground text-sm font-header text-white">
                 {user.fullName}

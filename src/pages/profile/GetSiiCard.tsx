@@ -3,8 +3,11 @@ import { Formik, FormikHelpers } from "formik";
 import { SiiCardModel } from "../../apis/sii_card/type";
 import * as Yup from "yup";
 import { useAddSiiCardMutaion } from "../../apis/sii_card/queries";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useGetUserByIdQuery } from "../../apis/account/queries";
+import { SyncLoader } from "react-spinners";
+import { useEffect } from "react";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,12 +18,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const GetSiiCard = () => {
+  const navigate = useNavigate();
   const { userName } = useParams<string>();
+  const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
+
+  useEffect(() => {
+    if (userInfo?.siiCard) {
+      navigate("/home");
+    }
+  });
   const { t } = useTranslation();
   const initialValues: SiiCardModel = {
-    fullName: "",
-    email: "",
-    mobileNumber: "",
+    fullName: userInfo?.fullName ?? "",
+    email: userInfo?.email ?? "",
+    mobileNumber: userInfo?.mobileNumber ?? "",
   };
 
   const { mutate: addSiiCard } = useAddSiiCardMutaion();
@@ -35,6 +46,17 @@ const GetSiiCard = () => {
       },
     });
   };
+  if (isLoading) {
+    return (
+      <div className="text-center h-screen flex flex-col justify-center items-center">
+        <SyncLoader size={20} />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <div className="text-red-500 text-center">Error loading </div>;
+  }
 
   return (
     <div className="flex flex-col justify-center items-center font-header w-full h-full py-12 px-4 sm:px-6 lg:px-8">

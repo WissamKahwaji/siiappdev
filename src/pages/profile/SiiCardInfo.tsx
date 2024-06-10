@@ -12,7 +12,7 @@ import { SyncLoader } from "react-spinners";
 import { EditCardParams } from "../../apis/sii_card/type";
 import { Formik, FormikHelpers } from "formik";
 import { useTranslation } from "react-i18next";
-
+import qrCode from "../../assets/qrCode.png";
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email address")
@@ -87,6 +87,9 @@ const SiiCardInfo = () => {
                 }`}
               >
                 <img src={card} alt="Card Back" className="w-full h-full" />
+                <p className="absolute bottom-3 md:left-11 left-8 text-white font-serif md:text-lg text-sm">
+                  {cardInfo?.fullName}
+                </p>
               </div>
               <div
                 className={`absolute w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
@@ -98,6 +101,14 @@ const SiiCardInfo = () => {
                   alt="Card Front"
                   className="w-full h-full"
                 />
+                <img
+                  src={qrCode}
+                  alt=""
+                  className="absolute bottom-10 right-5  md:bottom-12 md:right-8 md:w-16 md:h-auto w-12 h-auto"
+                />
+                <p className="absolute bottom-3 left-4 text-white font-serif text-lg">
+                  {cardInfo?._id}
+                </p>
               </div>
               <button
                 type="button"

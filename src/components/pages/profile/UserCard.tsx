@@ -14,7 +14,7 @@ const UserCard = (props: UserCardProps) => {
       <img
         src={props.user.profileImage ?? "https://via.placeholder.com/150"}
         alt={props.user.fullName}
-        className="w-24 h-24 rounded-full mb-4 border-4 border-secondary"
+        className="w-24 h-24 rounded-lg mb-4 border-4 border-secondary"
       />
       <h2 className="text-xl font-semibold text-gray-800 mb-2">
         {props.user.fullName}
