@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Post from "../../components/pages/post/Post";
 import { useGetAllPostsQuery } from "../../apis/posts/queries";
-import { SyncLoader } from "react-spinners";
+
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ import logo_video from "../../assets/video_logo.mp4";
 import { useTranslation } from "react-i18next";
 import { useGetUserSearchQuery } from "../../apis/account/queries";
 import { AiOutlineSearch } from "react-icons/ai";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 const Home = () => {
   const { t } = useTranslation();
@@ -92,7 +93,7 @@ const Home = () => {
   if (isLoadingPosts) {
     return (
       <div className="text-center flex flex-col justify-center items-center h-screen">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   } else if (isErrorPosts) {

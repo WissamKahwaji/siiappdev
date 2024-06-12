@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookmark,
   faFile,
+  faFolder,
   faTable,
-  faThumbsUp,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { PostModel } from "../../../apis/posts/type";
@@ -13,18 +13,16 @@ import Modal from "../../const/Modal";
 import { useNavigate, useParams } from "react-router-dom";
 import PostDetails from "../post/PostDetails";
 
-import {
-  useGetUserLikedPostsQuery,
-  useGetUserSavedPostsQuery,
-} from "../../../apis/account/queries";
+import { useGetUserSavedPostsQuery } from "../../../apis/account/queries";
 import {
   useGetUserDocsPostsQuery,
   useGetUserPostsQuery,
   useGetUserVideosPostsQuery,
 } from "../../../apis/posts/queries";
-import { SyncLoader } from "react-spinners";
+
 import { useAuth } from "../../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import LoadingComponent from "../../const/LoadingComponent";
 interface ProfilePostsProps {
   userId: string;
 }
@@ -45,7 +43,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
     isError: isErrorPosts,
   } = useGetUserPostsQuery("image", props.userId);
 
-  const { data: likedPosts, isLoading, isError } = useGetUserLikedPostsQuery();
+  // const { data: likedPosts, isLoading, isError } = useGetUserLikedPostsQuery();
 
   const {
     data: savedPosts,
@@ -95,24 +93,26 @@ const ProfilePosts = (props: ProfilePostsProps) => {
           { tab: "posts", icon: faTable, label: "posts" },
           { tab: "video", icon: faVideo, label: "videos" },
           { tab: "docs", icon: faFile, label: "docs" },
+          { tab: "folders", icon: faFolder, label: "folders" },
           { tab: "saves", icon: faBookmark, label: "saves" },
-          { tab: "likes", icon: faThumbsUp, label: "likes" },
         ]
       : [
           { tab: "posts", icon: faTable, label: "posts" },
           { tab: "video", icon: faVideo, label: "videos" },
+          { tab: "folders", icon: faFolder, label: "folders" },
           { tab: "docs", icon: faFile, label: "docs" },
         ]
     : [
         { tab: "posts", icon: faTable, label: "posts" },
         { tab: "video", icon: faVideo, label: "videos" },
+        { tab: "folders", icon: faFolder, label: "folders" },
         { tab: "docs", icon: faFile, label: "docs" },
       ];
 
   if (isLoadingPosts) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }
@@ -126,7 +126,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         className={`grid ${
           isAuthenticated && props.userId === currentUserId
             ? "grid-cols-5"
-            : "grid-cols-3"
+            : "grid-cols-4"
         } grid-flow-row font-semibold text-2xl border-t uppercase text-secondary tracking-widest md:h-16 h-8 lg:text-xs mt-4`}
       >
         {tabs.map(({ tab, icon, label }) => (
@@ -189,16 +189,18 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         {activeTab === "docs" && isErrorDocs && (
           <p>Error loading docs posts.</p>
         )}
-        {activeTab === "likes" &&
-          !isLoading &&
-          !isError &&
-          likedPosts?.map((post: PostModel, index: number) => (
-            <div key={index} onClick={() => handlePostClick(post)}>
-              <ProfilePost isVideo={false} post={post} />
-            </div>
-          ))}
-        {activeTab === "likes" && isLoading && <p>Loading...</p>}
-        {activeTab === "likes" && isError && <p>Error loading liked posts.</p>}
+        {activeTab === "folders" && (
+          // likedPosts?.map((post: PostModel, index: number) => (
+          //   <div key={index} onClick={() => handlePostClick(post)}>
+          //     <ProfilePost isVideo={false} post={post} />
+          //   </div>
+          // ))
+          <div></div>
+        )}
+        {/* {activeTab === "folders" && isLoading && <p>Loading...</p>}
+        {activeTab === "folders" && isError && (
+          <p>Error loading liked posts.</p>
+        )} */}
         {activeTab === "saves" &&
           !isLoadingSavedPosts &&
           !isErrorSavedPosts &&

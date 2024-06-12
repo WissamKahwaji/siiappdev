@@ -15,14 +15,17 @@ export type UserModel = {
   mobileNumber?: string;
   siiCard?: string;
   userCategory?: string | undefined;
+  qrCodeUrl?: string;
   isBusiness?: boolean;
   userAbout?: {
     aboutUs?: string;
     ourMission?: string;
     ourVision?: string;
   };
+  location?: string;
   socialMedia?: {
     webSite?: string;
+    companyProfile?: string;
     whatsApp?: string;
     faceBook?: string;
     linkedIn?: string;
@@ -50,8 +53,10 @@ export type EditProfileProps = {
   };
   userCategory?: string | undefined;
   isBusiness?: boolean;
+  location?: string;
   socialMedia?: {
     webSite: string;
+    companyProfile: string;
     whatsApp: string;
     faceBook: string;
     linkedIn: string;

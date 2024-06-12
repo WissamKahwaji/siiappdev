@@ -1,9 +1,10 @@
-import { SyncLoader } from "react-spinners";
+// import { SyncLoader } from "react-spinners";
 import { useGetUserByUserNameQuery } from "../../apis/account/queries";
 import { useParams } from "react-router-dom";
 import ProfileHeader from "../../components/pages/profile/profileHeader";
 import ProfilePosts from "../../components/pages/profile/profilePosts";
 import { useEffect } from "react";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 const Profile = () => {
   const { userName } = useParams<{ userName: string }>();
@@ -20,7 +21,8 @@ const Profile = () => {
   if (isLoadingUser) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        {/* <SyncLoader size={20} /> */}
+        <LoadingComponent />
       </div>
     );
   }

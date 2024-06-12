@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useGetUserByUserCategoryQuery } from "../../apis/account/queries";
-import { SyncLoader } from "react-spinners";
+
 import UserCard from "../../components/pages/profile/UserCard";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 const UsersByCategoriesPage = () => {
   const { userCategory } = useParams<{ userCategory: string }>();
@@ -15,7 +16,7 @@ const UsersByCategoriesPage = () => {
   if (isLoadingUsers) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }

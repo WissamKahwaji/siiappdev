@@ -151,7 +151,10 @@ const Login = () => {
               </div>
 
               <div className="mt-4 text-center">
-                <a href="#" className="text-xs text-blue-500 hover:underline">
+                <a
+                  href="/forget-password"
+                  className="text-xs text-blue-500 hover:underline"
+                >
                   {t("forget_password")}
                 </a>
               </div>

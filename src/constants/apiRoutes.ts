@@ -1,6 +1,8 @@
 const AUTH = {
   SIGN_IN: "/users/signin",
   SIGN_UP: "/users/signUp",
+  FORGET_PASSWORD: "/users/forget-password",
+  RESET_PASSWORD: (token: string) => `/users/reset-password/${token}`,
 };
 
 const POST = {

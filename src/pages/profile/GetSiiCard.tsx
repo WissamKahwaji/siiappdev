@@ -6,15 +6,21 @@ import { useAddSiiCardMutaion } from "../../apis/sii_card/queries";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetUserByIdQuery } from "../../apis/account/queries";
-import { SyncLoader } from "react-spinners";
+
 import { useEffect } from "react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .required("Please enter your email")
     .email("Invalid email format"),
   fullName: Yup.string().required("Please enter your full name"),
-  mobileNumber: Yup.string().required("Please enter your mobile number"),
+  mobileNumber: Yup.string()
+    .required("Please enter your mobile number")
+    .matches(/^\+?\d+$/, "Invalid mobile number")
+    .min(9, "Mobile number must be at least 11 characters long"),
 });
 
 const GetSiiCard = () => {
@@ -49,7 +55,7 @@ const GetSiiCard = () => {
   if (isLoading) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }
@@ -78,6 +84,7 @@ const GetSiiCard = () => {
             handleChange,
             handleBlur,
             handleSubmit,
+            setFieldValue,
             isSubmitting,
           }) => (
             <form
@@ -155,7 +162,7 @@ const GetSiiCard = () => {
                   >
                     {t("mobile_number")}
                   </label>
-                  <input
+                  {/* <input
                     id="mobileNumber"
                     name="mobileNumber"
                     type="text"
@@ -164,6 +171,30 @@ const GetSiiCard = () => {
                     onChange={handleChange}
                     value={values.mobileNumber}
                     style={{ direction: "ltr" }}
+                  /> */}
+                  <PhoneInput
+                    containerStyle={{ direction: "ltr" }}
+                    country={"ae"}
+                    value={values.mobileNumber}
+                    onBlur={handleBlur}
+                    onChange={value => setFieldValue("mobileNumber", value)}
+                    inputProps={{ required: true }}
+                    placeholder={t("your_mobile_number")}
+                    inputStyle={{
+                      width: "100%",
+                      height: "41px",
+                      border: "1px solid #757575",
+                      borderRadius: "0.375rem",
+                      fontSize: "15px",
+                      outline: "none",
+                      backgroundColor: "#d3d3d3",
+
+                      direction: "ltr",
+                    }}
+                    buttonStyle={{
+                      margin: 3,
+                      direction: "ltr",
+                    }}
                   />
                   {errors.mobileNumber && touched.mobileNumber && (
                     <div className="text-red-500 text-xs mt-1">

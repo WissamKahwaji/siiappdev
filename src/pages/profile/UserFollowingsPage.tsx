@@ -3,8 +3,9 @@ import {
   useGetUserFollowersQuery,
   useGetUserFollowingsQuery,
 } from "../../apis/account/queries";
-import { SyncLoader } from "react-spinners";
+
 import UserCard from "../../components/pages/profile/UserCard";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 interface UserFollowingsPageProps {
   type: "followers" | "followings";
@@ -24,7 +25,7 @@ const UserFollowingsPage: React.FC<UserFollowingsPageProps> = ({ type }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }

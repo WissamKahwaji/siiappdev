@@ -1,7 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { signIn, signUp } from ".";
-import { SignInValues, SignUpValues } from "./type";
+import { forgetPassword, resetPassword, signIn, signUp } from ".";
+import {
+  ForgetPasswordParams,
+  ResetPasswordParams,
+  SignInValues,
+  SignUpValues,
+} from "./type";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -47,4 +52,38 @@ const useSignUpMutation = () => {
   });
 };
 
-export { useSignInMutation, useSignUpMutation };
+const useForgetPasswordMutation = () => {
+  return useMutation({
+    mutationKey: ["forget-password"],
+    mutationFn: (data: ForgetPasswordParams) => forgetPassword(data),
+    onSuccess: data => {
+      console.log(data);
+      toast.success(`success, Open Your mail box`);
+    },
+    onError: () => {
+      toast.error("Error , Please try again later");
+    },
+  });
+};
+
+const useResetPasswordMutation = () => {
+  const navigate = useNavigate();
+  return useMutation({
+    mutationKey: ["reset-password"],
+    mutationFn: (data: ResetPasswordParams) => resetPassword(data),
+    onSuccess: () => {
+      toast.success(`success`);
+      navigate("/login", { replace: true });
+    },
+    onError: () => {
+      toast.error("Error , Please try again later");
+    },
+  });
+};
+
+export {
+  useSignInMutation,
+  useSignUpMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+};

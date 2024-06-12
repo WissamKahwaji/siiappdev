@@ -8,11 +8,14 @@ import {
   useEditSiiCardMutaion,
   useGetUserSiiCardQuery,
 } from "../../apis/sii_card/queries";
-import { SyncLoader } from "react-spinners";
+
 import { EditCardParams } from "../../apis/sii_card/type";
 import { Formik, FormikHelpers } from "formik";
 import { useTranslation } from "react-i18next";
-import qrCode from "../../assets/qrCode.png";
+// import qrCode from "../../assets/qrCode.png";
+import { formatCardNumber } from "../../utils";
+import { useGetUserByIdQuery } from "../../apis/account/queries";
+import LoadingComponent from "../../components/const/LoadingComponent";
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email address")
@@ -23,6 +26,11 @@ const validationSchema = Yup.object().shape({
 const SiiCardInfo = () => {
   const { t } = useTranslation();
   const { data: cardInfo, isLoading, isError } = useGetUserSiiCardQuery();
+  const {
+    data: userInfo,
+    isLoading: isLoadingUser,
+    isError: isErrorUser,
+  } = useGetUserByIdQuery();
   const [isFlipped, setIsFlipped] = useState(false);
   const { mutate: editSiiCard } = useEditSiiCardMutaion();
 
@@ -46,15 +54,15 @@ const SiiCardInfo = () => {
     setIsFlipped(!isFlipped);
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingUser) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }
 
-  if (isError) return <div>Error loading data...</div>;
+  if (isError || isErrorUser) return <div>Error loading data...</div>;
 
   return (
     <Formik
@@ -76,7 +84,7 @@ const SiiCardInfo = () => {
           className="flex flex-col justify-center items-center font-header w-full h-full py-12 px-4 sm:px-6 lg:px-8"
         >
           <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start md:w-1/3 max-w-full w-full">
-            <h2 className="text-2xl mb-8 bg-secondary px-3 py-1 rounded-sm shadow-sm text-navBackground">
+            <h2 className="text-2xl font-body mb-8 bg-secondary px-3 py-1 rounded-sm shadow-sm text-navBackground">
               {t("sii_card_info")}
             </h2>
 
@@ -102,18 +110,18 @@ const SiiCardInfo = () => {
                   className="w-full h-full"
                 />
                 <img
-                  src={qrCode}
+                  src={userInfo?.qrCodeUrl}
                   alt=""
                   className="absolute bottom-10 right-5  md:bottom-12 md:right-8 md:w-16 md:h-auto w-12 h-auto"
                 />
                 <p className="absolute bottom-3 left-4 text-white font-serif text-lg">
-                  {cardInfo?._id}
+                  {formatCardNumber(cardInfo?.cardNumber ?? "")}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleSwapClick}
-                className="absolute top-0 left-9 transform -translate-x-1/2 m-3 bg-white rounded-full w-14 p-2 shadow-md z-10 flex justify-center items-center "
+                className="absolute -right-8 -bottom-12 transform -translate-x-1/2 m-3 bg-gray-50 rounded-full w-14 p-2 shadow-md z-10 flex justify-center items-center "
               >
                 <FontAwesomeIcon icon={faRightLeft} />
               </button>
@@ -126,7 +134,7 @@ const SiiCardInfo = () => {
                   className="min-w-60 p-2 border border-gray-400 rounded-lg bg-navBackground/10 opacity-80 cursor-not-allowed"
                   style={{ direction: "ltr" }}
                 >
-                  {cardInfo?._id}
+                  {cardInfo?.cardNumber ?? ""}
                 </div>
               </div>
               <div>
@@ -191,7 +199,7 @@ const SiiCardInfo = () => {
                   style={{ direction: "ltr" }}
                 >
                   {cardInfo?.qrCode ??
-                    `https://www.siiapp.com/${cardInfo?.fullName}`}
+                    `https://www.siiapp.com/${cardInfo?.userName}/qrcode-info`}
                 </div>
               </div>
             </div>

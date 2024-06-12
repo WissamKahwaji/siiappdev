@@ -7,6 +7,7 @@
     "en":"English",
     "login":"log in",
     "forget_password":"forget password?!",
+    "reset_password":"reset password",
     "login_with_facebook" :"login with facebook",
     "login_with_google":"login with google",
     "login_with_apple":"login with apple",
@@ -101,6 +102,7 @@
     "tiktok":"Tiktok",
     "snapChat":"Snapchat",
     "youtube":"youtube",
+    "company_profile_and_others":"company profile/menu/brochure/catalogue",
     "xPlatform":"XPlatform",
     "painterest":"Painterest",
     "other_link":"other Link",
@@ -126,5 +128,9 @@
     "sii_brief":"'Sii' card is a unique discount card available through the website or application, obtained by completing a simple request process and registering the necessary information. It offers various discounts and special deals across essential and luxury sectors, including education, healthcare, restaurants, entertainment parks, hotels, tourism, travel, shopping centers, and more.",
     "sii_brief_second":"A notable feature of the Sii card is its integration with the cardholder’s digital account, allowing it to function as a personal card displaying all registered data by simply scanning the QR code on the back. This digital account can be accessed within the platform, offering convenience and versatility.",
     "sii_brief_third":"Through the Sii card, we aim to provide exclusive offers, achieving financial savings for cardholders ranging from 20% to 70%. It can be used both within the platform and directly, catering to the needs of individuals and corporate entities alike.",
-    "sii_card":"Sii Card"
+    "sii_card":"Sii Card",
+    "copy_profile":"Copy Profile",
+    "qr_code":"QR Code",
+    "share_qrcode":"Share QR Code",
+    "folders":"Folders"
 }

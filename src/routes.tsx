@@ -22,6 +22,9 @@ import AboutUsPage from "./components/pages/profile/AboutUsPage";
 import UsersByCategoriesPage from "./pages/profile/UsersByCategoriesPage";
 import UserFollowingsPage from "./pages/profile/UserFollowingsPage";
 import BriefPage from "./pages/brief/BriefPage";
+import ForgetPassword from "./pages/authentication/ForgetPassword";
+import ResetPassword from "./pages/authentication/ResetPassword";
+import QrCodeInfoPage from "./pages/profile/QrCodeInfoPage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -57,6 +60,10 @@ const Routes = () => {
             <Route path=":userName/:postId" element={<Profile />} />
             <Route path=":userName/about" element={<AboutUsPage />} />
             <Route path="/brief" element={<BriefPage />} />
+            <Route path="/forget-password" element={<ForgetPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/:userName/qrcode-info" element={<QrCodeInfoPage />} />
+
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FormikHelpers } from "formik";
-import { SyncLoader } from "react-spinners";
+// import { SyncLoader } from "react-spinners";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
@@ -24,6 +24,7 @@ import Modal from "../../const/Modal";
 import LoginModalContent from "../../const/LoginModalContent";
 import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
+import LoadingComponent from "../../const/LoadingComponent";
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -135,7 +136,8 @@ const PostDetails = ({
   if (isLoadingPost)
     return (
       <div className="text-center h-fit w-[120px] md:w-full flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        {/* <SyncLoader size={20} /> */}
+        <LoadingComponent />
       </div>
     );
   if (isErrorPost) return <div></div>;

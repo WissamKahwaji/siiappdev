@@ -11,6 +11,7 @@ import {
   FaSnapchat,
   FaTiktok,
   FaPinterest,
+  FaArrowDown,
 } from "react-icons/fa";
 import { FaThreads, FaX, FaXTwitter } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,14 +19,13 @@ import "swiper/css";
 import {
   faAdd,
   faArrowRight,
-  faBell,
   faCamera,
   faEdit,
   faList,
   faQrcode,
 } from "@fortawesome/free-solid-svg-icons";
 import * as Yup from "yup";
-import qrCode from "../../../assets/qrCode.png";
+
 import yellowCardBack from "../../../assets/card.png";
 import logo from "../../../assets/logo_sii_new.png";
 import { useEffect, useRef, useState } from "react";
@@ -49,8 +49,11 @@ import { useTranslation } from "react-i18next";
 import SignUpModal from "./SignUpModal";
 import UserAccountsModal from "./UserAccountsModal";
 import LogInModalForm from "./LogInModalForm";
-import { PiUserSwitchFill } from "react-icons/pi";
+
 import ImagePopup from "../../const/ImagePopup";
+import QrCodeUser from "../../const/QrCodeUser";
+import { ImProfile } from "react-icons/im";
+
 interface ProfileHeaderProps {
   user: UserModel;
 }
@@ -95,6 +98,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   const socialMediaIcons = [
     { icon: <GiWorld className="w-5 h-5 md:w-9 md:h-9" />, field: "webSite" },
+    {
+      icon: <ImProfile className="w-5 h-5 md:w-9 md:h-9" />,
+      field: "companyProfile",
+    },
+
     {
       icon: <BsWhatsapp className="w-5 h-5 md:w-9 md:h-9" />,
       field: "whatsApp",
@@ -292,52 +300,247 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   return (
     <div className="flex flex-col md:justify-center md:items-center justify-start items-start px-3 w-full">
-      <div className="flex flex-row gap-x-1 md:gap-x-8 md:justify-center w-full">
-        <div className="md:hidden relative">
-          {/* <img
-            src={user.user?.profileImage ?? defaultImage}
-            alt="profile"
-            className=" object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
-          /> */}
-          <ImagePopup
-            src={user.user?.profileImage ?? defaultImage}
-            alt="profile"
-            smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[130px]"
-            largeClassName="h-[300px] w-[300px]"
-          />
-          {user.user._id === userId && (
-            <Link to={"/account/edit-profile"}>
-              <div className="absolute bottom-0 p-1 rounded-lg  bg-gray-200  opacity-35 right-0">
-                <FontAwesomeIcon icon={faCamera} width={14} height={14} />
+      <div className="flex md:hidden w-full flex-col">
+        {userId === user.user._id ? (
+          <div className="flex flex-row w-full justify-between items-start">
+            <div className="flex flex-col justify-start items-center space-y-2">
+              <div
+                className="flex flex-row justify-start items-center  gap-x-1"
+                onClick={() => setIsAddAccountModalOpen(true)}
+              >
+                <p className="text-sm   font-semibold ">
+                  {user.user?.userName}
+                </p>
+                <FaArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
               </div>
-            </Link>
-          )}
-        </div>
-        <div className="hidden md:flex md:flex-col">
-          <div className="relative rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px]">
-            {/* <img
-              src={user.user?.profileImage ?? defaultImage}
-              alt="profile"
-              className=" object-contain  md:h-full md:w-full"
-              onClick={handleImageClick}
-            />
-            {isPopupOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div className="relative">
-                  <img
+              <div className="h-[100px] w-auto">
+                <div className=" relative">
+                  <ImagePopup
                     src={user.user?.profileImage ?? defaultImage}
-                    alt="profile enlarged"
-                    className="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 h-[300px] w-[300px]"
+                    alt="profile"
+                    smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-auto"
+                    largeClassName="h-[300px] w-[300px]"
                   />
-                  <button
-                    className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-2"
-                    onClick={closePopup}
-                  >
-                    &times;
-                  </button>
+                  {user.user._id === userId && (
+                    <Link to={"/account/edit-profile"}>
+                      <div className="absolute bottom-0 p-1 rounded-lg  bg-gray-200  opacity-35 right-0">
+                        <FontAwesomeIcon
+                          icon={faCamera}
+                          width={14}
+                          height={14}
+                        />
+                      </div>
+                    </Link>
+                  )}
                 </div>
               </div>
-            )} */}
+            </div>
+
+            <div className="flex flex-row md:gap-x-4 gap-x-2">
+              {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+                  <FontAwesomeIcon icon={faBell} className="" />
+                </div> */}
+              <div className="relative group">
+                <div
+                  className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                  onClick={() => setIsQrModalOpen(true)}
+                >
+                  <FontAwesomeIcon icon={faQrcode} className="" />
+                </div>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  QR Code
+                </div>
+              </div>
+
+              <div
+                className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <FontAwesomeIcon icon={faAdd} className="" />
+              </div>
+              <Link to="/account/edit-profile">
+                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md">
+                  <FontAwesomeIcon icon={faEdit} className="" />
+                </div>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-row w-full justify-between items-start">
+            <div className="flex flex-col justify-start items-center space-y-2">
+              <p className="text-sm  font-semibold ">{user.user?.userName}</p>
+              <div className="h-[100px] w-auto">
+                <div className=" relative">
+                  <ImagePopup
+                    src={user.user?.profileImage ?? defaultImage}
+                    alt="profile"
+                    smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-auto"
+                    largeClassName="h-[300px] w-[300px]"
+                  />
+                  {user.user._id === userId && (
+                    <Link to={"/account/edit-profile"}>
+                      <div className="absolute bottom-0 p-1 rounded-lg  bg-gray-200  opacity-35 right-0">
+                        <FontAwesomeIcon
+                          icon={faCamera}
+                          width={14}
+                          height={14}
+                        />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-start items-end">
+              <div className="flex flex-row gap-x-2 md:gap-x-3">
+                {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+                  <FontAwesomeIcon icon={faBell} className="" />
+                </div> */}
+                <div className="relative group">
+                  <div
+                    className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                    onClick={() => setIsQrModalOpen(true)}
+                  >
+                    <FontAwesomeIcon icon={faQrcode} className="" />
+                  </div>
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    QR Code
+                  </div>
+                </div>
+                <div
+                  className=" px-2 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                  onClick={() => {
+                    setIsMoreModalOpen(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faList} className="" />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-2 mt-3 capitalize w-full">
+                <div
+                  className="w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleToggleFollow}
+                >
+                  <p className="font-serif  font-semibold text-xs md:text-sm">
+                    {isFollowed ? t("following") : t("follow")}
+                  </p>
+                </div>
+                <div
+                  className="w-28   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  onClick={handleShareClick}
+                >
+                  <p className="font-serif  font-semibold text-xs">
+                    {t("share_profile")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* <div className="flex flex-row w-full justify-between items-center">
+          <div className="h-[100px] w-auto">
+            <div className=" relative">
+              <ImagePopup
+                src={user.user?.profileImage ?? defaultImage}
+                alt="profile"
+                smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-auto"
+                largeClassName="h-[300px] w-[300px]"
+              />
+              {user.user._id === userId && (
+                <Link to={"/account/edit-profile"}>
+                  <div className="absolute bottom-0 p-1 rounded-lg  bg-gray-200  opacity-35 right-0">
+                    <FontAwesomeIcon icon={faCamera} width={14} height={14} />
+                  </div>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div> */}
+      </div>
+      <div className="md:hidden font-header mt-4 text-lg md:h-[135px] w-full overflow-ellipsis">
+        {/* <p className="text-sm  font-semibold">wissam_98</p> */}
+        <p className="md:text-2xl text-base   font-header font-semibold min-w-[270px]">
+          {user.user.fullName}
+        </p>
+        <Link to={`/users/${user.user.userCategory}`}>
+          <p className="text-xs font-header text-blue-500 font-bold cursor-pointer">
+            {user.user.userCategory}
+          </p>
+        </Link>
+        <p className="text-sm whitespace-pre-wrap ">{user.user.bio}</p>
+        <div className="flex w-full justify-start items-start gap-x-5 mt-1">
+          <div
+            className="flex flex-row items-end gap-x-0.5 font-semibold text-sm "
+            onClick={() => {
+              if (user.user._id === userId) {
+                navigate("/account/followings");
+              }
+            }}
+          >
+            <p className="font-semibold text-sm text-navBackground">
+              {user.user?.followings.length}
+            </p>
+            <p className="text-xs text-secondary">{t("follows")}</p>
+          </div>
+          <div
+            className="flex flex-row items-end gap-x-0.5 font-semibold text-sm capitalize "
+            onClick={() => {
+              if (user.user._id === userId) {
+                navigate("/account/followers");
+              }
+            }}
+          >
+            <p className="font-semibold text-sm text-navBackground">
+              {followersCount}
+            </p>
+            <p className="text-xs text-secondary">{t("followers")}</p>
+          </div>
+          {user.user.userAbout &&
+            (user.user.userAbout.aboutUs ||
+              user.user.userAbout.ourMission ||
+              user.user.userAbout.ourVision) && (
+              <Link to={`/${user.user.userName}/about`}>
+                <p className="underline text-secondary font-serif font-semibold text-xs my-1 cursor-pointer w-fit">
+                  {t("read_more_About_us")}
+                </p>
+              </Link>
+            )}
+        </div>
+      </div>
+      {userId === user.user._id && (
+        <div className="md:hidden bg-secondary rounded-xl px-4 py-8 my-3">
+          <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-col w-1/2">
+              <h2 className="text-navBackground font-serif text-base font-bold flex items-center">
+                <img src={logo} alt="" className="w-10 h-auto mr-1" />{" "}
+                {t("premium_card")}
+              </h2>
+              <p className="text-navBackground text-sm font-semibold mt-1">
+                {t("premium_card_info")}
+              </p>
+              <div
+                className="mt-3 text-sm flex items-center gap-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
+                onClick={() => {
+                  user.user?.siiCard
+                    ? navigate("/sii-card")
+                    : navigate(`/get-sii-card/${user.user?.userName}`);
+                }}
+              >
+                <p>
+                  {user.user?.siiCard
+                    ? t("show_details")
+                    : t("get_sii_card_now")}
+                </p>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </div>
+            </div>
+            <img src={yellowCardBack} alt="" className="w-36" />
+          </div>
+        </div>
+      )}
+      <div className="hidden md:flex w-full justify-center">
+        <div className="hidden md:flex md:flex-col items-start justify-start">
+          <div className="relative rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px]">
             <ImagePopup
               src={user.user?.profileImage ?? defaultImage}
               alt="profile"
@@ -365,20 +568,47 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               {user?.user?.bio ? user.user.bio : "write your bio in settings"}
             </p>
           </div>
-          {user.user.userAbout &&
-            (user.user.userAbout.aboutUs ||
-              user.user.userAbout.ourMission ||
-              user.user.userAbout.ourVision) && (
-              <Link to={`/${user.user.userName}/about`}>
-                <p className="underline text-secondary font-serif font-semibold text-sm my-2 cursor-pointer w-fit">
-                  {t("read_more_About_us")}
-                </p>
-              </Link>
-            )}
+          <div className="flex w-full justify-start items-start gap-x-5 mt-2 ">
+            <div
+              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm text-navBackground font-serif cursor-pointer"
+              onClick={() => {
+                if (user.user._id === userId) {
+                  navigate("/account/followings");
+                }
+              }}
+            >
+              <p className="font-semibold text-sm text-navBackground">
+                {user.user?.followings.length}
+              </p>
+              <p className="text-xs text-secondary">{t("follows")}</p>
+            </div>
+            <div
+              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm capitalize text-navBackground font-serif cursor-pointer"
+              onClick={() => {
+                if (user.user._id === userId) {
+                  navigate("/account/followers");
+                }
+              }}
+            >
+              <p className=" ">{followersCount}</p>
+              <p className="text-xs text-secondary">{t("followers")}</p>
+            </div>
+            {user.user.userAbout &&
+              (user.user.userAbout.aboutUs ||
+                user.user.userAbout.ourMission ||
+                user.user.userAbout.ourVision) && (
+                <Link to={`/${user.user.userName}/about`}>
+                  <p className="underline text-secondary font-serif font-semibold text-sm  cursor-pointer w-fit">
+                    {t("read_more_About_us")}
+                  </p>
+                </Link>
+              )}
+          </div>
         </div>
-        <div className="flex flex-col w-full md:w-auto">
+
+        <div className="hidden md:flex flex-col justify-start items-start ">
           {userId === user.user._id ? (
-            <div className="flex flex-row  md:gap-x-10 h-fit md:items-center md:justify-between items-center  justify-between  cursor-pointer">
+            <div className="flex flex-row w-full md:gap-x-10 h-fit md:items-center md:justify-between items-center  justify-between  cursor-pointer">
               <div
                 className="flex flex-row justify-center items-center md:gap-x-2 gap-x-1"
                 onClick={() => setIsAddAccountModalOpen(true)}
@@ -386,13 +616,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="text-sm ml-4 md:ml-0 font-semibold ">
                   {user.user?.userName}
                 </p>
-                <PiUserSwitchFill className="text-secondary md:w-6 md:h-6 w-5 h-5" />
+                <FaArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
               </div>
 
-              <div className="flex flex-row md:gap-x-4 gap-x-2">
-                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+              <div className="flex flex-row md:gap-x-4 gap-x-2 ">
+                {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
-                </div>
+                </div> */}
                 <div className="relative group">
                   <div
                     className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
@@ -419,14 +649,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row justify-between items-center w-full">
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
               <div className="flex flex-row gap-x-2 md:gap-x-3">
-                <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
+                {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
+                </div> */}
+                <div className="relative group">
+                  <div
+                    className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                    onClick={() => setIsQrModalOpen(true)}
+                  >
+                    <FontAwesomeIcon icon={faQrcode} className="" />
+                  </div>
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-black text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    QR Code
+                  </div>
                 </div>
                 <div
-                  className=" px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                  className=" px-2 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={() => {
                     setIsMoreModalOpen(true);
                   }}
@@ -436,62 +677,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </div>
             </div>
           )}
-          <div className="md:hidden justify-start items-start mt-3">
-            <div className="flex flex-row justify-center mt-3 capitalize gap-x-8 w-full">
-              <div className="text-primary font-header flex flex-col items-center justify-center">
-                <p className="font-semibold text-sm">
-                  {user.user?.posts.length}
-                </p>
-                <p className="text-xs">{t("posts")}</p>
-              </div>
-              <div
-                className="text-primary font-header flex flex-col items-center justify-center cursor-pointer"
-                onClick={() => {
-                  if (user.user._id === userId) {
-                    navigate("/account/followings");
-                  }
-                }}
-              >
-                <p className="font-semibold text-sm">
-                  {user.user?.followings.length}
-                </p>
-                <p className="text-xs">{t("follows")}</p>
-              </div>
-              <div
-                className="text-primary font-header flex flex-col items-center justify-center"
-                onClick={() => {
-                  if (user.user._id === userId) {
-                    navigate("/account/followers");
-                  }
-                }}
-              >
-                <p className="font-semibold text-sm">{followersCount}</p>
-                <p className="text-xs">{t("followers")}</p>
-              </div>
-            </div>
-            {userId !== user.user._id && (
-              <div className="flex flex-row justify-center mt-3 capitalize gap-x-3 w-full">
-                <div
-                  className="  w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
-                  onClick={handleToggleFollow}
-                >
-                  <p className="font-serif  font-semibold text-xs md:text-sm">
-                    {isFollowed ? t("following") : t("follow")}
-                  </p>
-                </div>
-                <div
-                  className="w-28   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
-                  onClick={handleShareClick}
-                >
-                  <p className="font-serif  font-semibold text-xs">
-                    {t("share_profile")}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
           <div className="hidden md:flex md:flex-col  group perspective-1000  items-center justify-center my-2 md:min-w-[530px]">
-            <div
+            {/* <div
               className={`hidden ${
                 userId === user.user._id ? "justify-center" : "md:justify-start"
               } md:w-full items-start md:flex md:mt-2`}
@@ -526,7 +713,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   <p className="text-sm">{t("followers")}</p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {userId === user.user._id ? (
               <div className=" bg-secondary rounded-xl px-4 py-8 ">
@@ -577,71 +764,18 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   </p>
                 </div>
                 {/* <div
-                  className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
-                  onClick={() => {
-                    setIsMoreModalOpen(true);
-                  }}
-                >
-                  <p className="font-serif font-semibold text-sm ">Message</p>
-                </div> */}
+               className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+               onClick={() => {
+                 setIsMoreModalOpen(true);
+               }}
+             >
+               <p className="font-serif font-semibold text-sm ">Message</p>
+             </div> */}
               </div>
             )}
           </div>
         </div>
       </div>
-      <div className="md:hidden font-header mt-4 text-lg md:h-[135px] w-full overflow-ellipsis">
-        {/* <p className="text-sm  font-semibold">wissam_98</p> */}
-        <p className="md:text-2xl text-base   font-header font-semibold min-w-[270px]">
-          {user.user.fullName}
-        </p>
-        <Link to={`/users/${user.user.userCategory}`}>
-          <p className="text-xs font-header text-blue-500 font-bold cursor-pointer">
-            {user.user.userCategory}
-          </p>
-        </Link>
-        <p className="text-sm whitespace-pre-wrap ">{user.user.bio}</p>
-        {user.user.userAbout &&
-          (user.user.userAbout.aboutUs ||
-            user.user.userAbout.ourMission ||
-            user.user.userAbout.ourVision) && (
-            <Link to={`/${user.user.userName}/about`}>
-              <p className="underline text-secondary font-serif font-semibold text-xs my-1 cursor-pointer w-fit">
-                {t("read_more_About_us")}
-              </p>
-            </Link>
-          )}
-      </div>
-      {userId === user.user._id && (
-        <div className="md:hidden bg-secondary rounded-xl px-4 py-8 my-3">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-col w-1/2">
-              <h2 className="text-navBackground font-serif text-base font-bold flex items-center">
-                <img src={logo} alt="" className="w-10 h-auto mr-1" />{" "}
-                {t("premium_card")}
-              </h2>
-              <p className="text-navBackground text-sm font-semibold mt-1">
-                {t("premium_card_info")}
-              </p>
-              <div
-                className="mt-3 text-sm flex items-center gap-x-2 cursor-pointer w-fit p-2 bg-navBackground rounded-xl text-secondary font-serif font-semibold"
-                onClick={() => {
-                  user.user?.siiCard
-                    ? navigate("/sii-card")
-                    : navigate(`/get-sii-card/${user.user?.userName}`);
-                }}
-              >
-                <p>
-                  {user.user?.siiCard
-                    ? t("show_details")
-                    : t("get_sii_card_now")}
-                </p>
-                <FontAwesomeIcon icon={faArrowRight} />
-              </div>
-            </div>
-            <img src={yellowCardBack} alt="" className="w-36" />
-          </div>
-        </div>
-      )}
       <div className={`md:my-12 mt-3 w-full md:px-64 `}>
         {filteredIcons.length > 0 && (
           <Swiper
@@ -730,7 +864,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
               onClick={handleShareClick}
             >
-              {t("share")}
+              {t("copy_profile")}
+            </p>
+            <p
+              className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+              onClick={() => {
+                setIsMoreModalOpen(false);
+                setIsQrModalOpen(true);
+              }}
+            >
+              {t("qr_code")}
             </p>
             <Link to={`tel:${user.user.mobileNumber}`}>
               <p className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out">
@@ -1206,7 +1349,36 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           size="md"
         >
           <div className="flex flex-col justify-center items-center w-full">
-            <img src={qrCode} alt="" className="w-52 h-fit" />
+            <QrCodeUser
+              qrCodeUrl={user.user.qrCodeUrl}
+              userName={user.user.userName}
+            />
+
+            {/* <div className="flex items-center justify-center p-4">
+              {user.user.qrCodeUrl ? (
+                <img
+                  src={user.user.qrCodeUrl}
+                  alt="User QR Code"
+                  className="w-52 h-fit"
+                />
+              ) : (
+                <p>Loading QR code...</p>
+              )}
+            </div> */}
+            <button
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(
+                    `https://siiappdev.siidevelopment.com/${user.user.userName}/qrcode-info`
+                  )
+                  .then(() => {
+                    toast.info("copy to clipboard");
+                  });
+              }}
+              className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200 mb-2"
+            >
+              {t("share_qrcode")}
+            </button>
             <button
               onClick={handleShareClick}
               className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"

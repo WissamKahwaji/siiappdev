@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useGetUserByUserNameQuery } from "../../../apis/account/queries";
-import { SyncLoader } from "react-spinners";
+// import { SyncLoader } from "react-spinners";
 import { useTranslation } from "react-i18next";
+import LoadingComponent from "../../const/LoadingComponent";
 
 const AboutUsPage = () => {
   const { userName } = useParams<{ userName: string }>();
@@ -15,7 +16,8 @@ const AboutUsPage = () => {
   if (isLoadingUser) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-100">
-        <SyncLoader size={20} />
+        {/* <SyncLoader size={20} /> */}
+        <LoadingComponent />
       </div>
     );
   }

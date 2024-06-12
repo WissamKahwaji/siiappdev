@@ -3,7 +3,7 @@ import {
   useGetUserAccountsQuery,
   useSwitchAccountMutation,
 } from "../../../apis/account/queries";
-import { SyncLoader } from "react-spinners";
+import LoadingComponent from "../../const/LoadingComponent";
 
 interface UserAccountsModalProps {
   onClose: () => void;
@@ -15,7 +15,7 @@ const UserAccountsModal = ({ onClose }: UserAccountsModalProps) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50px]  bg-gray-100">
-        <SyncLoader size={15} />
+        <LoadingComponent />
       </div>
     );
   }

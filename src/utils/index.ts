@@ -40,3 +40,7 @@ export const formatDate = (dateString: string): string => {
 
   return `${year}-${month}-${day} ${strTime}`;
 };
+
+export const formatCardNumber = (cardNumber: string): string => {
+  return cardNumber.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};

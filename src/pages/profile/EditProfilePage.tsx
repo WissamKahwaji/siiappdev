@@ -8,15 +8,19 @@ import {
 } from "../../apis/account/queries";
 import { EditProfileProps } from "../../apis/account/type";
 
-import { SyncLoader } from "react-spinners";
 import ImageCropper from "../../components/const/ImageCropper";
 import ToggleSwitch from "../../components/const/ToggleSwitch";
 import { useTranslation } from "react-i18next";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import LoadingComponent from "../../components/const/LoadingComponent";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
   bio: Yup.string(),
-  mobileNumber: Yup.string(),
+  mobileNumber: Yup.string()
+    .matches(/^\+?\d+$/, "Invalid mobile number")
+    .min(9, "Mobile number must be at least 9 characters long"),
   userCategory: Yup.string(),
   userAbout: Yup.object().shape({
     aboutUs: Yup.string(),
@@ -25,7 +29,9 @@ const validationSchema = Yup.object().shape({
   }),
   socialMedia: Yup.object().shape({
     webSite: Yup.string(),
-    whatsApp: Yup.string(),
+    whatsApp: Yup.string()
+      .matches(/^\+?\d+$/, "Invalid mobile number")
+      .min(9, "Mobile number must be at least 9 characters long"),
     faceBook: Yup.string(),
     linkedIn: Yup.string(),
     instagram: Yup.string(),
@@ -70,7 +76,7 @@ const EditProfilePage: React.FC = () => {
   const [isBusinessAccount, setIsBusinessAccount] = useState(
     userInfo?.isBusiness ?? false
   );
-
+  const [fileError, setFileError] = useState<string | null>(null);
   const handleSwitchChange = (checked: boolean, setFieldValue: any) => {
     setIsBusinessAccount(checked);
 
@@ -99,8 +105,10 @@ const EditProfilePage: React.FC = () => {
       ourMission: userInfo?.userAbout?.ourMission ?? "",
       ourVision: userInfo?.userAbout?.ourVision ?? "",
     },
+    location: userInfo?.location ?? "",
     socialMedia: {
       webSite: userInfo?.socialMedia?.webSite ?? "",
+      companyProfile: userInfo?.socialMedia?.companyProfile ?? "",
       whatsApp: userInfo?.socialMedia?.whatsApp ?? "",
       faceBook: userInfo?.socialMedia?.faceBook ?? "",
       linkedIn: userInfo?.socialMedia?.linkedIn ?? "",
@@ -129,7 +137,7 @@ const EditProfilePage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
-        <SyncLoader size={20} />
+        <LoadingComponent />
       </div>
     );
   }
@@ -248,7 +256,7 @@ const EditProfilePage: React.FC = () => {
                     >
                       {t("phone_number")}
                     </label>
-                    <input
+                    {/* <input
                       id="mobileNumber"
                       name="mobileNumber"
                       type="text"
@@ -257,6 +265,28 @@ const EditProfilePage: React.FC = () => {
                       onChange={handleChange}
                       value={values.mobileNumber}
                       style={{ direction: "ltr" }}
+                    /> */}
+                    <PhoneInput
+                      containerStyle={{ direction: "ltr" }}
+                      country={"ae"}
+                      value={values.mobileNumber}
+                      onBlur={handleBlur}
+                      onChange={value => setFieldValue("mobileNumber", value)}
+                      placeholder={t("mobileNumber")}
+                      inputStyle={{
+                        width: "100%",
+                        height: "41px",
+                        border: "1px solid #d3d3d3",
+                        borderRadius: "0.375rem",
+                        fontSize: "15px",
+                        outline: "none",
+
+                        direction: "ltr",
+                      }}
+                      buttonStyle={{
+                        margin: 3,
+                        direction: "ltr",
+                      }}
                     />
                     {errors.mobileNumber && touched.mobileNumber && (
                       <div className="text-red-500 text-xs mt-1">
@@ -341,6 +371,57 @@ const EditProfilePage: React.FC = () => {
                       style={{ direction: "ltr" }}
                     />
                   </div>
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-1 text-sm font-medium text-gray-700"
+                      htmlFor="socialMedia.webSite"
+                    >
+                      {t("company_profile_and_others")}
+                    </label>
+                    <p className="text-xs text-gray-700 mb-1">
+                      file size must be less than 25MB
+                    </p>
+                    <input
+                      id="doc"
+                      name="doc"
+                      type="file"
+                      accept="application/pdf"
+                      onBlur={handleBlur}
+                      onChange={event => {
+                        const file = event.currentTarget.files![0];
+                        if (file && file.size > 25 * 1024 * 1024) {
+                          setFileError("File size should not exceed 25MB");
+                          setFieldValue("doc", null);
+                        } else {
+                          setFileError(null);
+                          setFieldValue("doc", file);
+                        }
+                      }}
+                      className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  {fileError && (
+                    <div className="text-red-500 text-xs mt-1">{fileError}</div>
+                  )}
+
+                  <div className="flex flex-col">
+                    <label
+                      className="mb-2 text-sm font-medium text-gray-700"
+                      htmlFor="location"
+                    >
+                      {t("location")}
+                    </label>
+                    <input
+                      id="location"
+                      name="location"
+                      type="text"
+                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.location}
+                      style={{ direction: "ltr" }}
+                    />
+                  </div>
 
                   <div className="flex flex-col">
                     <label
@@ -349,7 +430,7 @@ const EditProfilePage: React.FC = () => {
                     >
                       {t("whatsApp")}
                     </label>
-                    <input
+                    {/* <input
                       id="socialMedia.whatsApp"
                       name="socialMedia.whatsApp"
                       type="text"
@@ -358,6 +439,30 @@ const EditProfilePage: React.FC = () => {
                       onChange={handleChange}
                       value={values.socialMedia?.whatsApp}
                       style={{ direction: "ltr" }}
+                    /> */}
+                    <PhoneInput
+                      containerStyle={{ direction: "ltr" }}
+                      country={"ae"}
+                      value={values.socialMedia?.whatsApp}
+                      onBlur={handleBlur}
+                      onChange={value =>
+                        setFieldValue("socialMedia.whatsApp", value)
+                      }
+                      placeholder={t("whatsApp")}
+                      inputStyle={{
+                        width: "100%",
+                        height: "41px",
+                        border: "1px solid #d3d3d3",
+                        borderRadius: "0.375rem",
+                        fontSize: "15px",
+                        outline: "none",
+
+                        direction: "ltr",
+                      }}
+                      buttonStyle={{
+                        margin: 3,
+                        direction: "ltr",
+                      }}
                     />
                   </div>
                   <div className="flex flex-col">

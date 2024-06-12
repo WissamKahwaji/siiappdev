@@ -7,3 +7,13 @@ export type SignUpValues = {
   fullName: string;
   confirmPassword: string;
 };
+
+export type ResetPasswordParams = {
+  password: string;
+  token: string;
+  confirmPassword: string;
+};
+
+export type ForgetPasswordParams = {
+  email: string;
+};
