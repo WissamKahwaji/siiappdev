@@ -22,6 +22,7 @@ import {
   faArrowRight,
   faCamera,
   faEdit,
+  faHome,
   faList,
   faQrcode,
 } from "@fortawesome/free-solid-svg-icons";
@@ -397,6 +398,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
+                <Link
+                  to={"/home"}
+                  className=" px-2 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                >
+                  <div>
+                    <FontAwesomeIcon icon={faHome} className="" />
+                  </div>
+                </Link>
                 <div className="relative group">
                   <div
                     className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
