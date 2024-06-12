@@ -11,8 +11,9 @@ import {
   FaSnapchat,
   FaTiktok,
   FaPinterest,
-  FaArrowDown,
 } from "react-icons/fa";
+import { IoIosArrowDown } from "react-icons/io";
+
 import { FaThreads, FaX, FaXTwitter } from "react-icons/fa6";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -311,7 +312,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="text-sm   font-semibold ">
                   {user.user?.userName}
                 </p>
-                <FaArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
+                <IoIosArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
               </div>
               <div className="h-[100px] w-auto">
                 <div className=" relative">
@@ -616,7 +617,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p className="text-sm ml-4 md:ml-0 font-semibold ">
                   {user.user?.userName}
                 </p>
-                <FaArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
+                <IoIosArrowDown className="text-secondary md:w-4 md:h-4 w-4 h-4" />
               </div>
 
               <div className="flex flex-row md:gap-x-4 gap-x-2 ">

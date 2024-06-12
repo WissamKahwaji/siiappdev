@@ -16,7 +16,7 @@ import {
   FaTiktok,
   FaPinterest,
 } from "react-icons/fa";
-import { FaMapLocationDot, FaThreads, FaX, FaXTwitter } from "react-icons/fa6";
+import { FaMapLocationDot, FaThreads, FaXTwitter } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
 import { UserModel } from "../../apis/account/type";
 import { ImProfile } from "react-icons/im";
@@ -79,11 +79,7 @@ const QrCodeInfoPage = () => {
       field: "threads",
       text: "threads",
     },
-    {
-      icon: <FaX className="w-5 h-5 md:w-7 md:h-7 lg:w-9 lg:h-9" />,
-      field: "xPlatform",
-      text: "XPlatform",
-    },
+
     {
       icon: <FaFacebook className="w-5 h-5 md:w-7 md:h-7 lg:w-9 lg:h-9" />,
       field: "faceBook",
