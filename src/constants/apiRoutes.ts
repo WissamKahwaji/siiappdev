@@ -45,5 +45,13 @@ const USER = {
   SWITCH_ACCOUNT: "/users/switchAccount",
 };
 
-const API_ROUTES = { AUTH, USER, POST, SII_CARD };
+const FOLDER = {
+  GET_USER_FOLDERS: (userId: string) => `/folders/user-folders/${userId}`,
+  GET_BY_ID: (id: string) => `/folders/by-id/${id}`,
+  CREATE_FOLDER: "/folders/add-folder",
+  UPDATE_FOLDER: (id: string | undefined) => `/folders/update/${id}`,
+  DELETE: (id: string | undefined) => `/folders/delete/${id}`,
+};
+
+const API_ROUTES = { AUTH, USER, POST, SII_CARD, FOLDER };
 export default API_ROUTES;

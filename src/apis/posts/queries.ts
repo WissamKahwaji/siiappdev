@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { AddCommentInputProps, PostInputProps } from "./type";
+import { AddCommentInputProps } from "./type";
 import {
   addComment,
   addPost,
@@ -16,6 +16,7 @@ import {
   toggleSave,
 } from ".";
 import { toast } from "react-toastify";
+import { FolderOrPostProps } from "../folder/type";
 
 const useGetAllPostsQuery = () =>
   useQuery({
@@ -49,7 +50,7 @@ const useAddPostMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add-post"],
-    mutationFn: (payload: PostInputProps) => addPost(payload),
+    mutationFn: (payload: FolderOrPostProps) => addPost(payload),
     onSuccess() {
       toast.success(`add post successfully.`);
       queryClient.invalidateQueries({
@@ -71,7 +72,7 @@ const useEditPostMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit-post"],
-    mutationFn: (payload: PostInputProps) => editPost(payload),
+    mutationFn: (payload: FolderOrPostProps) => editPost(payload),
     onSuccess() {
       toast.success(`edit post successfully.`);
       queryClient.invalidateQueries({

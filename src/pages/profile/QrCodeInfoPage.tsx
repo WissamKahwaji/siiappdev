@@ -137,7 +137,7 @@ const QrCodeInfoPage = () => {
   const filteredIcons = filterSocialMediaIcons(userInfo!);
 
   return (
-    <div className="flex items-center justify-center my-10 h-full w-full font-header">
+    <div className="flex items-center justify-center my-10 h-full w-full font-header mt-20">
       <div className="bg-navBackground p-8 rounded-lg shadow-md md:max-w-3xl max-w-sm w-full flex flex-col justify-start items-center space-y-7">
         <div className="flex justify-center items-center w-full flex-col space-y-4">
           <ImagePopup
@@ -146,6 +146,14 @@ const QrCodeInfoPage = () => {
             smallClassName="object-cover rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 md:h-[150px] md:w-[150px] h-[100px] w-[100px] lg:h-[200px] lg:w-[200px]"
             largeClassName="h-[300px] w-[300px]"
           />
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-secondary md:text-lg text-base">
+              {userInfo?.fullName}
+            </p>
+            <p className="text-gray-400 md:text-base text-sm">
+              @{userInfo?.userName}
+            </p>
+          </div>
           <Link to={`/${userInfo?.userName}`} replace>
             <p className="bg-secondary rounded-lg px-3 py-2 text-navBackground text-sm shadow-sm shadow-gray-200 hover:text-secondary hover:bg-navBackground/40 transform ease-in-out duration-300">
               Show Profile

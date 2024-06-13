@@ -123,13 +123,18 @@ const Home = () => {
             {suggestions.users.map((user, index) => (
               <Link key={index} to={`/${user.userName}`} reloadDocument>
                 <div
-                  className="p-2 hover:bg-gray-200 cursor-pointer   border border-b-secondary"
+                  className="p-2 hover:bg-gray-200 cursor-pointer   border border-b-secondary flex flex-row justify-start items-center gap-x-2"
                   onClick={() => {
                     setShowSuggestions(false);
                     setSearchQuery("");
                   }}
                 >
-                  {user.fullName}
+                  <img
+                    src={user.profileImage}
+                    alt=""
+                    className="w-8 h-auto rounded-lg border-2 border-secondary shadow-md shadow-secondary/50"
+                  />
+                  <p>{user.fullName}</p>
                 </div>
               </Link>
             ))}

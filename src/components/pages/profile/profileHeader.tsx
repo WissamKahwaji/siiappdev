@@ -36,7 +36,7 @@ import { MdAdd } from "react-icons/md";
 import { UserModel } from "../../../apis/account/type";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "../../const/Modal";
-import { PostInputProps } from "../../../apis/posts/type";
+
 import { useAddPostMutation } from "../../../apis/posts/queries";
 import { Formik, FormikHelpers } from "formik";
 import { useToggleFollowMutaion } from "../../../apis/account/queries";
@@ -55,6 +55,8 @@ import LogInModalForm from "./LogInModalForm";
 import ImagePopup from "../../const/ImagePopup";
 import QrCodeUser from "../../const/QrCodeUser";
 import { ImProfile } from "react-icons/im";
+import { FolderOrPostProps } from "../../../apis/folder/type";
+import { useAddFolderMutation } from "../../../apis/folder/queries";
 
 interface ProfileHeaderProps {
   user: UserModel;
@@ -236,7 +238,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   //   const file = event.target.files?.[0];
   //   setCoverImage(file ?? null);
   // };
-  const initialValues: PostInputProps = {
+  const initialValues: FolderOrPostProps = {
     caption: "",
     link: "",
     mobileNumber: "",
@@ -244,7 +246,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     tags: [],
     postType: fileType,
   };
+
+  // const initialValues2: FolderInputProps = {
+  //   name: "",
+  //   caption: "",
+  //   link: "",
+  //   mobileNumber: "",
+  //   whatsAppNumber: "",
+  // };
+
   const { mutate: addPostInfo } = useAddPostMutation();
+  const { mutate: addFolderInfo } = useAddFolderMutation();
   const { mutate: toggleFollow } = useToggleFollowMutaion();
 
   const handleToggleFollow = () => {
@@ -271,18 +283,40 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   };
 
   const handleSubmit = (
-    values: PostInputProps,
-    { setSubmitting }: FormikHelpers<PostInputProps>
+    values: FolderOrPostProps,
+    { setSubmitting }: FormikHelpers<FolderOrPostProps>
   ) => {
-    addPostInfo(values, {
-      onSettled() {
-        setSubmitting(false);
-        setCroppedImageFile(null);
-        setCroppedImageDataUrl("");
-        setIsModalOpen(false);
-      },
-    });
+    if (fileType === "folder") {
+      addFolderInfo(values, {
+        onSettled() {
+          setSubmitting(false);
+          setIsModalOpen(false);
+        },
+      });
+    } else {
+      addPostInfo(values, {
+        onSettled() {
+          setSubmitting(false);
+          setCroppedImageFile(null);
+          setCroppedImageDataUrl("");
+          setIsModalOpen(false);
+        },
+      });
+    }
   };
+  // const handleFolderSubmit = (
+  //   values: FolderInputProps,
+  //   { setSubmitting }: FormikHelpers<FolderInputProps>
+  // ) => {
+  //   addFolderInfo(values, {
+  //     onSettled() {
+  //       setSubmitting(false);
+  //       // setCroppedImageFile(null);
+  //       // setCroppedImageDataUrl("");
+  //       setIsModalOpen(false);
+  //     },
+  //   });
+  // };
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   // const handleSwapClick = () => {
@@ -338,7 +372,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </div>
             </div>
 
-            <div className="flex flex-row md:gap-x-4 gap-x-2">
+            <div className="flex flex-row md:gap-x-4 gap-x-2 mt-6">
               {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
@@ -394,7 +428,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </div>
             </div>
             <div className="flex flex-col justify-start items-end">
-              <div className="flex flex-row gap-x-2 md:gap-x-3">
+              <div className="flex flex-row gap-x-2 md:gap-x-3 mt-6">
                 {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
@@ -428,7 +462,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </div>
               <div className="flex flex-col space-y-2 mt-3 capitalize w-full">
                 <div
-                  className="w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  className={`${
+                    isFollowed ? "border-2 border-secondary bg-transparent" : ""
+                  } w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out`}
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
@@ -618,9 +654,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
         <div className="hidden md:flex flex-col justify-start items-start ">
           {userId === user.user._id ? (
-            <div className="flex flex-row w-full md:gap-x-10 h-fit md:items-center md:justify-between items-center  justify-between  cursor-pointer">
+            <div className="flex flex-row w-full md:gap-x-10 h-fit md:items-center md:justify-between items-center  justify-between ">
               <div
-                className="flex flex-row justify-center items-center md:gap-x-2 gap-x-1"
+                className="flex flex-row justify-center items-center md:gap-x-2 gap-x-1  cursor-pointer"
                 onClick={() => setIsAddAccountModalOpen(true)}
               >
                 <p className="text-sm ml-4 md:ml-0 font-semibold ">
@@ -661,7 +697,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           ) : (
             <div className="flex flex-row justify-between items-center w-full">
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
-              <div className="flex flex-row gap-x-2 md:gap-x-3">
+              <div className="flex flex-row gap-x-2 md:gap-x-3 ">
                 {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
@@ -758,11 +794,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             ) : (
               <div className="flex flex-row justify-center items-center gap-x-8 mt-10 w-full">
                 <div
-                  className="w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  className={`${
+                    isFollowed ? "border-2 border-secondary bg-transparent" : ""
+                  } w-40 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out`}
                   onClick={handleToggleFollow}
                 >
-                  <p className="font-serif  font-semibold text-xs md:text-sm">
-                    {isFollowed ? t("follows") : t("follow")}
+                  <p className="font-serif  font-semibold text-xs md:text-sm capitalize">
+                    {isFollowed ? t("following") : t("follow")}
                   </p>
                 </div>
                 <div
@@ -994,6 +1032,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         {t("doc")}
                       </span>
                     </label>
+                    <label className="flex items-center gap-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="fileType"
+                        value="folder"
+                        checked={fileType === "folder"}
+                        onChange={() => {
+                          setFileType("folder");
+                        }}
+                        className="form-radio h-4 w-4 text-blue-600"
+                      />
+                      <span className="text-gray-700 font-medium">
+                        {t("folder")}
+                      </span>
+                    </label>
                   </div>
 
                   {fileType === "image" && (
@@ -1195,8 +1248,106 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                       )}
                     </div>
                   )}
+                  {fileType === "folder" && (
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="folder_images"
+                      >
+                        {t("folder_images")}
+                      </label>
+                      <input
+                        id="folderImages"
+                        name="folderImages"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={event => {
+                          if (event.currentTarget.files) {
+                            setFieldValue(
+                              "folderImages",
+                              Array.from(event.currentTarget.files)
+                            );
+                          }
+                        }}
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+                  {fileType === "folder" && (
+                    <div className="flex flex-col items-start justify-start w-full">
+                      <label
+                        className="mb-2 text-sm font-medium text-gray-700"
+                        htmlFor="folder_images"
+                      >
+                        {t("folder_cover_image")}
+                      </label>
+                      {/* <input
+                        id="folderCoverImg"
+                        name="folderCoverImg"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={event => {
+                          if (event.currentTarget.files) {
+                            setFieldValue(
+                              "folderCoverImg",
+                              Array.from(event.currentTarget.files)
+                            );
+                          }
+                        }}
+                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      /> */}
+                      <div className="flex w-full justify-start items-center">
+                        <ImageCropper
+                          aspect={1}
+                          onCropComplete={croppedFile => {
+                            handleCropComplete(
+                              croppedFile,
+                              setFieldValue,
+                              "folderCoverImg"
+                            );
+                          }}
+                        />
+                        {croppedImageDataUrl && (
+                          <div className="mt-4">
+                            <img
+                              src={croppedImageDataUrl}
+                              alt="folder_image"
+                              className="w-80 h-56 md:h-auto object-contain border border-secondary mt-4"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 gap-x-5 gap-y-3 mx-2">
+                    {fileType === "folder" && (
+                      <div className="flex flex-col items-start justify-start w-full">
+                        <label
+                          className="mb-2 text-sm font-medium text-gray-700"
+                          htmlFor="name"
+                        >
+                          {t("folder_name")}
+                        </label>
+                        <input
+                          id="name"
+                          name="name"
+                          type="text"
+                          minLength={2}
+                          className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.name ?? ""}
+                        />
+                        {errors.link && touched.link && (
+                          <div className="text-red-500 text-xs mt-1">
+                            {errors.link}
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <div className="flex flex-col items-start justify-start w-full">
                       <label
                         className="mb-2 text-sm font-medium text-gray-700"
@@ -1288,19 +1439,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col items-start justify-start w-full">
-                      <label
-                        className="mb-2 text-sm font-medium text-gray-700"
-                        htmlFor="HashTags"
-                      >
-                        {t("hashTags")}
-                      </label>
-                      <HashtagsInput
-                        value={values.tags ?? []}
-                        onChange={newTags => setFieldValue("tags", newTags)}
-                      />
-                    </div>
-                    {user.user.isBusiness && (
+                    {fileType !== "folder" && (
+                      <div className="flex flex-col items-start justify-start w-full">
+                        <label
+                          className="mb-2 text-sm font-medium text-gray-700"
+                          htmlFor="HashTags"
+                        >
+                          {t("hashTags")}
+                        </label>
+                        <HashtagsInput
+                          value={values.tags ?? []}
+                          onChange={newTags => setFieldValue("tags", newTags)}
+                        />
+                      </div>
+                    )}
+                    {user.user.isBusiness && fileType !== "folder" && (
                       <div className="flex flex-col items-start justify-start w-full">
                         <label
                           className="mb-1 text-sm font-medium text-gray-700"
@@ -1355,13 +1508,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <Modal
           isOpen={isQrModalOpen}
           setIsOpen={setIsQrModalOpen}
-          title={t("share_profile")}
+          title={t("qr_code")}
           size="md"
         >
           <div className="flex flex-col justify-center items-center w-full">
             <QrCodeUser
               qrCodeUrl={user.user.qrCodeUrl}
-              userName={user.user.userName}
+              userName={user.user.fullName}
             />
 
             {/* <div className="flex items-center justify-center p-4">
@@ -1390,10 +1543,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               {t("share_qrcode")}
             </button>
             <button
-              onClick={handleShareClick}
+              onClick={() => {
+                navigate(`/${user.user.userName}/qrcode-info`);
+              }}
               className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"
             >
-              {t("share_profile")}
+              {t("view_qrcode")}
             </button>
           </div>
         </Modal>

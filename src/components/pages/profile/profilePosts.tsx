@@ -23,6 +23,11 @@ import {
 import { useAuth } from "../../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../../const/LoadingComponent";
+import { useGetUserFoldersQuery } from "../../../apis/folder/queries";
+import { FolderModel } from "../../../apis/folder/type";
+import folderIcon from "../../../assets/folder_icon.png";
+import FolderCard from "../folder/FolderCard";
+
 interface ProfilePostsProps {
   userId: string;
 }
@@ -44,6 +49,12 @@ const ProfilePosts = (props: ProfilePostsProps) => {
   } = useGetUserPostsQuery("image", props.userId);
 
   // const { data: likedPosts, isLoading, isError } = useGetUserLikedPostsQuery();
+
+  const {
+    data: foldersData,
+    isLoading: isLoadingFolders,
+    isError: isErrorFolders,
+  } = useGetUserFoldersQuery(props.userId);
 
   const {
     data: savedPosts,
@@ -189,18 +200,22 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         {activeTab === "docs" && isErrorDocs && (
           <p>Error loading docs posts.</p>
         )}
-        {activeTab === "folders" && (
-          // likedPosts?.map((post: PostModel, index: number) => (
-          //   <div key={index} onClick={() => handlePostClick(post)}>
-          //     <ProfilePost isVideo={false} post={post} />
-          //   </div>
-          // ))
-          <div></div>
+        {activeTab === "folders" &&
+          foldersData?.map((folder: FolderModel, index: number) => (
+            <div key={index}>
+              <FolderCard
+                image={folder.coverImg ?? folderIcon}
+                name={folder.name}
+                onClick={() => {
+                  navigate(`/${folder.owner.userName}/folders/${folder._id}`);
+                }}
+              />
+            </div>
+          ))}
+        {activeTab === "folders" && isLoadingFolders && <p>Loading...</p>}
+        {activeTab === "folders" && isErrorFolders && (
+          <p>Error loading folders.</p>
         )}
-        {/* {activeTab === "folders" && isLoading && <p>Loading...</p>}
-        {activeTab === "folders" && isError && (
-          <p>Error loading liked posts.</p>
-        )} */}
         {activeTab === "saves" &&
           !isLoadingSavedPosts &&
           !isErrorSavedPosts &&

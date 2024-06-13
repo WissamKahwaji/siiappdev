@@ -1,7 +1,7 @@
 {
     "search":"بحث",
     "home":"الرئيسية",
-    "account":"الحساب",
+    "account":"حسابي",
     "signout":"تسجيل الخروج",
     "ar":"العربية",
     "en":"English",
@@ -130,6 +130,8 @@
      "copy_profile":"مشاركة البروفايل",
      "qr_code":"Qr Code",
      "share_qrcode":"مشاركة Qr Code",
-     "folders":"مشاريع"
-
+     "folders":"مشاريع",
+      "folder_images":"صور المشاريع",
+      "folder_name":"اسم المجلد",
+      "view_qrcode":"عرض Qr Code"
    }

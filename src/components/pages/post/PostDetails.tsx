@@ -12,7 +12,7 @@ import {
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
 
-import { PostInputProps, PostModel } from "../../../apis/posts/type";
+import { PostModel } from "../../../apis/posts/type";
 import EditPostDetails from "./EditPostDetails";
 import OptionsModal from "./OptionsModal";
 import { Link } from "react-router-dom";
@@ -25,6 +25,7 @@ import LoginModalContent from "../../const/LoginModalContent";
 import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../../const/LoadingComponent";
+import { FolderOrPostProps } from "../../../apis/folder/type";
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -116,8 +117,8 @@ const PostDetails = ({
   };
 
   const handleEditPost = (
-    values: PostInputProps,
-    { setSubmitting }: FormikHelpers<PostInputProps>
+    values: FolderOrPostProps,
+    { setSubmitting }: FormikHelpers<FolderOrPostProps>
   ) => {
     editPostInfo(values, {
       onSettled() {

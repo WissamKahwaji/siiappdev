@@ -98,13 +98,18 @@ const Navbar = () => {
               {suggestions.users.map((user, index) => (
                 <Link key={index} to={`/${user.userName}`} reloadDocument>
                   <div
-                    className="p-2 hover:bg-gray-200 cursor-pointer "
+                    className="p-2 hover:bg-gray-200 cursor-pointer flex flex-row gap-x-3 items-center justify-start"
                     onClick={() => {
                       setShowSuggestions(false);
                       setSearchQuery("");
                     }}
                   >
-                    {user.fullName}
+                    <img
+                      src={user.profileImage}
+                      alt=""
+                      className="w-8 h-auto rounded-lg border-2 border-secondary shadow-md shadow-secondary/50"
+                    />
+                    <p> {user.fullName}</p>
                   </div>
                 </Link>
               ))}
@@ -252,14 +257,14 @@ const Navbar = () => {
                   <a
                     key={index}
                     href={item.path}
-                    className="text-white hover:text-hoverColor transition duration-300 text-lg border-b-2 w-full border-b-secondary/20 capitalize"
+                    className="font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary "
                   >
                     {t(item.title)}
                   </a>
                 ))}
                 {isAuthenticated ? (
-                  <p
-                    className="cursor-pointer text-white"
+                  <div
+                    className="cursor-pointer text-secondary border-2 border-secondary w-full px-2 py-2 rounded-lg  "
                     onClick={() => {
                       window.localStorage.removeItem("userName");
                       window.localStorage.removeItem("userId");
@@ -267,8 +272,8 @@ const Navbar = () => {
                       window.location.href = "/login";
                     }}
                   >
-                    {t("signout")}
-                  </p>
+                    <p>{t("signout")}</p>
+                  </div>
                 ) : (
                   <p
                     className="cursor-pointer text-white"

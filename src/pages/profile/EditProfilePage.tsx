@@ -213,7 +213,7 @@ const EditProfilePage: React.FC = () => {
                       id="fullName"
                       name="fullName"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.fullName}
@@ -236,7 +236,7 @@ const EditProfilePage: React.FC = () => {
                     <textarea
                       id="bio"
                       name="bio"
-                      className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.bio ?? ""}
@@ -276,7 +276,7 @@ const EditProfilePage: React.FC = () => {
                       inputStyle={{
                         width: "100%",
                         height: "41px",
-                        border: "1px solid #d3d3d3",
+                        border: "1px solid #FFCF57",
                         borderRadius: "0.375rem",
                         fontSize: "15px",
                         outline: "none",
@@ -315,7 +315,7 @@ const EditProfilePage: React.FC = () => {
                         <select
                           id="userCategory"
                           name="userCategory"
-                          className="block appearance-none w-full px-4 py-2 pr-8 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="block appearance-none w-full px-4 py-2 pr-8 border border-secondary rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-navBackground "
                           onBlur={handleBlur}
                           onChange={handleChange}
                           value={values.userCategory}
@@ -364,7 +364,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.webSite"
                       name="socialMedia.webSite"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.webSite}
@@ -397,7 +397,7 @@ const EditProfilePage: React.FC = () => {
                           setFieldValue("doc", file);
                         }
                       }}
-                      className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                     />
                   </div>
                   {fileError && (
@@ -415,7 +415,7 @@ const EditProfilePage: React.FC = () => {
                       id="location"
                       name="location"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.location}
@@ -452,7 +452,7 @@ const EditProfilePage: React.FC = () => {
                       inputStyle={{
                         width: "100%",
                         height: "41px",
-                        border: "1px solid #d3d3d3",
+                        border: "1px solid #FFCF57",
                         borderRadius: "0.375rem",
                         fontSize: "15px",
                         outline: "none",
@@ -476,7 +476,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.faceBook"
                       name="socialMedia.faceBook"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.faceBook}
@@ -494,7 +494,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.linkedIn"
                       name="socialMedia.linkedIn"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.linkedIn}
@@ -512,7 +512,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.instagram"
                       name="socialMedia.instagram"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.instagram}
@@ -530,7 +530,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.threads"
                       name="socialMedia.threads"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.threads}
@@ -548,7 +548,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.tiktok"
                       name="socialMedia.tiktok"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.tiktok}
@@ -566,7 +566,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.snapChat"
                       name="socialMedia.snapChat"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.snapChat}
@@ -584,7 +584,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.youtube"
                       name="socialMedia.youtube"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.youtube}
@@ -602,7 +602,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.xPlatform"
                       name="socialMedia.xPlatform"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.xPlatform}
@@ -620,7 +620,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.painterest"
                       name="socialMedia.painterest"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.painterest}
@@ -638,7 +638,7 @@ const EditProfilePage: React.FC = () => {
                       id="socialMedia.otherLink"
                       name="socialMedia.otherLink"
                       type="text"
-                      className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="px-4 py-2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                       onBlur={handleBlur}
                       onChange={handleChange}
                       value={values.socialMedia?.otherLink}
@@ -660,7 +660,7 @@ const EditProfilePage: React.FC = () => {
                   <textarea
                     id="userAbout.aboutUs"
                     name="userAbout.aboutUs"
-                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-secondary h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.userAbout?.aboutUs ?? ""}
@@ -676,7 +676,7 @@ const EditProfilePage: React.FC = () => {
                   <textarea
                     id="userAbout.ourVision"
                     name="userAbout.ourVision"
-                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-secondary h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.userAbout?.ourVision ?? ""}
@@ -692,7 +692,7 @@ const EditProfilePage: React.FC = () => {
                   <textarea
                     id="userAbout.ourMission"
                     name="userAbout.ourMission"
-                    className="px-4 py-2 border h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-secondary h-32 rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.userAbout?.ourMission ?? ""}

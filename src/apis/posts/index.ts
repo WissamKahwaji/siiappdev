@@ -1,12 +1,8 @@
 import API_ROUTES from "../../constants/apiRoutes";
 import { createFormData } from "../../utils";
+import { FolderOrPostProps } from "../folder/type";
 import publicInstance from "../publicInstance";
-import {
-  AddCommentInputProps,
-  CommentModel,
-  PostInputProps,
-  PostModel,
-} from "./type";
+import { AddCommentInputProps, CommentModel, PostModel } from "./type";
 
 const getAllPosts = async () => {
   const res = await publicInstance.get<PostModel[]>(API_ROUTES.POST.GET_ALL);
@@ -37,14 +33,14 @@ const getPostById = async (id: string) => {
   return res.data;
 };
 
-const addPost = async (payload: PostInputProps) => {
+const addPost = async (payload: FolderOrPostProps) => {
   const { ...rest } = payload;
   const data = createFormData({ ...rest });
   const res = await publicInstance.post(API_ROUTES.POST.ADD, data);
   return res.data;
 };
 
-const editPost = async (payload: PostInputProps) => {
+const editPost = async (payload: FolderOrPostProps) => {
   const { ...rest } = payload;
   const data = createFormData({ ...rest });
   const res = await publicInstance.put(API_ROUTES.POST.EDIT(payload._id), data);

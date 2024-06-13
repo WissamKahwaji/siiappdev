@@ -1,7 +1,7 @@
 {
     "search":"search",
     "home":"home",
-    "account":"account",
+    "account":"My Account",
     "signout":"sign out",
     "ar":"العربية",
     "en":"English",
@@ -132,5 +132,8 @@
     "copy_profile":"Copy Profile",
     "qr_code":"QR Code",
     "share_qrcode":"Share QR Code",
-    "folders":"Folders"
+    "folders":"Folders",
+    "folder_images":"Folder Images",
+    "folder_name":"Folder Name",
+    "view_qrcode":"View QR Code"
 }

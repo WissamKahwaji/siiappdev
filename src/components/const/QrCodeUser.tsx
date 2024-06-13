@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 interface QrCodeUserProps {
   qrCodeUrl: string | undefined;
   userName: string;
@@ -15,11 +13,12 @@ const QrCodeUser = ({ qrCodeUrl, userName }: QrCodeUserProps) => {
             alt="User QR Code"
             className="w-52 h-fit border-2 border-secondary shadow-sm shadow-secondary mb-2 "
           />
-          <Link
+          <p className="text-lg font-serif text-navBackground">{userName}</p>
+          {/* <Link
             to={`https://siiappdev.siidevelopment.com/${userName}/qrcode-info`}
           >
             <p className="text-sm font-body text-blue-500">{`https://siiappdev.siidevelopment.com/${userName}/qrcode-info`}</p>
-          </Link>
+          </Link> */}
         </div>
       ) : (
         <p>Loading QR code...</p>

@@ -1,16 +1,17 @@
 import { Formik, FormikHelpers } from "formik";
-import { PostInputProps, PostModel } from "../../../apis/posts/type";
+import { PostModel } from "../../../apis/posts/type";
 import Modal from "../../const/Modal";
 import HashtagsInput from "../../const/HashtagsInput";
 import { useTranslation } from "react-i18next";
+import { FolderOrPostProps } from "../../../apis/folder/type";
 
 interface EditPostDetailsProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPost: PostModel;
   onEdit: (
-    values: PostInputProps,
-    helpers: FormikHelpers<PostInputProps>
+    values: FolderOrPostProps,
+    helpers: FormikHelpers<FolderOrPostProps>
   ) => void;
 }
 

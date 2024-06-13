@@ -25,6 +25,8 @@ import BriefPage from "./pages/brief/BriefPage";
 import ForgetPassword from "./pages/authentication/ForgetPassword";
 import ResetPassword from "./pages/authentication/ResetPassword";
 import QrCodeInfoPage from "./pages/profile/QrCodeInfoPage";
+import FolderDetailsPage from "./pages/folder/FolderDetailsPage";
+import EditFolderDetailsPage from "./pages/folder/EditFolderDetailsPage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -63,6 +65,10 @@ const Routes = () => {
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/:userName/qrcode-info" element={<QrCodeInfoPage />} />
+            <Route
+              path="/:userName/folders/:id"
+              element={<FolderDetailsPage />}
+            />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
@@ -90,6 +96,10 @@ const Routes = () => {
               <Route
                 path="courses/course-preview"
                 element={<CoursePreviewPage />}
+              />
+              <Route
+                path="/:userName/folders/:id/edit"
+                element={<EditFolderDetailsPage />}
               />
               {/* Add more protected routes here */}
             </Route>
