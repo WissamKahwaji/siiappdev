@@ -25,10 +25,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           className="sr-only"
         />
         <div
-          className={`w-11 h-6 bg-navBackground rounded-full peer peer-checked:bg-blue-600`}
+          className={`w-11 h-6 bg-white border-2 border-secondary rounded-md peer peer-checked:bg-blue-600`}
         >
           <div
-            className={`absolute w-5 h-5  rounded-full border border-gray-300 top-0.5 left-0.5 transition-transform ${
+            className={`absolute w-5 h-5  rounded-md border border-gray-300 top-0.5 left-0.5 transition-transform ${
               checked ? "transform translate-x-5 bg-secondary" : "bg-white"
             }`}
           />
