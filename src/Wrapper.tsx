@@ -9,7 +9,9 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const Wrapper = () => {
   const queryClient = new QueryClient();
 
-  const clientId = import.meta.env.VITE_APP_CLIENT_ID;
+  // const clientId = import.meta.env.VITE_APP_CLIENT_ID;
+  const clientId =
+    "182721288209-dc3213dufq26ijvindhbhho7qblcskt6.apps.googleusercontent.com";
 
   return (
     <GoogleOAuthProvider clientId={clientId}>
