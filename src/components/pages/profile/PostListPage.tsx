@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { useGetUserPostsQuery } from "../../../apis/posts/queries";
 import { useParams } from "react-router-dom";
 import { PostModel } from "../../../apis/posts/type";
@@ -18,18 +18,13 @@ const PostListPage = () => {
   } = useGetUserPostsQuery(type, userId ?? "");
   const currentUserId = localStorage.getItem("userId");
 
-  // Ref for scrolling to post
+  // Ref for the post to scroll to
   const scrollToRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    // Scroll to the selected post when postId changes
-    if (postId && postsInfo) {
-      const index = postsInfo.findIndex(
-        (post: PostModel) => post._id === postId
-      );
-      if (index !== -1 && scrollToRef.current) {
-        scrollToRef.current.scrollIntoView();
-      }
+  useLayoutEffect(() => {
+    // Scroll to the selected post when posts are loaded and postId is available
+    if (postId && scrollToRef.current) {
+      scrollToRef.current.scrollIntoView();
     }
   }, [postId, postsInfo]);
 
@@ -46,7 +41,7 @@ const PostListPage = () => {
   }
 
   return (
-    <div className="container mx-auto pt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center w-full ">
+    <div className="container mx-auto pt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center w-full">
       {postsInfo &&
         postsInfo.map((post: PostModel, index) => (
           <div key={index} ref={postId === post._id ? scrollToRef : null}>
