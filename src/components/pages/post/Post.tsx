@@ -164,7 +164,9 @@ const Post = (props: PostProps) => {
 
   const handleShareClick = () => {
     navigator.clipboard
-      .writeText(`siiapp.net/${props.post.owner.userName}/${props.post._id}`)
+      .writeText(
+        `www.siiapp.net/${props.post.owner.userName}/${props.post._id}`
+      )
       .then(() => {
         toast.info("copy to clipboard");
       });
