@@ -210,7 +210,7 @@ const Post = (props: PostProps) => {
             playsInline
             muted
             controls
-            className="object-cover bg-transparent w-full max-h-[450px]"
+            className="object-cover bg-transparent w-full max-h-[450px] "
           >
             <source src={props.post?.postVideo} type="video/mp4" />
             Your browser does not support the video tag.
@@ -258,7 +258,7 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <div className="border-2 rounded-lg border-secondary shadow-sm shadow-secondary mb-5 bg-white font-header w-full max-w-[550px]">
+    <div className="border-2 rounded-lg border-secondary shadow-sm shadow-secondary mb-5 bg-white font-header w-full max-w-[550px] md:min-w-[550px] ">
       <div className="p-3 flex flex-row">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>

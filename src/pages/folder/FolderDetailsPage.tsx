@@ -87,11 +87,11 @@ const FolderDetailsPage = () => {
           {folderInfo?.caption}
         </p>
 
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-2 my-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4  sm:grid-cols-3   my-5">
           {folderInfo?.images.map((image, index) => (
             <div
               key={index}
-              className="relative group rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 p-2 md:h-[200px] h-[100px] flex items-center justify-center"
+              className="relative group rounded-lg border-2 border-secondary shadow-md shadow-secondary/50 p-2 md:h-[300px] h-[200px] flex items-center justify-center cursor-pointer"
             >
               <img
                 src={image}

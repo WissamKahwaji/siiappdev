@@ -22,6 +22,7 @@ import { UserModel } from "../../apis/account/type";
 import { ImProfile } from "react-icons/im";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../../components/const/LoadingComponent";
+import { getFileNameFromUrl } from "../../utils";
 
 const QrCodeInfoPage = () => {
   const { userName } = useParams<{ userName: string }>();
@@ -193,7 +194,9 @@ const QrCodeInfoPage = () => {
                         {t(item.text ?? "")}
                       </p>
                       <p className="font-serif font-semibold text-xs md:text-sm text-gray-700 cursor-copy break-all">
-                        {socialLink}
+                        {item.field === "companyProfile"
+                          ? getFileNameFromUrl(socialLink)
+                          : socialLink}
                       </p>
                     </div>
                   </div>

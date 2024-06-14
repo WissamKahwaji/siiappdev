@@ -27,6 +27,7 @@ import ResetPassword from "./pages/authentication/ResetPassword";
 import QrCodeInfoPage from "./pages/profile/QrCodeInfoPage";
 import FolderDetailsPage from "./pages/folder/FolderDetailsPage";
 import EditFolderDetailsPage from "./pages/folder/EditFolderDetailsPage";
+import PostListPage from "./components/pages/profile/PostListPage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -68,6 +69,10 @@ const Routes = () => {
             <Route
               path="/:userName/folders/:id"
               element={<FolderDetailsPage />}
+            />
+            <Route
+              path="/:userName/:userId/posts/:postId/:type"
+              element={<PostListPage />}
             />
 
             {/* Protected Routes */}

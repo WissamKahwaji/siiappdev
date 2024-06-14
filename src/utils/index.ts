@@ -79,3 +79,11 @@ export const formatDate = (dateString: string): string => {
 export const formatCardNumber = (cardNumber: string): string => {
   return cardNumber.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
+
+export const getFileNameFromUrl = (url: string): string => {
+  // Split the URL by '/'
+  const parts = url.split("/");
+  // Get the last part (filename)
+  const fileName = parts[parts.length - 1];
+  return fileName;
+};

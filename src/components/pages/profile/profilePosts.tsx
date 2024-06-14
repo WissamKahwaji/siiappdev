@@ -74,9 +74,11 @@ const ProfilePosts = (props: ProfilePostsProps) => {
   } = useGetUserDocsPostsQuery(props.userId);
 
   const handlePostClick = (post: PostModel) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-    navigate(`/${post.owner.userName}/${post._id}`, { replace: true });
+    // setSelectedPost(post);
+    // setIsModalOpen(true);
+    navigate(
+      `/${post.owner.userName}/${post.owner._id}/posts/${post._id}/${post.postType}`
+    );
   };
 
   const handleCloseModal = (post: PostModel) => {
@@ -172,7 +174,11 @@ const ProfilePosts = (props: ProfilePostsProps) => {
         {activeTab === "posts" &&
           postsInfo &&
           postsInfo.map((post, index) => (
-            <div key={index} onClick={() => handlePostClick(post)}>
+            <div
+              key={index}
+              className="cursor-pointer"
+              onClick={() => handlePostClick(post)}
+            >
               <ProfilePost isVideo={false} post={post} />
             </div>
           ))}

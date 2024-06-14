@@ -92,20 +92,19 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
       onMouseEnter={() => setShowOverlay(true)}
       onMouseLeave={() => setShowOverlay(false)}
     >
-      <a href="#">
-        <div
-          className={`bg-gray-800 bg-opacity-60 h-full w-full absolute inset-0 z-10 flex items-center justify-center text-white ${
-            showOverlay ? "" : "hidden"
-          }`}
-        >
-          <div className="flex items-center space-x-4">
-            <PiHandsClappingLight className="w-5 h-5" />
-            <span>{post.likes?.length ?? 0}</span>
-            <FontAwesomeIcon icon={faBookmark} />
-            <span>{post.saves?.length ?? 0}</span>
-          </div>
+      <div
+        className={`bg-gray-800 bg-opacity-60 h-full w-full absolute inset-0 z-10 flex items-center justify-center text-white ${
+          showOverlay ? "" : "hidden"
+        }`}
+      >
+        <div className="flex items-center space-x-4">
+          <PiHandsClappingLight className="w-5 h-5" />
+          <span>{post.likes?.length ?? 0}</span>
+          <FontAwesomeIcon icon={faBookmark} />
+          <span>{post.saves?.length ?? 0}</span>
         </div>
-      </a>
+      </div>
+
       {renderPostContent()}
     </div>
   );

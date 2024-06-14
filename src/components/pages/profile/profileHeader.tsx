@@ -1562,28 +1562,30 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <p>Loading QR code...</p>
               )}
             </div> */}
-            <button
-              onClick={() => {
-                navigator.clipboard
-                  .writeText(
-                    `https://www.siiapp.net/${user.user.userName}/qrcode-info`
-                  )
-                  .then(() => {
-                    toast.info("copy to clipboard");
-                  });
-              }}
-              className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200 mb-2"
-            >
-              {t("share_qrcode")}
-            </button>
-            <button
-              onClick={() => {
-                navigate(`/${user.user.userName}/qrcode-info`);
-              }}
-              className="flex items-center justify-center bg-secondary w-1/2 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"
-            >
-              {t("view_qrcode")}
-            </button>
+            <div className="flex flex-row items-center w-full justify-center gap-x-2 md:gap-x-3">
+              <button
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText(
+                      `https://www.siiapp.net/${user.user.userName}/qrcode-info`
+                    )
+                    .then(() => {
+                      toast.info("copy to clipboard");
+                    });
+                }}
+                className="flex items-center justify-center bg-secondary w-40 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200 "
+              >
+                {t("share_qrcode")}
+              </button>
+              <button
+                onClick={() => {
+                  navigate(`/${user.user.userName}/qrcode-info`);
+                }}
+                className="flex items-center justify-center bg-secondary w-40 gap-x-2 px-4 py-2 rounded-lg text-black hover:bg-black hover:text-secondary transition duration-200"
+              >
+                {t("view_qrcode")}
+              </button>
+            </div>
           </div>
         </Modal>
       )}
