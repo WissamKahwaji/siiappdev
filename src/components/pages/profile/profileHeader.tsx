@@ -1566,7 +1566,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               onClick={() => {
                 navigator.clipboard
                   .writeText(
-                    `https://siiappdev.siidevelopment.com/${user.user.userName}/qrcode-info`
+                    `https://www.siiapp.net/${user.user.userName}/qrcode-info`
                   )
                   .then(() => {
                     toast.info("copy to clipboard");

@@ -103,7 +103,7 @@ const PostDetails = ({
   const handleShareClick = () => {
     navigator.clipboard
       .writeText(
-        `siiappdev.siidevelopment.com/${selectedPost.owner.userName}/${selectedPost._id}`
+        `siiapp.net/${selectedPost.owner.userName}/${selectedPost._id}`
       )
       .then(() => {
         toast.info("copy to clipboard");
