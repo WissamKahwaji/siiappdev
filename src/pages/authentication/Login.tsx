@@ -1,4 +1,3 @@
-// import logo from "../../assets/logo_sii_new_2.png";
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";
 import { Link } from "react-router-dom";
@@ -15,17 +14,43 @@ import logo_video from "../../assets/video_logo.mp4";
 import { useTranslation } from "react-i18next";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required("please_enter_your_email"),
+  email: Yup.string().required(
+    "Please enter your email or mobileNumber or username"
+  ),
   password: Yup.string()
     .required("Please enter your password")
     .min(8, "Password must be at least 8 characters long"),
 });
+
 const Login = () => {
   const { t } = useTranslation();
-
-  // const selectedLang = i18n.language;
   const { mutate: signIn } = useSignInMutation();
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleGoogleLogin = () => {
+    // Redirect to Google OAuth endpoint
+    window.location.href =
+      "https://siiappback.siidevelopment.com/users/auth/google";
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const userName = params.get("userName");
+    const email = params.get("email");
+    const userId = params.get("userId");
+
+    if (token && userName && email && userId) {
+      // Store token in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("email", email);
+
+      window.location.href = `/${userName}`;
+    }
+  }, []);
+
   const handleSignIn = (
     values: SignInValues,
     { setSubmitting }: FormikHelpers<SignInValues>
@@ -47,14 +72,8 @@ const Login = () => {
   }, []);
 
   return (
-    <div
-      className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20 capitalize"
-      style={{
-        direction: "ltr",
-      }}
-    >
+    <div className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:space-x-20 capitalize">
       <div className="md:w-96 w-52 h-auto">
-        {/* <img src={logo} alt="Logo" className="object-contain" /> */}
         <video
           id="logoVideo"
           autoPlay
@@ -98,9 +117,6 @@ const Login = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
-                    // style={{
-                    //   direction: selectedLang == "en" ? "ltr" : "rtl",
-                    // }}
                   />
                   {errors.email && touched.email && (
                     <div className="text-red-500 text-xs">{errors.email}</div>
@@ -171,12 +187,15 @@ const Login = () => {
               >
                 {t("login_with_facebook")}
               </button>
+
               <button
                 type="button"
+                onClick={handleGoogleLogin}
                 className="bg-gray-500 text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-red-700 focus:outline-none"
               >
                 {t("login_with_google")}
               </button>
+
               <button
                 type="button"
                 className="bg-black text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-gray-800 focus:outline-none"
@@ -193,11 +212,13 @@ const Login = () => {
                   {t("signup")}
                 </Link>
               </div>
+
               <div className="flex items-center mt-6">
                 <div className="border-t border-gray-300 flex-grow"></div>
                 <div className="mx-4 text-sm text-gray-500">{t("or")}</div>
                 <div className="border-t border-gray-300 flex-grow"></div>
               </div>
+
               <Link to={`/home`} replace>
                 <div className="cursor-pointer text-center mt-5 bg-secondary rounded-lg shadow-lg shadow-navBackground/20 py-1 space-x-1 flex flex-row justify-center items-center">
                   <p className="font-semibold font-header">

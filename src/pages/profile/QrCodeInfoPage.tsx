@@ -150,9 +150,11 @@ const QrCodeInfoPage = () => {
             <p className="text-secondary md:text-lg text-base">
               {userInfo?.fullName}
             </p>
-            <p className="text-gray-400 md:text-base text-sm">
-              @{userInfo?.userName}
-            </p>
+            {userInfo?.isBusiness && userInfo.userCategory && (
+              <p className="text-gray-400 md:text-base text-sm">
+                {userInfo.userCategory}
+              </p>
+            )}
           </div>
           <Link to={`/${userInfo?.userName}`} replace>
             <p className="bg-secondary rounded-lg px-3 py-2 text-navBackground text-sm shadow-sm shadow-gray-200 hover:text-secondary hover:bg-navBackground/40 transform ease-in-out duration-300">
@@ -175,7 +177,11 @@ const QrCodeInfoPage = () => {
                     className="py-3 px-4 w-full bg-secondary rounded-lg text-navBackground flex items-center justify-start gap-x-4 cursor-pointer transition-transform transform hover:scale-105 ease-in-out duration-300"
                     onClick={() => {
                       if (item.field === "whatsApp") {
-                        window.open(`https://wa.me/${socialLink}`, "_blank");
+                        const sanitizedNumber = socialLink.replace(/\s+/g, "");
+                        window.open(
+                          `https://wa.me/${sanitizedNumber}`,
+                          "_blank"
+                        );
                       } else {
                         window.open(socialLink, "_blank");
                       }

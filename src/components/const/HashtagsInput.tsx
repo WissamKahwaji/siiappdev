@@ -26,7 +26,7 @@ const HashtagsInput: React.FC<HashtagsInputProps> = ({ value, onChange }) => {
   };
   const { t } = useTranslation();
   return (
-    <div className="flex flex-wrap items-center border rounded-lg p-2 w-full">
+    <div className="flex flex-wrap items-center border border-secondary   rounded-lg p-2 w-full">
       {value.map((hashtag, index) => (
         <div
           key={index}

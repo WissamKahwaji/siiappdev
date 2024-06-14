@@ -39,7 +39,11 @@ import Modal from "../../const/Modal";
 
 import { useAddPostMutation } from "../../../apis/posts/queries";
 import { Formik, FormikHelpers } from "formik";
-import { useToggleFollowMutaion } from "../../../apis/account/queries";
+import {
+  useGetUserAccountsQuery,
+  useSwitchAccountMutation,
+  useToggleFollowMutaion,
+} from "../../../apis/account/queries";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import LoginToast from "../../const/LoginToast";
@@ -57,6 +61,7 @@ import QrCodeUser from "../../const/QrCodeUser";
 import { ImProfile } from "react-icons/im";
 import { FolderOrPostProps } from "../../../apis/folder/type";
 import { useAddFolderMutation } from "../../../apis/folder/queries";
+import LoadingComponent from "../../const/LoadingComponent";
 
 interface ProfileHeaderProps {
   user: UserModel;
@@ -259,6 +264,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const { mutate: addFolderInfo } = useAddFolderMutation();
   const { mutate: toggleFollow } = useToggleFollowMutaion();
 
+  const {
+    data: users,
+    isLoading: isLoadingUserAccounts,
+    isError: isErrorUserAccounts,
+  } = useGetUserAccountsQuery();
+  const { mutate: switchAccount } = useSwitchAccountMutation();
+
   const handleToggleFollow = () => {
     if (!isAuthenticated) {
       toast.error(
@@ -339,7 +351,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
       <div className="flex md:hidden w-full flex-col">
         {userId === user.user._id ? (
           <div className="flex flex-row w-full justify-between items-start">
-            <div className="flex flex-col justify-start items-center space-y-2">
+            <div className="flex flex-col justify-start items-start space-y-2">
               <div
                 className="flex flex-row justify-start items-center  gap-x-1"
                 onClick={() => setIsAddAccountModalOpen(true)}
@@ -376,6 +388,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
+              <Link
+                to={"/home"}
+                className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+              >
+                <div>
+                  <FontAwesomeIcon icon={faHome} className="" />
+                </div>
+              </Link>
               <div className="relative group">
                 <div
                   className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
@@ -403,7 +423,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           </div>
         ) : (
           <div className="flex flex-row w-full justify-between items-start">
-            <div className="flex flex-col justify-start items-center space-y-2">
+            <div className="flex flex-col justify-start items-start space-y-2">
               <p className="text-sm  font-semibold ">{user.user?.userName}</p>
               <div className="h-[100px] w-auto">
                 <div className=" relative">
@@ -464,7 +484,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <div
                   className={`${
                     isFollowed ? "border-2 border-secondary bg-transparent" : ""
-                  } w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out`}
+                  } w-28 px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer  `}
                   onClick={handleToggleFollow}
                 >
                   <p className="font-serif  font-semibold text-xs md:text-sm">
@@ -472,7 +492,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                   </p>
                 </div>
                 <div
-                  className="w-28   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
+                  className="w-28   px-3 py-1 shadow-lg flex justify-center items-center bg-secondary rounded-md cursor-pointer"
                   onClick={handleShareClick}
                 >
                   <p className="font-serif  font-semibold text-xs">
@@ -669,6 +689,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 {/* <div className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer">
                   <FontAwesomeIcon icon={faBell} className="" />
                 </div> */}
+                <Link
+                  to={"/home"}
+                  className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
+                >
+                  <div>
+                    <FontAwesomeIcon icon={faHome} className="" />
+                  </div>
+                </Link>
                 <div className="relative group">
                   <div
                     className="md:w-8 md:h-8 w-8 h-8 flex justify-center items-center bg-secondary rounded-md cursor-pointer"
@@ -868,7 +896,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                       className="rounded-lg md:w-20 md:h-20 w-12 h-12 bg-secondary cursor-pointer  flex justify-center items-center"
                       onClick={() => {
                         if (item.field === "whatsApp") {
-                          window.open(`https://wa.me/${socialLink}`, "_blank");
+                          const sanitizedNumber = socialLink.replace(
+                            /\s+/g,
+                            ""
+                          );
+                          window.open(
+                            `https://wa.me/${sanitizedNumber}`,
+                            "_blank"
+                          );
                         } else {
                           window.open(socialLink, "_blank");
                         }
@@ -931,10 +966,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             <p
               className="w-full rounded bg-secondary py-2 cursor-pointer hover:text-secondary hover:bg-navBackground duration-300 transform ease-in-out"
               onClick={() => {
-                window.open(
-                  `https://wa.me/${user.user.socialMedia?.whatsApp}`,
-                  "_blank"
-                );
+                const sanitizedNumber =
+                  user.user.socialMedia?.whatsApp?.replace(/\s+/g, "");
+                window.open(`https://wa.me/${sanitizedNumber}`, "_blank");
               }}
             >
               {t("whatsapp")}
@@ -994,7 +1028,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           setFileType("image");
                           setFieldValue("postType", "image");
                         }}
-                        className="form-radio h-4 w-4 text-blue-600"
+                        className="form-radio h-4 w-4 text-blue-600 "
                       />
                       <span className="text-gray-700 font-medium">
                         {t("image")}
@@ -1336,7 +1370,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           name="name"
                           type="text"
                           minLength={2}
-                          className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                           onBlur={handleBlur}
                           onChange={handleChange}
                           value={values.name ?? ""}
@@ -1359,7 +1393,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         id="caption"
                         name="caption"
                         minLength={1}
-                        className="px-4 h-32 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.caption ?? ""}
@@ -1382,7 +1416,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         name="link"
                         type="url"
                         minLength={2}
-                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.link ?? ""}
@@ -1405,7 +1439,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         name="whatsAppNumber"
                         type="text"
                         minLength={2}
-                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.whatsAppNumber ?? ""}
@@ -1428,7 +1462,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         name="mobileNumber"
                         type="text"
                         minLength={2}
-                        className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.mobileNumber ?? ""}
@@ -1473,7 +1507,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           type="number"
                           min={1}
                           max={100}
-                          className="px-4 py-2 w-full border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                           onBlur={handleBlur}
                           onChange={handleChange}
                           value={values.discountPercentage ?? ""}
@@ -1485,7 +1519,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 bg-navBackground text-secondary font-semibold rounded-lg hover:bg-secondary hover:text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 transform ease-in-out duration-300"
                 >
                   {isSubmitting ? `${t("saving")}..` : t("save")}
                 </button>
@@ -1557,18 +1591,47 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <Modal
           isOpen={isAddAccountModalOpen}
           setIsOpen={setIsAddAccountModalOpen}
-          title={t("add_account")}
+          title={t("your_accounts")}
           size="md"
         >
-          <div className="flex flex-col justify-center items-center w-full gap-y-4">
+          <div className="flex flex-col justify-start items-center w-full min-w-[300px] gap-y-4 min-h-[400px]">
+            <div className="flex flex-col flex-1 justify-start items-center w-full min-w-[300px] ">
+              {isLoadingUserAccounts && (
+                <div className="flex justify-center items-center min-h-[50px]  bg-gray-100">
+                  <LoadingComponent />
+                </div>
+              )}
+              {isErrorUserAccounts && <div>Error occurred</div>}
+              {users &&
+                users.length > 0 &&
+                users.map((user, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-row items-center justify-start md:gap-x-3 gap-x-2 w-full md:w-1/2 bg-navBackground/90  shadow-lg py-2 px-3 rounded-lg cursor-pointer"
+                    onClick={() => {
+                      switchAccount({ email: user.email });
+                    }}
+                  >
+                    <img
+                      src={user.profileImage ?? defaultImage}
+                      alt="profile"
+                      className=" object-cover rounded-md border-2 border-gray-200 shadow-md shadow-secondary/50 md:h-[40px] md:w-[40px] h-[40px] w-[40px]"
+                    />
+                    <p className="text-navBackground text-sm font-header text-white">
+                      {user.fullName}
+                    </p>
+                  </div>
+                ))}
+            </div>
             <div
               className="w-full text-sm md:text-base md:w-1/2 bg-secondary text-navBackground font-serif px-3 py-2 rounded-lg shadow-md cursor-pointer"
               onClick={() => {
                 setIsAddAccountModalOpen(false);
-                setIsNewLoginModalOpen(true);
+
+                setIsNewLoginFormModalOpen(true);
               }}
             >
-              {t("log_in_to_one_of_your_accounts")}
+              {t("log_in_to_onther_account")}
             </div>
             <div
               className="w-full text-sm md:text-base md:w-1/2 bg-navBackground text-secondary font-serif px-3 py-2 rounded-lg shadow-md cursor-pointer"

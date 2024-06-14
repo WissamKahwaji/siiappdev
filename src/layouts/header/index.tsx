@@ -11,7 +11,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useGetUserSearchQuery } from "../../apis/account/queries";
 import LanguageButton from "../../components/const/LanguageButton";
 import { useTranslation } from "react-i18next";
-import { FiLogIn } from "react-icons/fi";
+import { IoMdPersonAdd } from "react-icons/io";
+import logo from "../../assets/guest-01-01.png";
 
 const Navbar = () => {
   const { isAuthenticated } = useAuth();
@@ -21,7 +22,10 @@ const Navbar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
+
   const userName = localStorage.getItem("userName");
+  const profileImage = localStorage.getItem("profileImage");
+
   const navItems = [
     { title: "home", path: "/home" },
     { title: "account", path: `/${userName}` },
@@ -176,18 +180,28 @@ const Navbar = () => {
               {t("login")}
             </p>
           )}
-          <LanguageButton />
+          <LanguageButton className="relative flex flex-col items-center  rounded-lg" />
         </div>
         <div className="md:hidden flex flex-row items-center gap-x-4">
-          {!isAuthenticated && (
+          {!isAuthenticated ? (
             <div className="md:hidden text-secondary hover:text-white transition duration-300 text-2xl focus:outline-none">
-              <FiLogIn
+              <IoMdPersonAdd
                 className="cursor-pointer text-secondary"
                 onClick={() => {
                   window.location.href = "/login";
                 }}
               />
             </div>
+          ) : (
+            <img
+              src={profileImage ?? logo}
+              alt=""
+              className="md:hidden w-6 h-6  rounded-lg border-2 border-secondary shadow-md shadow-secondary/50"
+              onClick={() => {
+                // navigate(`/${userName}`, { replace: true });
+                window.location.href = `/${userName}`;
+              }}
+            />
           )}
           <button
             onClick={toggleDrawer}
@@ -209,7 +223,10 @@ const Navbar = () => {
                   <source src={logo_video} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
-                <LanguageButton />
+                <LanguageButton
+                  className="relative flex flex-col items-center  rounded-lg w-full"
+                  title={`${t("change_language")}`}
+                />
                 {/* <div className="flex items-center font-body w-full bg-white rounded p-2">
                   <input
                     type="text"
@@ -254,13 +271,28 @@ const Navbar = () => {
                   </div>
                 )} */}
                 {navItems.map((item, index) => (
-                  <a
+                  // <a
+                  //   key={index}
+                  //   href={item.path}
+                  //   className="font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary "
+                  // >
+                  //   {t(item.title)}
+                  // </a>
+                  <Link
+                    className={` font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary `}
                     key={index}
-                    href={item.path}
-                    className="font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary "
+                    // to={isAuthenticated ? item.path : "/login"}
+                    to={
+                      isAuthenticated
+                        ? item.path
+                        : item.title == "account"
+                        ? "/login"
+                        : item.path
+                    }
+                    reloadDocument
                   >
                     {t(item.title)}
-                  </a>
+                  </Link>
                 ))}
                 {isAuthenticated ? (
                   <div
@@ -269,6 +301,7 @@ const Navbar = () => {
                       window.localStorage.removeItem("userName");
                       window.localStorage.removeItem("userId");
                       window.localStorage.removeItem("token");
+                      window.localStorage.removeItem("profileImage");
                       window.location.href = "/login";
                     }}
                   >

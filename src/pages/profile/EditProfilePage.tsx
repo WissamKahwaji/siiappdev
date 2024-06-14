@@ -294,7 +294,7 @@ const EditProfilePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <div className="flex justify-between items-center my-2">
+                  <div className="flex justify-between items-center my-2 flex-row w-full">
                     <ToggleSwitch
                       label={t("switch_to_business_account")}
                       checked={values.isBusiness ?? isBusinessAccount}

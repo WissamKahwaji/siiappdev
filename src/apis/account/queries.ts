@@ -121,6 +121,7 @@ const useSignUpWithAddMutation = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
       localStorage.removeItem("password");
+      localStorage.removeItem("profileImage");
 
       localStorage.setItem("token", data.token);
       login(data.token);
@@ -147,6 +148,7 @@ const useSwitchAccountMutation = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
       localStorage.removeItem("password");
+      localStorage.removeItem("profileImage");
 
       localStorage.setItem("token", data.token);
       login(data.token);

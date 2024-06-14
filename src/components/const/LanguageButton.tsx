@@ -3,8 +3,11 @@ import { AiOutlineCaretDown, AiOutlineCaretUp } from "react-icons/ai";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
-
-const LanguageButton = () => {
+interface LanguageButtonProps {
+  className: string;
+  title?: string | undefined;
+}
+const LanguageButton = ({ className, title }: LanguageButtonProps) => {
   const { i18n } = useTranslation();
   console.log("LanguageButton", navigator.language.split("-")[0]);
   const storedLanguage = localStorage.getItem("selectedLanguage");
@@ -39,12 +42,13 @@ const LanguageButton = () => {
   const langList = ["en", "ar"];
 
   return (
-    <div className="relative flex flex-col items-center  rounded-lg">
+    <div className={className}>
       <button
-        className="bg-secondary text-xs md:text-sm text-navBackground capitalize px-4 py-2 md:px-3 md:py-1  w-full h-full flex items-center justify-between font-serif  rounded-lg tracking-wider border-transparent active:border-white duration-300 active:text-white"
+        className="bg-secondary text-xs md:text-sm text-navBackground capitalize px-2 py-2 md:px-3 md:py-1  w-full h-full flex items-center justify-between font-serif  rounded-lg tracking-wider border-transparent active:border-white duration-300 active:text-white"
         onClick={() => setIsOpen(prev => !prev)}
       >
-        {lang}
+        {/* {lang} */}
+        {title ? title : lang}
         {!isOpen ? (
           <AiOutlineCaretDown className="h-3" />
         ) : (

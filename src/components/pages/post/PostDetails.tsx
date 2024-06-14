@@ -16,7 +16,11 @@ import { PostModel } from "../../../apis/posts/type";
 import EditPostDetails from "./EditPostDetails";
 import OptionsModal from "./OptionsModal";
 import { Link } from "react-router-dom";
-import { PiHandsClappingFill, PiHandsClappingThin } from "react-icons/pi";
+import {
+  PiHandsClappingFill,
+  PiHandsClappingThin,
+  PiShareFatLight,
+} from "react-icons/pi";
 import { toast } from "react-toastify";
 import LoginToast from "../../const/LoginToast";
 import { useAuth } from "../../../context/AuthContext";
@@ -94,6 +98,16 @@ const PostDetails = ({
       setIsLiked(!isLiked);
       setLikeCount(prevCount => (isLiked ? prevCount - 1 : prevCount + 1));
     }
+  };
+
+  const handleShareClick = () => {
+    navigator.clipboard
+      .writeText(
+        `siiappdev.siidevelopment.com/${selectedPost.owner.userName}/${selectedPost._id}`
+      )
+      .then(() => {
+        toast.info("copy to clipboard");
+      });
   };
 
   const handleToggleSave = () => {
@@ -259,10 +273,11 @@ const PostDetails = ({
             <p
               className="cursor-pointer text-sm"
               onClick={() => {
-                window.open(
-                  `https://wa.me/${postInfo.whatsAppNumber}`,
-                  "_blank"
+                const sanitizedNumber = postInfo.whatsAppNumber?.replace(
+                  /\s+/g,
+                  ""
                 );
+                window.open(`https://wa.me/${sanitizedNumber}`, "_blank");
               }}
             >
               <div className="flex flex-row">
@@ -335,6 +350,10 @@ const PostDetails = ({
                 <PiHandsClappingThin className="w-5 h-5" />
               )}
             </div>
+            <PiShareFatLight
+              className="w-6 h-6 cursor-pointer hover:text-gray-500"
+              onClick={handleShareClick}
+            />
             <div onClick={handleToggleSave} className="cursor-pointer">
               {isSaved ? (
                 <BsBookmarkCheckFill className="w-5 h-5   text-secondary" />

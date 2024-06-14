@@ -4,18 +4,24 @@ import Routes from "./routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/AuthContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const Wrapper = () => {
   const queryClient = new QueryClient();
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools />
 
-      <AuthProvider>
-        <Routes />
-        <ToastContainer />
-      </AuthProvider>
-    </QueryClientProvider>
+  const clientId = import.meta.env.VITE_APP_CLIENT_ID;
+
+  return (
+    <GoogleOAuthProvider clientId={clientId}>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools />
+
+        <AuthProvider>
+          <Routes />
+          <ToastContainer />
+        </AuthProvider>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 };
 

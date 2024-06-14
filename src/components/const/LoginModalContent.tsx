@@ -28,7 +28,10 @@ const LoginModalContent = () => {
 
   return (
     <Formik
-      initialValues={{ email: "", password: "" }}
+      initialValues={{
+        email: localStorage.getItem("email") ?? "",
+        password: localStorage.getItem("password") ?? "",
+      }}
       validationSchema={validationSchema}
       onSubmit={handleSignIn}
     >

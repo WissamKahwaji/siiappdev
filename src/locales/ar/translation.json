@@ -16,7 +16,7 @@
     "or":"أو",
     "signup" : "إنشاء حساب",
     "skip_to_home":"تخطي الى الصفحة الرئيسية",
-    "your_email_or_phone_number":"الإيميل",
+    "your_email_or_phone_number":"الإيميل أو رقم الجوال أو اسم المستخدم",
     "username":"اسم المستخدم",
     "fullname":"الاسم الكامل",
     "password" :"كلمة المرور",
@@ -133,5 +133,7 @@
      "folders":"مشاريع",
       "folder_images":"صور المشاريع",
       "folder_name":"اسم المجلد",
-      "view_qrcode":"عرض Qr Code"
+      "view_qrcode":"عرض Qr Code",
+      "change_language":"تغيير اللغة",
+      "log_in_to_onther_account":"تسجيل الدخول لحساب اخر"
    }

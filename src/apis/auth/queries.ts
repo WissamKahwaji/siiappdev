@@ -23,6 +23,7 @@ const useSignInMutation = () => {
       localStorage.setItem("userName", data.result.userName);
       localStorage.setItem("email", variables.email);
       localStorage.setItem("password", variables.password);
+      localStorage.setItem("profileImage", data.result.profileImage);
       navigate(`/${data.result.userName}`, { replace: true });
     },
     onError: () => {
@@ -44,6 +45,8 @@ const useSignUpMutation = () => {
       localStorage.setItem("userName", data.result.userName);
       localStorage.setItem("email", variables.email);
       localStorage.setItem("password", variables.password);
+      localStorage.setItem("profileImage", data.profileImage);
+
       navigate(`/${data.result.userName}`, { replace: true });
     },
     onError: () => {

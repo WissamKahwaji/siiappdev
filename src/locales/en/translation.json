@@ -16,7 +16,7 @@
     "or":"or",
     "signup" : "sign up",
     "skip_to_home":"skip to home",
-    "your_email_or_phone_number":"your email or phone number",
+    "your_email_or_phone_number":"your email or phone number or username",
     "username":"username",
     "fullname":"full name",
     "password" :"password",
@@ -135,5 +135,7 @@
     "folders":"Folders",
     "folder_images":"Folder Images",
     "folder_name":"Folder Name",
-    "view_qrcode":"View QR Code"
+    "view_qrcode":"View QR Code",
+    "change_language":"Change Language",
+    "log_in_to_onther_account":"Log In To Onther Account"
 }

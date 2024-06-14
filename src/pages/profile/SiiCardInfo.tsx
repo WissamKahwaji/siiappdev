@@ -131,7 +131,7 @@ const SiiCardInfo = () => {
               <div>
                 <p className="text-sm">{t("card_number")}</p>
                 <div
-                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-80 cursor-not-allowed"
+                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-40 cursor-not-allowed"
                   style={{ direction: "ltr" }}
                 >
                   {cardInfo?.cardNumber ?? ""}
@@ -176,7 +176,7 @@ const SiiCardInfo = () => {
               <div>
                 <p className="text-sm">{t("full_name")}</p>
                 <div
-                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-80 cursor-not-allowed"
+                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-40 cursor-not-allowed"
                   style={{ direction: "ltr" }}
                 >
                   {cardInfo?.fullName}
@@ -185,7 +185,7 @@ const SiiCardInfo = () => {
               <div>
                 <p className="text-sm">{t("user_name")}</p>
                 <div
-                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-80 cursor-not-allowed"
+                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-40  cursor-not-allowed"
                   style={{ direction: "ltr" }}
                 >
                   {cardInfo?.userName}
@@ -195,7 +195,7 @@ const SiiCardInfo = () => {
               <div>
                 <p className="text-sm">{t("qr_code_link")}</p>
                 <div
-                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-80 cursor-copy"
+                  className="min-w-60 p-2 border border-secondary rounded-lg bg-gray-50 opacity-40 cursor-copy"
                   style={{ direction: "ltr" }}
                 >
                   {cardInfo?.qrCode ??

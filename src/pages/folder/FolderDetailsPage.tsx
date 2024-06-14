@@ -118,12 +118,13 @@ const FolderDetailsPage = () => {
           {folderInfo?.whatsAppNumber && (
             <p
               className="cursor-pointer text-sm"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/${folderInfo?.whatsAppNumber}`,
-                  "_blank"
-                )
-              }
+              onClick={() => {
+                const sanitizedNumber = folderInfo?.whatsAppNumber?.replace(
+                  /\s+/g,
+                  ""
+                );
+                window.open(`https://wa.me/${sanitizedNumber}`, "_blank");
+              }}
             >
               <div className="flex flex-row">
                 <span className="font-bold">{`${t(

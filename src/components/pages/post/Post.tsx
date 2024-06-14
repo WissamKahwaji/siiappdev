@@ -18,6 +18,7 @@ import LoginModalContent from "../../const/LoginModalContent";
 import { formatDate } from "../../../utils";
 import { useTranslation } from "react-i18next";
 import { FaHandsClapping } from "react-icons/fa6";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 type PostProps = {
   post: PostModel;
@@ -163,7 +164,9 @@ const Post = (props: PostProps) => {
 
   const handleShareClick = () => {
     navigator.clipboard
-      .writeText(window.location.href + `post/${props.post._id}`)
+      .writeText(
+        `siiappdev.siidevelopment.com/${props.post.owner.userName}/${props.post._id}`
+      )
       .then(() => {
         toast.info("copy to clipboard");
       });
@@ -173,13 +176,31 @@ const Post = (props: PostProps) => {
     switch (props.post?.postType) {
       case "image":
         return (
-          <div className="p-2 justify-center flex">
+          <div className="p-2 justify-center flex relative">
             <img
               src={props.post.images[0]}
               alt="Post"
               className="object-cover  border border-secondary rounded-lg md:w-full w-full  cursor-pointer"
               onClick={() => handlePostClick(props.post)}
             />
+            {props.post.discountPercentage &&
+              props.post.discountPercentage > 0 && (
+                <div className="absolute bottom-4 w-full px-2 bg-transparent ">
+                  <div className=" p-3 bg-secondary">
+                    <Link to={`/${props.post.owner.userName}`}>
+                      <div className="w-full flex flex-row justify-between items-center ">
+                        <p className="text-blue-500 font-bold">
+                          <span className="font-semibold text-black">
+                            {`${t("discount")} : `}
+                          </span>{" "}
+                          {props.post.discountPercentage}%
+                        </p>
+                        <MdOutlineKeyboardArrowRight size={24} />
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              )}
           </div>
         );
       case "video":
@@ -325,12 +346,13 @@ const Post = (props: PostProps) => {
           {props.post.whatsAppNumber && (
             <p
               className="cursor-pointer text-sm"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/${props.post.whatsAppNumber}`,
-                  "_blank"
-                )
-              }
+              onClick={() => {
+                const sanitizedNumber = props.post.whatsAppNumber?.replace(
+                  /\s+/g,
+                  ""
+                );
+                window.open(`https://wa.me/${sanitizedNumber}`, "_blank");
+              }}
             >
               <div className="flex flex-row">
                 <span className="font-bold">{`${t(
