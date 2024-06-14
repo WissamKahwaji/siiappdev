@@ -23,7 +23,7 @@ const PostListPage = () => {
 
   useLayoutEffect(() => {
     // Scroll to the selected post when posts are loaded and postId is available
-    if (postId && scrollToRef.current) {
+    if (postId && scrollToRef.current && postsInfo) {
       scrollToRef.current.scrollIntoView();
     }
   }, [postId, postsInfo]);
