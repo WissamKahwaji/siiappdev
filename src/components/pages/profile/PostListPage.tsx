@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGetUserPostsQuery } from "../../../apis/posts/queries";
 import { useParams } from "react-router-dom";
 import { PostModel } from "../../../apis/posts/type";
