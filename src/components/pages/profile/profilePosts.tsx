@@ -165,7 +165,7 @@ const ProfilePosts = (props: ProfilePostsProps) => {
       <div
         className={`grid ${
           activeTab === "video"
-            ? "md:grid-cols-5 grid-cols-3 mx-5"
+            ? "md:grid-cols-5 grid-cols-3 mx-3"
             : "md:grid-cols-4 grid-cols-3"
         } gap-1 lg:gap-1 my-3 md:my-5 py-1 md:py-2 px-1 md:px-2`}
       >
