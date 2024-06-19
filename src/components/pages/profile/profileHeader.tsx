@@ -621,7 +621,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
               </Link>
             )}
           </div>
-          <div className="font-header mt-4 text-lg   max-w-[240px]  overflow-hidden whitespace-pre-wrap">
+          <div className="font-header mt-4 text-lg  min-w-[240px] max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
             {user.user.isBusiness && (
               <Link to={`/users/${user.user.userCategory}`} className="w-auto">
