@@ -21,13 +21,12 @@ const PostListPage = () => {
   const scrollRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    // Ensure the posts are loaded and the postId is valid
     if (postId && postsInfo) {
       const index = postsInfo.findIndex(
         (post: PostModel) => post._id === postId
       );
       if (index !== -1 && scrollRefs.current[index]) {
-        scrollRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+        scrollRefs.current[index]?.scrollIntoView();
       }
     }
   }, [postId, postsInfo]);
@@ -48,7 +47,7 @@ const PostListPage = () => {
     <div className="container mx-auto pt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center w-full">
       {postsInfo &&
         postsInfo.map((post: PostModel, index) => (
-          <div key={index} ref={el => (scrollRefs.current[index] = el)}>
+          <div key={post._id} ref={el => (scrollRefs.current[index] = el)}>
             <Post post={post} currentUserId={currentUserId ?? ""} />
           </div>
         ))}
