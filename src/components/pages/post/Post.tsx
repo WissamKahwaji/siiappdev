@@ -210,6 +210,7 @@ const Post = (props: PostProps) => {
             playsInline
             muted
             controls
+            autoPlay
             className="object-cover bg-transparent w-full max-h-[450px] "
           >
             <source src={props.post?.postVideo} type="video/mp4" />

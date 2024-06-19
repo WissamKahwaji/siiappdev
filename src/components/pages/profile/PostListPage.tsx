@@ -19,18 +19,18 @@ const PostListPage = () => {
   const currentUserId = localStorage.getItem("userId");
 
   const scrollRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   useEffect(() => {
     if (postId && postsInfo) {
       const index = postsInfo.findIndex(
         (post: PostModel) => post._id === postId
       );
-      if (index !== -1 && scrollRefs.current[index]) {
-        scrollRefs.current[index]?.scrollIntoView();
+      if (index !== -1) {
+        setTimeout(() => {
+          scrollRefs.current[index]?.scrollIntoView();
+        }, 400); // Adjust delay as needed
       }
     }
   }, [postId, postsInfo]);
-
   if (isLoadingPosts) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
