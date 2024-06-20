@@ -22,7 +22,7 @@ const useAddSiiCardMutaion = () => {
         queryKey: ["get-user-byId"],
       });
 
-      navigate("/", { replace: true });
+      navigate(`/sii-card`, { replace: true });
     },
     onError() {
       toast.error(`failed to add sii-card`);

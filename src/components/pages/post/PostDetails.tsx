@@ -285,6 +285,7 @@ const PostDetails = ({
                   "whatsApp_number"
                 )} : `}</span>
                 <p
+                  className="text-blue-700 underline"
                   style={{ direction: "ltr" }}
                 >{`${postInfo?.whatsAppNumber}`}</p>
               </div>
@@ -297,7 +298,10 @@ const PostDetails = ({
                   <span className="font-bold">{`${t(
                     "mobile_number"
                   )} : `}</span>
-                  <p style={{ direction: "ltr" }}>
+                  <p
+                    style={{ direction: "ltr" }}
+                    className="text-blue-700 underline"
+                  >
                     {` ${postInfo?.mobileNumber}`}
                   </p>
                 </div>

@@ -360,6 +360,7 @@ const Post = (props: PostProps) => {
                   "whatsApp_number"
                 )} : `}</span>
                 <p
+                  className="text-blue-700 underline"
                   style={{ direction: "ltr" }}
                 >{`${props.post.whatsAppNumber}`}</p>
               </div>
@@ -372,7 +373,10 @@ const Post = (props: PostProps) => {
                   <span className="font-bold">{`${t(
                     "mobile_number"
                   )} : `}</span>
-                  <p style={{ direction: "ltr" }}>
+                  <p
+                    style={{ direction: "ltr" }}
+                    className="text-blue-700 underline"
+                  >
                     {` ${props.post?.mobileNumber}`}
                   </p>
                 </div>
