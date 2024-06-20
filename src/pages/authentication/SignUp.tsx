@@ -5,7 +5,7 @@ import logo_video from "../../assets/video_logo.mp4";
 import googlePlayImg from "../../assets/google play.png";
 import appleStoreImg from "../../assets/apple_store_2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
+// import { faSquareFacebook } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -55,6 +55,11 @@ const Signup = () => {
         setSubmitting(false);
       },
     });
+  };
+  const handleGoogleLogin = () => {
+    // Redirect to Google OAuth endpoint
+    window.location.href =
+      "https://siiappback.siidevelopment.com/users/auth/google";
   };
 
   // State to manage password visibility
@@ -229,25 +234,26 @@ const Signup = () => {
               <div className="mx-4 text-sm text-gray-500">{t("or")}</div>
               <div className="border-t border-gray-300 flex-grow"></div>
             </div>
-            <button
+            {/* <button
               type="button"
               className="w-full flex flex-row justify-center items-center space-x-2 bg-blue-800 text-white text-sm font-semibold rounded-full py-2 transition duration-300 hover:bg-blue-900 focus:outline-none"
             >
               <FontAwesomeIcon icon={faSquareFacebook} color="white" />
               <p> {t("login_with_facebook")}</p>
-            </button>
+            </button> */}
             <button
               type="button"
+              onClick={handleGoogleLogin}
               className="bg-gray-500 text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-red-700 focus:outline-none"
             >
               {t("login_with_google")}
             </button>
-            <button
+            {/* <button
               type="button"
               className="bg-black text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-gray-800 focus:outline-none"
             >
               {t("login_with_apple")}
-            </button>
+            </button> */}
             <div className="flex items-center mt-6">
               <div className="border-t border-gray-300 flex-grow"></div>
               <div className="mx-4 text-sm text-gray-500">{t("or")}</div>

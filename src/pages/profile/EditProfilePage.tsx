@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import LoadingComponent from "../../components/const/LoadingComponent";
+import Modal from "react-modal";
+import { useDeleteUserAccountMutation } from "../../apis/auth/queries";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required("Full Name is required"),
@@ -71,6 +73,7 @@ const EditProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
   const { mutate: editProfileInfo } = useEditProfileMutation();
+  const { mutate: deleteAccountInfo } = useDeleteUserAccountMutation();
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
   const [isBusinessAccount, setIsBusinessAccount] = useState(
@@ -133,6 +136,15 @@ const EditProfilePage: React.FC = () => {
       },
     });
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleDeleteAccount = () => {
+    deleteAccountInfo();
+  };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   if (isLoading) {
     return (
@@ -708,6 +720,43 @@ const EditProfilePage: React.FC = () => {
               </form>
             )}
           </Formik>
+          <div
+            className="mt-8 p-3 font-serif border-2 border-red-800 text-navBackground cursor-pointer hover:bg-red-600 hover:border-black hover:border-2 hover:text-white transform ease-in-out duration-300"
+            onClick={openModal}
+          >
+            {t("delete_my_account")}
+          </div>
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={closeModal}
+            contentLabel="Confirm Delete"
+            className="fixed inset-0 flex items-center justify-center z-50"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+          >
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-lg font-bold mb-4">
+                {t("delete_my_account")}
+              </h2>
+              <p className="mb-4">{t("delete_account_warning")}</p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 bg-gray-300 rounded-md"
+                >
+                  {t("no")}
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteAccount();
+                    closeModal();
+                  }}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md"
+                >
+                  {t("yes")}
+                </button>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

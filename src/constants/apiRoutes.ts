@@ -3,6 +3,7 @@ const AUTH = {
   SIGN_UP: "/users/signUp",
   FORGET_PASSWORD: "/users/forget-password",
   RESET_PASSWORD: (token: string) => `/users/reset-password/${token}`,
+  DELETE_ACCOUNT: "/users/delete-account",
 };
 
 const POST = {

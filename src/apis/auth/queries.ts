@@ -1,6 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { forgetPassword, resetPassword, signIn, signUp } from ".";
+import {
+  deleteUserAccount,
+  forgetPassword,
+  resetPassword,
+  signIn,
+  signUp,
+} from ".";
 import {
   ForgetPasswordParams,
   ResetPasswordParams,
@@ -84,9 +90,31 @@ const useResetPasswordMutation = () => {
   });
 };
 
+const useDeleteUserAccountMutation = () => {
+  return useMutation({
+    mutationKey: ["delete-user-account"],
+    mutationFn: () => deleteUserAccount(),
+    onSuccess: () => {
+      toast.success(`success`);
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("password");
+      localStorage.removeItem("profileImage");
+
+      window.location.href = "/login";
+    },
+    onError: () => {
+      toast.error("Error , Please try again later");
+    },
+  });
+};
+
 export {
   useSignInMutation,
   useSignUpMutation,
   useForgetPasswordMutation,
   useResetPasswordMutation,
+  useDeleteUserAccountMutation,
 };

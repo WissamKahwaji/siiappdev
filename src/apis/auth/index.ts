@@ -30,4 +30,9 @@ const resetPassword = async (data: ResetPasswordParams) => {
   return res.data;
 };
 
-export { signIn, signUp, forgetPassword, resetPassword };
+const deleteUserAccount = async () => {
+  const res = await publicInstance.delete(API_ROUTES.AUTH.DELETE_ACCOUNT);
+  return res.data;
+};
+
+export { signIn, signUp, forgetPassword, resetPassword, deleteUserAccount };

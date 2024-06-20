@@ -32,6 +32,9 @@ const Login = () => {
     window.location.href =
       "https://siiappback.siidevelopment.com/users/auth/google";
   };
+  // const handleFacebookLogin = () => {
+  //   window.location.href = "http://localhost:5001/users/auth/facebook";
+  // };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -181,12 +184,13 @@ const Login = () => {
                 <div className="border-t border-gray-300 flex-grow"></div>
               </div>
 
-              <button
+              {/* <button
                 type="button"
+                onClick={handleFacebookLogin}
                 className="bg-blue-800 text-white text-sm font-semibold rounded-full py-2 mt-6 transition duration-300 hover:bg-blue-900 focus:outline-none"
               >
                 {t("login_with_facebook")}
-              </button>
+              </button> */}
 
               <button
                 type="button"
@@ -196,12 +200,12 @@ const Login = () => {
                 {t("login_with_google")}
               </button>
 
-              <button
+              {/* <button
                 type="button"
                 className="bg-black text-white text-sm font-semibold rounded-full py-2 mt-3 transition duration-300 hover:bg-gray-800 focus:outline-none"
               >
                 {t("login_with_apple")}
-              </button>
+              </button> */}
 
               <div className="mt-8 text-gray-600 text-center">
                 {t("don't_have_any_account")}

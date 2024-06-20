@@ -96,7 +96,7 @@ const FolderDetailsPage = () => {
               <img
                 src={image}
                 alt={`Folder image ${index + 1}`}
-                className="object-contain max-h-full max-w-full transition-transform duration-300 transform group-hover:scale-105"
+                className="object-contain w-full h-full transition-transform duration-300 transform group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg">
                 <button
@@ -170,14 +170,16 @@ const FolderDetailsPage = () => {
         overlayClassName="fixed inset-0 bg-black bg-opacity-50"
       >
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-          <h2 className="text-lg font-bold mb-4">Confirm Delete</h2>
-          <p className="mb-4">Are you sure you want to delete this folder?</p>
+          <h2 className="text-lg font-bold mb-4">
+            {t("delete_folder_confirm")}
+          </h2>
+          <p className="mb-4">{t("delete_folder_warning")}</p>
           <div className="flex justify-end gap-4">
             <button
               onClick={closeModal}
               className="px-4 py-2 bg-gray-300 rounded-md"
             >
-              No
+              {t("no")}
             </button>
             <button
               onClick={() => {
@@ -186,7 +188,7 @@ const FolderDetailsPage = () => {
               }}
               className="px-4 py-2 bg-red-600 text-white rounded-md"
             >
-              Yes
+              {t("yes")}
             </button>
           </div>
         </div>

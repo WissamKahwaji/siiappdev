@@ -135,5 +135,11 @@
       "folder_name":"اسم المجلد",
       "view_qrcode":"عرض Qr Code",
       "change_language":"تغيير اللغة",
-      "log_in_to_onther_account":"تسجيل الدخول لحساب اخر"
+      "log_in_to_onther_account":"تسجيل الدخول لحساب اخر",
+      "delete_my_account":"حذف حسابي",
+      "yes":"نعم",
+      "no":"لا",
+      "delete_account_warning":"أنت تقوم بحذف حسابك !! هل تود المتابعة بحذف الحساب ؟",
+      "delete_folder_warning":"هل تريد حذف هذا المجلد ؟!",
+      "delete_folder_confirm":"تأكيد حذف المجلد"
    }
