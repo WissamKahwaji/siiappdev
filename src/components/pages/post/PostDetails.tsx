@@ -164,7 +164,7 @@ const PostDetails = ({
           <img
             src={postInfo.images[0]}
             alt="Post"
-            className="md:w-full md:h-full w-full h-full object-cover rounded-lg border-4 border-secondary"
+            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
           />
         );
       case "video":
@@ -221,7 +221,7 @@ const PostDetails = ({
 
   return (
     <div className="flex flex-col md:flex-row w-full h-full font-header">
-      <div className="md:w-1/2 w-full flex flex-col items-center">
+      <div className="md:w-1/2 w-full  flex flex-col items-center">
         {renderPostContent()}
       </div>
 
