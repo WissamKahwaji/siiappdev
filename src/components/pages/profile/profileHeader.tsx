@@ -62,6 +62,7 @@ import { ImProfile } from "react-icons/im";
 import { FolderOrPostProps } from "../../../apis/folder/type";
 import { useAddFolderMutation } from "../../../apis/folder/queries";
 import LoadingComponent from "../../const/LoadingComponent";
+import { toPng } from "html-to-image";
 
 interface ProfileHeaderProps {
   user: UserModel;
@@ -85,6 +86,27 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [isNewLoginFormModalOpen, setIsNewLoginFormModalOpen] = useState(false);
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
+
+  const qrCodeRef = useRef<HTMLDivElement>(null);
+
+  const handleSaveAsImage = () => {
+    if (qrCodeRef) {
+      if (qrCodeRef.current) {
+        toPng(qrCodeRef.current)
+          .then(dataUrl => {
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `${user.user.fullName}_QRCode.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          })
+          .catch(error => {
+            console.error("Error generating image", error);
+          });
+      }
+    }
+  };
 
   const handleCropComplete = (
     croppedFile: File,
@@ -1549,19 +1571,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             <QrCodeUser
               qrCodeUrl={user.user.qrCodeUrl}
               userName={user.user.fullName}
+              qrCodeRef={qrCodeRef}
             />
 
-            {/* <div className="flex items-center justify-center p-4">
-              {user.user.qrCodeUrl ? (
-                <img
-                  src={user.user.qrCodeUrl}
-                  alt="User QR Code"
-                  className="w-52 h-fit"
-                />
-              ) : (
-                <p>Loading QR code...</p>
-              )}
-            </div> */}
             <div className="flex flex-row items-center w-full justify-center gap-x-2 md:gap-x-3">
               <button
                 onClick={() => {
@@ -1586,6 +1598,12 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                 {t("view_qrcode")}
               </button>
             </div>
+            <p
+              className="underline text-blue-500 text-sm mt-4 cursor-pointer"
+              onClick={handleSaveAsImage}
+            >
+              {t("click_here_to_download_the_Qr_Code")}
+            </p>
           </div>
         </Modal>
       )}
