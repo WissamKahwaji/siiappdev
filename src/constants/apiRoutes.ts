@@ -54,5 +54,21 @@ const FOLDER = {
   DELETE: (id: string | undefined) => `/folders/delete/${id}`,
 };
 
-const API_ROUTES = { AUTH, USER, POST, SII_CARD, FOLDER };
+const PRIVACY_POLICY = {
+  GET: "/privacy-policy",
+};
+
+const INFO_HELP = {
+  GET: "/info-help",
+};
+
+const API_ROUTES = {
+  AUTH,
+  USER,
+  POST,
+  SII_CARD,
+  FOLDER,
+  PRIVACY_POLICY,
+  INFO_HELP,
+};
 export default API_ROUTES;

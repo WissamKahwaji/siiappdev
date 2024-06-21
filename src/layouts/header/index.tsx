@@ -1,12 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   AiOutlineCloseSquare,
   AiOutlineMenu,
   AiOutlineSearch,
+  AiOutlineDown,
 } from "react-icons/ai";
 import logo_video from "../../assets/video_logo_black.mp4";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useGetUserSearchQuery } from "../../apis/account/queries";
 import LanguageButton from "../../components/const/LanguageButton";
@@ -20,6 +20,7 @@ const Navbar = () => {
   const [showDrawer, setShowDrawer] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -29,7 +30,14 @@ const Navbar = () => {
   const navItems = [
     { title: "home", path: "/home" },
     { title: "account", path: `/${userName}` },
-    { title: "brief", path: `/brief` },
+    {
+      title: "info&help",
+      path: "#",
+      subNav: [
+        { title: "info_help", path: "/info-help" },
+        { title: "privacy_policy", path: "/privacy-policy" },
+      ],
+    },
   ];
 
   const toggleDrawer = () => {
@@ -81,7 +89,7 @@ const Navbar = () => {
             </Link>
           </div>
         </div>
-        <div className="hidden md:flex  flex-col items-center w-1/2 h-10 justify-center bg-white rounded-lg p-2 relative">
+        <div className="hidden md:flex flex-col items-center w-1/2 h-10 justify-center bg-white rounded-lg p-2 relative">
           <div className="flex w-full">
             <input
               type="text"
@@ -98,7 +106,7 @@ const Navbar = () => {
             </button>
           </div>
           {showSuggestions && suggestions && (
-            <div className="absolute top-full left-0 w-full max-h-[300px] overflow-y-scroll  font-body bg-white border border-gray-300 rounded-b-lg shadow-lg z-10">
+            <div className="absolute top-full left-0 w-full max-h-[300px] overflow-y-scroll font-body bg-white border border-gray-300 rounded-b-lg shadow-lg z-10">
               {suggestions.users.map((user, index) => (
                 <Link key={index} to={`/${user.userName}`} reloadDocument>
                   <div
@@ -139,23 +147,60 @@ const Navbar = () => {
         </div>
         <div className="hidden text-white md:flex md:flex-row md:gap-x-10 justify-between items-center font-header capitalize">
           {navItems.map((item, index) => (
-            <Link
-              className={`${
-                item.path === currentPath ? "text-secondary" : "text-white"
-              }`}
+            <div
               key={index}
-              // to={isAuthenticated ? item.path : "/login"}
-              to={
-                isAuthenticated
-                  ? item.path
-                  : item.title == "account"
-                  ? "/login"
-                  : item.path
+              className="relative"
+              onClick={() =>
+                item.subNav && setDropdownVisible(!dropdownVisible)
               }
-              reloadDocument
             >
-              {t(item.title)}
-            </Link>
+              <div className="flex items-center cursor-pointer">
+                {item.subNav ? (
+                  <div
+                    className={`${
+                      item.path === currentPath
+                        ? "text-secondary"
+                        : "text-white"
+                    }`}
+                  >
+                    {t(item.title)}
+                  </div>
+                ) : (
+                  <Link
+                    className={`${
+                      item.path === currentPath
+                        ? "text-secondary"
+                        : "text-white"
+                    }`}
+                    to={
+                      isAuthenticated
+                        ? item.path
+                        : item.title == "account"
+                        ? "/login"
+                        : item.path
+                    }
+                    reloadDocument
+                  >
+                    {t(item.title)}
+                  </Link>
+                )}
+                {item.subNav && <AiOutlineDown className="ml-1" />}
+              </div>
+              {item.subNav && dropdownVisible && (
+                <div className="absolute left-0 mt-4 w-48 bg-secondary shadow-lg rounded-lg z-20">
+                  {item.subNav.map((subItem, subIndex) => (
+                    <Link
+                      key={subIndex}
+                      to={subItem.path}
+                      reloadDocument
+                      className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                    >
+                      {t(subItem.title)}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
           {isAuthenticated ? (
             <p
@@ -180,7 +225,7 @@ const Navbar = () => {
               {t("login")}
             </p>
           )}
-          <LanguageButton className="relative flex flex-col items-center  rounded-lg" />
+          <LanguageButton className="relative flex flex-col items-center rounded-lg" />
         </div>
         <div className="md:hidden flex flex-row items-center gap-x-4">
           {!isAuthenticated ? (
@@ -196,9 +241,8 @@ const Navbar = () => {
             <img
               src={profileImage ?? logo}
               alt=""
-              className="md:hidden w-6 h-6  rounded-lg border-2 border-secondary shadow-md shadow-secondary/50"
+              className="md:hidden w-6 h-6 rounded-lg border-2 border-secondary shadow-md shadow-secondary/50"
               onClick={() => {
-                // navigate(`/${userName}`, { replace: true });
                 window.location.href = `/${userName}`;
               }}
             />
@@ -224,79 +268,56 @@ const Navbar = () => {
                   Your browser does not support the video tag.
                 </video>
                 <LanguageButton
-                  className="relative flex flex-col items-center  rounded-lg w-full"
+                  className="relative flex flex-col items-center rounded-lg w-full"
                   title={`${t("change_language")}`}
                 />
-                {/* <div className="flex items-center font-body w-full bg-white rounded p-2">
-                  <input
-                    type="text"
-                    placeholder={t("search")}
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    className="border-none outline-none flex-grow"
-                  />
-                </div> */}
-                {/* {showSuggestions && suggestions && (
-                  <div className="absolute top-[138px] font-body w-3/4 overflow-y-scroll max-h-[430px] bg-white border border-gray-300 rounded-b-lg shadow-lg z-10">
-                    {suggestions.users.map((user, index) => (
-                      <Link key={index} to={`/${user.userName}`} reloadDocument>
-                        <div
-                          className="p-2 hover:bg-gray-200 cursor-pointer border border-b-secondary"
-                          onClick={() => {
-                            setSearchQuery(user.fullName);
-                            setShowSuggestions(false);
-                          }}
-                        >
-                          {user.fullName}
-                        </div>
-                      </Link>
-                    ))}
-                    {suggestions.posts.map((post, index) => (
-                      <Link
-                        key={index}
-                        to={`/${post.owner.userName}/${post._id}`}
-                        reloadDocument
-                      >
-                        <div
-                          className="p-2 hover:bg-gray-200 cursor-pointer line-clamp-2 border border-b-secondary"
-                          onClick={() => {
-                            setSearchQuery(post.caption);
-                            setShowSuggestions(false);
-                          }}
-                        >
-                          {post.caption}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )} */}
                 {navItems.map((item, index) => (
-                  // <a
-                  //   key={index}
-                  //   href={item.path}
-                  //   className="font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary "
-                  // >
-                  //   {t(item.title)}
-                  // </a>
-                  <Link
-                    className={` font-header  hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary  px-2 py-1 rounded-lg shadow-sm shadow-secondary `}
-                    key={index}
-                    // to={isAuthenticated ? item.path : "/login"}
-                    to={
-                      isAuthenticated
-                        ? item.path
-                        : item.title == "account"
-                        ? "/login"
-                        : item.path
-                    }
-                    reloadDocument
-                  >
-                    {t(item.title)}
-                  </Link>
+                  <div key={index} className="w-full">
+                    <div
+                      className={`font-header hover:text-hoverColor transition duration-300 text-base border-b-2 w-full border-b-secondary/20 capitalize text-navBackground bg-secondary px-2 py-1 rounded-lg shadow-sm shadow-secondary ${
+                        item.subNav ? "flex justify-between items-center" : ""
+                      }`}
+                      onClick={() =>
+                        item.subNav && setDropdownVisible(!dropdownVisible)
+                      }
+                    >
+                      {item.subNav ? (
+                        <div>{t(item.title)}</div>
+                      ) : (
+                        <Link
+                          to={
+                            isAuthenticated
+                              ? item.path
+                              : item.title == "account"
+                              ? "/login"
+                              : item.path
+                          }
+                          reloadDocument
+                        >
+                          {t(item.title)}
+                        </Link>
+                      )}
+                      {item.subNav && <AiOutlineDown />}
+                    </div>
+                    {item.subNav && dropdownVisible && (
+                      <div className="ml-4 mt-2 bg-secondary rounded-lg">
+                        {item.subNav.map((subItem, subIndex) => (
+                          <Link
+                            key={subIndex}
+                            to={subItem.path}
+                            reloadDocument
+                            className="block px-4 py-2 text-navBackground "
+                          >
+                            {t(subItem.title)}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
                 {isAuthenticated ? (
                   <div
-                    className="cursor-pointer text-secondary border-2 border-secondary w-full px-2 py-2 rounded-lg  "
+                    className="cursor-pointer text-secondary border-2 border-secondary w-full px-2 py-2 rounded-lg"
                     onClick={() => {
                       window.localStorage.removeItem("userName");
                       window.localStorage.removeItem("userId");

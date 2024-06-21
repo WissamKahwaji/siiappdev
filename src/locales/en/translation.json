@@ -143,5 +143,14 @@
     "no":"No",
     "delete_account_warning":"Are you sure you want to delete this account ?!",
     "delete_folder_warning":"Are you sure you want to delete this folder?!",
-    "delete_folder_confirm":"Confirm Delete Folder"
+    "delete_folder_confirm":"Confirm Delete Folder",
+    "info&help":"Info & Help",
+    "info_help":"Info & Help",
+    "privacy_policy":"Privacy Policy",
+    "contact_via_email":"Contact us via email",
+    "do_you_still_need_help":"Do you still need help? Contact us",
+    "your_message":"Your message",
+    "send_message":"Send Message",
+    "submit_suggestion":"Submit Suggestion",
+    "write_suggestion":"Write Suggestion"
 }

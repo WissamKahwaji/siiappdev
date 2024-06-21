@@ -721,7 +721,7 @@ const EditProfilePage: React.FC = () => {
             )}
           </Formik>
           <div
-            className="mt-8 p-3 font-serif border-2 border-red-800 text-navBackground cursor-pointer hover:bg-red-600 hover:border-black hover:border-2 hover:text-white transform ease-in-out duration-300"
+            className="mt-8 p-3 font-serif text-center border-2 bg-navBackground  text-secondary cursor-pointer hover:bg-secondary hover:border-black hover:border-2 hover:text-navBackground transform ease-in-out duration-300"
             onClick={openModal}
           >
             {t("delete_my_account")}

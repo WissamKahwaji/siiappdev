@@ -28,6 +28,8 @@ import QrCodeInfoPage from "./pages/profile/QrCodeInfoPage";
 import FolderDetailsPage from "./pages/folder/FolderDetailsPage";
 import EditFolderDetailsPage from "./pages/folder/EditFolderDetailsPage";
 import PostListPage from "./components/pages/profile/PostListPage";
+import PrivacyPolicyPage from "./pages/privacy policy";
+import InfoHelpPage from "./pages/info-help/InfoHelpPage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -74,7 +76,8 @@ const Routes = () => {
               path="/:userName/:userId/posts/:postId/:type"
               element={<PostListPage />}
             />
-
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/info-help" element={<InfoHelpPage />} />
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route
