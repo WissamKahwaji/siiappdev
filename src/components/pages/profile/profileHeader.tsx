@@ -19,6 +19,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import {
   faAdd,
+  faArrowLeft,
   faArrowRight,
   faCamera,
   faEdit,
@@ -73,7 +74,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const selectedLang = i18n.language;
   const { isAuthenticated } = useAuth();
   // const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -619,7 +621,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                     ? t("show_details")
                     : t("get_sii_card_now")}
                 </p>
-                <FontAwesomeIcon icon={faArrowRight} />
+                <FontAwesomeIcon
+                  icon={selectedLang === "en" ? faArrowRight : faArrowLeft}
+                />
               </div>
             </div>
             <img src={yellowCardBack} alt="" className="w-36" />
@@ -835,7 +839,11 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           ? t("show_details")
                           : t("get_sii_card_now")}
                       </p>
-                      <FontAwesomeIcon icon={faArrowRight} />
+                      <FontAwesomeIcon
+                        icon={
+                          selectedLang === "en" ? faArrowRight : faArrowLeft
+                        }
+                      />
                     </div>
                   </div>
                   <img src={yellowCardBack} alt="" className="w-36 mr-3" />
