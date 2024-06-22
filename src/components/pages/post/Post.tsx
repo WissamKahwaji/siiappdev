@@ -189,8 +189,8 @@ const Post = (props: PostProps) => {
             />
             {props.post.discountPercentage &&
               props.post.discountPercentage > 0 && (
-                <div className=" w-full mt-2 bg-transparent ">
-                  <div className=" p-3 bg-secondary">
+                <div className=" w-full mt-0.5 bg-transparent">
+                  <div className=" px-2 md:px-3 py-1 bg-secondary rounded-lg">
                     <Link to={`/${props.post.owner.userName}`}>
                       <div className="w-full flex flex-row justify-between items-center ">
                         <div>
@@ -200,7 +200,7 @@ const Post = (props: PostProps) => {
                             </span>{" "}
                             {props.post.discountPercentage}%
                           </p>
-                          <p className="text-xs text-gray-600">
+                          <p className="md:text-xs text-[10px] text-gray-600">
                             {t(
                               "This discount for this service will be given to all users who have a Sii card"
                             )}
