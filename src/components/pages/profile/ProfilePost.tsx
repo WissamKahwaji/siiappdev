@@ -30,12 +30,19 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
               <div className="absolute bottom-2 w-full md:px-2 px-1 bg-transparent ">
                 <div className=" md:p-3 p-1 bg-secondary">
                   <div className="w-full flex flex-row justify-between items-center ">
-                    <p className="text-blue-500 font-bold md:text-sm text-[8px]">
-                      <span className="font-semibold text-black ">
-                        {`${t("discount")} : `}
-                      </span>{" "}
-                      {post.discountPercentage}%
-                    </p>
+                    <div className="flex flex-col md:space-y-1">
+                      <p className="text-blue-500 font-bold md:text-sm text-[8px]">
+                        <span className="font-semibold text-black ">
+                          {`${t("discount")} : `}
+                        </span>{" "}
+                        {post.discountPercentage}%
+                      </p>
+                      <p className="md:text-[7.5px] text-[3.5px] text-gray-600">
+                        {t(
+                          "This discount for this service will be given to all users who have a Sii card"
+                        )}
+                      </p>
+                    </div>
                     {/* <MdOutlineKeyboardArrowRight size={24} /> */}
                   </div>
                 </div>

@@ -180,7 +180,7 @@ const Post = (props: PostProps) => {
     switch (props.post?.postType) {
       case "image":
         return (
-          <div className="p-2 justify-center flex relative">
+          <div className="p-2 justify-center">
             <img
               src={props.post.images[0]}
               alt="Post"
@@ -189,16 +189,24 @@ const Post = (props: PostProps) => {
             />
             {props.post.discountPercentage &&
               props.post.discountPercentage > 0 && (
-                <div className="absolute bottom-4 w-full px-2 bg-transparent ">
+                <div className=" w-full mt-2 bg-transparent ">
                   <div className=" p-3 bg-secondary">
                     <Link to={`/${props.post.owner.userName}`}>
                       <div className="w-full flex flex-row justify-between items-center ">
-                        <p className="text-blue-500 font-bold">
-                          <span className="font-semibold text-black">
-                            {`${t("discount")} : `}
-                          </span>{" "}
-                          {props.post.discountPercentage}%
-                        </p>
+                        <div>
+                          <p className="text-blue-500 font-bold">
+                            <span className="font-semibold text-black">
+                              {`${t("discount")} : `}
+                            </span>{" "}
+                            {props.post.discountPercentage}%
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {t(
+                              "This discount for this service will be given to all users who have a Sii card"
+                            )}
+                          </p>
+                        </div>
+
                         {selectedLang === "en" ? (
                           <MdOutlineKeyboardArrowRight size={24} />
                         ) : (
