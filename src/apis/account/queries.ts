@@ -56,8 +56,9 @@ const useEditProfileMutation = () => {
   return useMutation({
     mutationKey: ["edit-profile"],
     mutationFn: (payload: EditProfileProps) => editUserProfile(payload),
-    onSuccess(_, variable) {
+    onSuccess(data, variable) {
       toast.success(`edit ${variable.fullName} successfully.`);
+      localStorage.setItem("profileImage", data.profileImage);
       queryClient.invalidateQueries({ queryKey: ["get-user-userName"] });
       queryClient.invalidateQueries({ queryKey: ["get-user-byId"] });
       navigate(`/${variable.userName}`, { replace: true });
