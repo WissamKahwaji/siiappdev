@@ -3,6 +3,8 @@ import { PiHandsClappingLight } from "react-icons/pi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { PostModel } from "../../../apis/posts/type";
+import { useTranslation } from "react-i18next";
+
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -13,16 +15,33 @@ interface ProfilePostProps {
 
 const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
   const [showOverlay, setShowOverlay] = useState(false);
-
+  const { t } = useTranslation();
   const renderPostContent = () => {
     switch (post.postType) {
       case "image":
         return (
-          <img
-            src={post.images[0]}
-            alt="post"
-            className="absolute inset-0 object-contain w-full h-full "
-          />
+          <div>
+            <img
+              src={post.images[0]}
+              alt="post"
+              className="absolute inset-0 object-contain w-full h-full "
+            />
+            {post.discountPercentage && post.discountPercentage > 0 && (
+              <div className="absolute bottom-2 w-full md:px-2 px-1 bg-transparent ">
+                <div className=" md:p-3 p-1 bg-secondary">
+                  <div className="w-full flex flex-row justify-between items-center ">
+                    <p className="text-blue-500 font-bold md:text-sm text-[8px]">
+                      <span className="font-semibold text-black ">
+                        {`${t("discount")} : `}
+                      </span>{" "}
+                      {post.discountPercentage}%
+                    </p>
+                    {/* <MdOutlineKeyboardArrowRight size={24} /> */}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         );
       case "video":
         return (

@@ -18,7 +18,10 @@ import LoginModalContent from "../../const/LoginModalContent";
 import { formatDate } from "../../../utils";
 import { useTranslation } from "react-i18next";
 import { FaHandsClapping } from "react-icons/fa6";
-import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
 
 type PostProps = {
   post: PostModel;
@@ -26,7 +29,8 @@ type PostProps = {
 };
 
 const Post = (props: PostProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const selectedLang = i18n.language;
   const { isAuthenticated } = useAuth();
   // const { mutate: addCommentInfo } = useAddCommentMutaion();
   const { mutate: toggleLike } = useToggleLikeMutaion();
@@ -195,7 +199,11 @@ const Post = (props: PostProps) => {
                           </span>{" "}
                           {props.post.discountPercentage}%
                         </p>
-                        <MdOutlineKeyboardArrowRight size={24} />
+                        {selectedLang === "en" ? (
+                          <MdOutlineKeyboardArrowRight size={24} />
+                        ) : (
+                          <MdOutlineKeyboardArrowLeft size={24} />
+                        )}
                       </div>
                     </Link>
                   </div>

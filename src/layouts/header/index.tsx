@@ -184,7 +184,7 @@ const Navbar = () => {
                     {t(item.title)}
                   </Link>
                 )}
-                {item.subNav && <AiOutlineDown className="ml-1" />}
+                {item.subNav && <AiOutlineDown className="mx-2" />}
               </div>
               {item.subNav && dropdownVisible && (
                 <div className="absolute left-0 mt-4 w-48 bg-secondary shadow-lg rounded-lg z-20">
