@@ -35,7 +35,7 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
                         <span className="font-semibold text-black ">
                           {`${t("discount")} : `}
                         </span>{" "}
-                        {post.discountPercentage}%
+                        {post.discountPercentage}% off
                       </p>
                       <p className="md:text-[7.5px] text-[3.5px] text-gray-600">
                         {t(

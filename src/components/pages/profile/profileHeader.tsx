@@ -190,6 +190,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   const filteredIcons = filterSocialMediaIcons(user.user);
   const [fileType, setFileType] = useState("image");
+  const [discountFunctionType, setDiscountFunctionType] = useState("get_offer");
+
   const [isFollowed, setIsFollowed] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [followersCount, setFollowersCount] = useState<number>(
@@ -1542,6 +1544,51 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           onChange={handleChange}
                           value={values.discountPercentage ?? ""}
                         />
+                        {values.discountPercentage &&
+                          values.discountPercentage > 0 && (
+                            <div className="flex flex-row items-center gap-x-8 mt-8">
+                              <label className="flex items-center gap-x-2 cursor-pointer">
+                                <input
+                                  type="radio"
+                                  name="discountFunctionType"
+                                  value="get_offer"
+                                  checked={discountFunctionType === "get_offer"}
+                                  onChange={() => {
+                                    setDiscountFunctionType("get_offer");
+                                    setFieldValue(
+                                      "discountFunctionType",
+                                      "get_offer"
+                                    );
+                                  }}
+                                  className="form-radio h-4 w-4 text-seconBackground "
+                                />
+                                <span className="text-gray-700 font-medium">
+                                  {t("get_offer")}
+                                </span>
+                              </label>
+                              <label className="flex items-center gap-x-2 cursor-pointer">
+                                <input
+                                  type="radio"
+                                  name="discountFunctionType"
+                                  value="send_message"
+                                  checked={
+                                    discountFunctionType === "send_message"
+                                  }
+                                  onChange={() => {
+                                    setDiscountFunctionType("send_message");
+                                    setFieldValue(
+                                      "discountFunctionType",
+                                      "send_message"
+                                    );
+                                  }}
+                                  className="form-radio h-4 w-4 text-seconBackground "
+                                />
+                                <span className="text-gray-700 font-medium">
+                                  {t("send_message")}
+                                </span>
+                              </label>
+                            </div>
+                          )}
                       </div>
                     )}
                   </div>

@@ -191,14 +191,25 @@ const Post = (props: PostProps) => {
               props.post.discountPercentage > 0 && (
                 <div className=" w-full mt-0.5 bg-transparent">
                   <div className=" px-2 md:px-3 py-1 bg-secondary rounded-lg">
-                    <Link to={`/${props.post.owner.userName}`}>
+                    <Link
+                      to={
+                        props.post.discountFunctionType
+                          ? `/${props.post.owner.userName}?discountType=${props.post.discountFunctionType}`
+                          : `/${props.post.owner.userName}`
+                      }
+                      state={{
+                        discountType: props.post.discountFunctionType,
+                        postName: props.post.caption,
+                      }}
+                      reloadDocument
+                    >
                       <div className="w-full flex flex-row justify-between items-center ">
                         <div>
                           <p className="text-blue-500 font-bold">
                             <span className="font-semibold text-black">
                               {`${t("discount")} : `}
                             </span>{" "}
-                            {props.post.discountPercentage}%
+                            {props.post.discountPercentage}% off
                           </p>
                           <p className="md:text-xs text-[10px] text-gray-600">
                             {t(
@@ -424,7 +435,7 @@ const Post = (props: PostProps) => {
               <span className="font-semibold text-black">
                 {`${t("discount")} : `}
               </span>{" "}
-              {props.post.discountPercentage}%
+              {props.post.discountPercentage}% off
             </p>
             <p className="text-xs text-gray-600">
               {t(

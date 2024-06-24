@@ -36,6 +36,7 @@ export type FolderInputProps = {
   postVideo?: string | undefined;
   postDocs?: string | undefined;
   discountPercentage?: number | undefined;
+  discountFunctionType?: string | undefined;
 };
 
 export type FolderOrPostProps = {
@@ -56,4 +57,5 @@ export type FolderOrPostProps = {
   postVideo?: string | undefined;
   postDocs?: string | undefined;
   discountPercentage?: number | undefined;
+  discountFunctionType?: string | undefined;
 };

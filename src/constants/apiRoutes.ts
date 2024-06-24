@@ -62,6 +62,11 @@ const INFO_HELP = {
   GET: "/info-help",
 };
 
+const QRCODE = {
+  GET_BY_USERNAME: (userName: string) => `/qrcode/${userName}`,
+  ADD_EDIT: "/qrcode",
+};
+
 const API_ROUTES = {
   AUTH,
   USER,
@@ -70,5 +75,6 @@ const API_ROUTES = {
   FOLDER,
   PRIVACY_POLICY,
   INFO_HELP,
+  QRCODE,
 };
 export default API_ROUTES;

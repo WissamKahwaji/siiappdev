@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./layouts/header";
 import { useEffect } from "react";
+import Footer from "./layouts/footer";
 
 function App() {
   const { pathname } = useLocation();
@@ -12,11 +13,11 @@ function App() {
     <div className="App">
       <Navbar />
 
-      <main className="mt-[43px] md:mt-[185px] lg:mt-[56px] xl:mt-[90px]">
+      <main className="mt-[43px] sm:mt-[53px] md:mt-[56px] lg:mt-[56px] xl:mt-[67px]">
         <Outlet />
       </main>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

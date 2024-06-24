@@ -146,10 +146,18 @@
       "info_help":"التعريف و المساعدة",
       "privacy_policy":"السياسة والخصوصية",
       "contact_via_email":"تواصل معنا عبر الإيميل",
-      "do_you_still_need_help":"هل ما زلت بحاجة للمساعدة ؟ تواصل معنا",
+      "do_you_still_need_help":"هل ما زلت بحاجة للمساعدة ؟ ",
       "your_message":"رسالتك",
       "send_message":"أرسل رسالتك",
       "submit_suggestion":"تقديم اقتراح",
     "write_suggestion":"اكتب اقتراحك",
-    "click_here_to_download_the_Qr_Code":"اضغط هنا لتنزيل ال Qr Code"
+    "click_here_to_download_the_Qr_Code":"اضغط هنا لتنزيل ال Qr Code",
+    "edit_qrcode":"تعديل ال Qr Code",
+    "upload_file":"تحميل ملف",
+    "show_profile":"عرض الحساب",
+    "call_us":"اتصل بنا",
+   "how_we_can_help_you":"كيف يمكننا مساعدتك ؟",
+   "help_via_email":"المساعدة عبر الإيميل",
+   "send_your_message":"أرسل رسالة",
+   "get_offer":"احصل على العرض الان"
    }

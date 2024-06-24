@@ -22,6 +22,7 @@ export type PostModel = {
   coverVideoImage?: string | undefined;
   coverPdfImage?: string | undefined;
   discountPercentage?: number | undefined;
+  discountFunctionType?: string | undefined;
   createdAt?: Date;
 };
 
@@ -37,6 +38,7 @@ export type PostInputProps = {
   postVideo?: string | undefined;
   postDocs?: string | undefined;
   discountPercentage?: number | undefined;
+  discountFunctionType?: string | undefined;
 };
 
 export type CommentModel = {

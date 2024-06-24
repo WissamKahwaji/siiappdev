@@ -148,10 +148,18 @@
     "info_help":"Info & Help",
     "privacy_policy":"Privacy Policy",
     "contact_via_email":"Contact us via email",
-    "do_you_still_need_help":"Do you still need help? Contact us",
+    "do_you_still_need_help":"Do you still need help?",
     "your_message":"Your message",
     "send_message":"Send Message",
     "submit_suggestion":"Submit Suggestion",
     "write_suggestion":"Write Suggestion",
-    "click_here_to_download_the_Qr_Code":"Click here to download the Qr Code"
+    "click_here_to_download_the_Qr_Code":"Click here to download the Qr Code",
+    "edit_qrcode":"Edit Qrcode",
+    "upload_file":"Upload File",
+    "show_profile":"Show Profile",
+    "call_us":"Call us",
+    "how_we_can_help_you":"How We Can Help You ?",
+    "help_via_email":"Help Via Email",
+    "get_offer":"Get Offer",
+    "send_your_message":"Send Message"
 }

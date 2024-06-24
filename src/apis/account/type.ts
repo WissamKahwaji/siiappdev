@@ -37,6 +37,7 @@ export type UserModel = {
     painterest?: string;
     xPlatform?: string;
     otherLink?: string;
+    location?: string;
   };
 };
 
@@ -68,6 +69,7 @@ export type EditProfileProps = {
     painterest: string;
     xPlatform: string;
     otherLink: string;
+    location?: string;
   };
 };
 

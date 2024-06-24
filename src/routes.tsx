@@ -30,6 +30,7 @@ import EditFolderDetailsPage from "./pages/folder/EditFolderDetailsPage";
 import PostListPage from "./components/pages/profile/PostListPage";
 import PrivacyPolicyPage from "./pages/privacy policy";
 import InfoHelpPage from "./pages/info-help/InfoHelpPage";
+import EditQrCodePage from "./pages/profile/EditQrCodePage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -108,6 +109,10 @@ const Routes = () => {
               <Route
                 path="/:userName/folders/:id/edit"
                 element={<EditFolderDetailsPage />}
+              />
+              <Route
+                path="/:userName/edit-qr-code"
+                element={<EditQrCodePage />}
               />
               {/* Add more protected routes here */}
             </Route>

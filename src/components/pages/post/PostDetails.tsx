@@ -332,7 +332,7 @@ const PostDetails = ({
                 <span className="font-semibold text-black">
                   {`${t("discount")} : `}
                 </span>{" "}
-                {postInfo?.discountPercentage}%
+                {postInfo?.discountPercentage}% off
               </p>
               <p className="text-xs text-gray-600">
                 {t(

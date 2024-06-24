@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetUserByUserNameQuery } from "../../apis/account/queries";
+import { useGetUserQrCodeQuery } from "../../apis/qrcode/queries";
 import { useEffect } from "react";
 
 import ImagePopup from "../../components/const/ImagePopup";
@@ -23,21 +24,29 @@ import { ImProfile } from "react-icons/im";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../../components/const/LoadingComponent";
 import { getFileNameFromUrl } from "../../utils";
+import { qrCodeModel } from "../../apis/qrcode/type";
 
 const QrCodeInfoPage = () => {
   const { userName } = useParams<{ userName: string }>();
+  const userId = localStorage.getItem("userId");
+
   const { t } = useTranslation();
   const {
     data: userInfo,
     isLoading: isLoadingUser,
     isError: isErrorUser,
   } = useGetUserByUserNameQuery(userName ?? "");
+  const {
+    data: userQrCodeInfo,
+    isLoading: isLoadingUserQrCode,
+    isError: isErrorUserQrCode,
+  } = useGetUserQrCodeQuery(userName ?? "");
 
   useEffect(() => {
     console.log("Fetching data for userName:", userName);
   }, [userName]);
 
-  if (isLoadingUser) {
+  if (isLoadingUser || isLoadingUserQrCode) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
         <LoadingComponent />
@@ -45,9 +54,12 @@ const QrCodeInfoPage = () => {
     );
   }
 
-  if (isErrorUser) {
+  if (isErrorUser || isErrorUserQrCode) {
     return <div>Error loading profile.</div>;
   }
+
+  // Use userQrCodeInfo if available, otherwise use userInfo
+  const user = userQrCodeInfo ?? userInfo?.socialMedia;
 
   const socialMediaIcons = [
     {
@@ -80,7 +92,6 @@ const QrCodeInfoPage = () => {
       field: "threads",
       text: "threads",
     },
-
     {
       icon: <FaFacebook className="w-5 h-5 md:w-7 md:h-7 lg:w-9 lg:h-9" />,
       field: "faceBook",
@@ -122,11 +133,10 @@ const QrCodeInfoPage = () => {
     },
   ];
 
-  const filterSocialMediaIcons = (user: UserModel): typeof socialMediaIcons => {
+  const filterSocialMediaIcons = (user: UserModel | qrCodeModel) => {
+    if (!user) return [];
     const newSocial = socialMediaIcons.filter(
-      icon =>
-        user.socialMedia &&
-        user.socialMedia[icon.field as keyof typeof user.socialMedia]
+      icon => user[icon.field as keyof (UserModel | qrCodeModel)]
     );
     newSocial.push({
       icon: <MdAdd className="w-5 h-5 md:w-7 md:h-7 lg:w-9 lg:h-9" />,
@@ -135,7 +145,7 @@ const QrCodeInfoPage = () => {
     return newSocial;
   };
 
-  const filteredIcons = filterSocialMediaIcons(userInfo!);
+  const filteredIcons = filterSocialMediaIcons(user!);
 
   return (
     <div className="flex items-center justify-center my-10 h-full w-full font-header mt-20">
@@ -151,7 +161,7 @@ const QrCodeInfoPage = () => {
             <p className="text-secondary md:text-lg text-base">
               {userInfo?.fullName}
             </p>
-            {userInfo?.isBusiness && userInfo.userCategory && (
+            {userInfo && userInfo.isBusiness && userInfo.userCategory && (
               <p className="text-gray-400 md:text-base text-sm">
                 {userInfo.userCategory}
               </p>
@@ -159,18 +169,21 @@ const QrCodeInfoPage = () => {
           </div>
           <Link to={`/${userInfo?.userName}`} replace>
             <p className="bg-secondary rounded-lg px-3 py-2 text-navBackground text-sm shadow-sm shadow-gray-200 hover:text-secondary hover:bg-navBackground/40 transform ease-in-out duration-300">
-              Show Profile
+              {t("show_profile")}
             </p>
           </Link>
+          {userId === userInfo?._id && (
+            <Link to={`/${userInfo?.userName}/edit-qr-code`}>
+              <p className="bg-secondary rounded-lg px-3 py-2 text-navBackground text-sm shadow-sm shadow-gray-200 hover:text-secondary hover:bg-navBackground/40 transform ease-in-out duration-300">
+                {t("edit_qrcode")}
+              </p>
+            </Link>
+          )}
         </div>
         <div className="w-full md:px-5 lg:px-10 flex flex-col items-start justify-start space-y-5">
           {filteredIcons.length > 0 &&
             filteredIcons.map((item, index) => {
-              const socialLink =
-                userInfo?.socialMedia &&
-                userInfo?.socialMedia[
-                  item.field as keyof typeof userInfo.socialMedia
-                ];
+              const socialLink = user && user[item.field as keyof typeof user];
               if (socialLink) {
                 return (
                   <div
@@ -178,13 +191,16 @@ const QrCodeInfoPage = () => {
                     className="py-3 px-4 w-full bg-secondary rounded-lg text-navBackground flex items-center justify-start gap-x-4 cursor-pointer transition-transform transform hover:scale-105 ease-in-out duration-300"
                     onClick={() => {
                       if (item.field === "whatsApp") {
-                        const sanitizedNumber = socialLink.replace(/\s+/g, "");
+                        const sanitizedNumber = (socialLink as string).replace(
+                          /\s+/g,
+                          ""
+                        );
                         window.open(
                           `https://wa.me/${sanitizedNumber}`,
                           "_blank"
                         );
                       } else {
-                        window.open(socialLink, "_blank");
+                        window.open(socialLink as string, "_blank");
                       }
                     }}
                   >
@@ -195,7 +211,7 @@ const QrCodeInfoPage = () => {
                       </p>
                       <p className="font-serif font-semibold text-xs md:text-sm text-gray-700 cursor-copy break-all">
                         {item.field === "companyProfile"
-                          ? getFileNameFromUrl(socialLink)
+                          ? getFileNameFromUrl(socialLink as string)
                           : socialLink}
                       </p>
                     </div>
@@ -203,8 +219,8 @@ const QrCodeInfoPage = () => {
                 );
               }
             })}
-          {userInfo?.location && (
-            <div className="py-3 px-4 w-full bg-secondary rounded-lg text-navBackground flex items-center justify-start gap-x-4  transition-transform transform hover:scale-105 ease-in-out duration-300">
+          {"location" in user! && user.location && (
+            <div className="py-3 px-4 w-full bg-secondary rounded-lg text-navBackground flex items-center justify-start gap-x-4 transition-transform transform hover:scale-105 ease-in-out duration-300">
               <div>
                 <FaMapLocationDot className="w-5 h-5 md:w-9 md:h-9" />
               </div>
@@ -213,7 +229,7 @@ const QrCodeInfoPage = () => {
                   {t("location")}
                 </p>
                 <p className="font-serif font-semibold text-xs md:text-sm text-gray-700 cursor-copy break-all">
-                  {userInfo?.location}
+                  {user.location}
                 </p>
               </div>
             </div>
