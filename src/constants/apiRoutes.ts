@@ -58,6 +58,10 @@ const PRIVACY_POLICY = {
   GET: "/privacy-policy",
 };
 
+const CARD_PRIVACY_POLICY = {
+  GET: "/card-privacy-policy",
+};
+
 const INFO_HELP = {
   GET: "/info-help",
 };
@@ -74,6 +78,7 @@ const API_ROUTES = {
   SII_CARD,
   FOLDER,
   PRIVACY_POLICY,
+  CARD_PRIVACY_POLICY,
   INFO_HELP,
   QRCODE,
 };

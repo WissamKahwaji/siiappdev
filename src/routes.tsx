@@ -31,6 +31,7 @@ import PostListPage from "./components/pages/profile/PostListPage";
 import PrivacyPolicyPage from "./pages/privacy policy";
 import InfoHelpPage from "./pages/info-help/InfoHelpPage";
 import EditQrCodePage from "./pages/profile/EditQrCodePage";
+import MailPage from "./pages/mail-page/MailPage";
 
 const Routes = () => {
   const { isAuthenticated } = useAuth();
@@ -79,6 +80,7 @@ const Routes = () => {
             />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/info-help" element={<InfoHelpPage />} />
+            <Route path="/help/mail" element={<MailPage />} />
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
               <Route

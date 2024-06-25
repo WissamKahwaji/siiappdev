@@ -1,16 +1,16 @@
 import { Formik, FormikHelpers } from "formik";
-
 import { SiiCardModel } from "../../apis/sii_card/type";
 import * as Yup from "yup";
 import { useAddSiiCardMutaion } from "../../apis/sii_card/queries";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGetUserByIdQuery } from "../../apis/account/queries";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import LoadingComponent from "../../components/const/LoadingComponent";
+import { useGetCardPrivacyPolicyQuery } from "../../apis/card_privacy_policy/queries";
+import PrivacyPolicyModal from "../../components/const/PrivacyPolicyModal";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -27,12 +27,17 @@ const GetSiiCard = () => {
   const navigate = useNavigate();
   const { userName } = useParams<string>();
   const { data: userInfo, isLoading, isError } = useGetUserByIdQuery();
+  const { data: cardPrivacyPolicy } = useGetCardPrivacyPolicyQuery();
+
+  const [showModal, setShowModal] = useState(false);
+  const [formValues, setFormValues] = useState<SiiCardModel | null>(null);
 
   useEffect(() => {
     if (userInfo?.siiCard) {
       navigate("/home");
     }
-  });
+  }, [userInfo, navigate]);
+
   const { t } = useTranslation();
   const initialValues: SiiCardModel = {
     fullName: userInfo?.fullName ?? "",
@@ -46,12 +51,22 @@ const GetSiiCard = () => {
     values: SiiCardModel,
     { setSubmitting }: FormikHelpers<SiiCardModel>
   ) => {
-    addSiiCard(values, {
-      onSettled() {
-        setSubmitting(false);
-      },
-    });
+    setFormValues(values);
+    setShowModal(true);
+    setSubmitting(false);
   };
+
+  const handleAgree = () => {
+    if (formValues) {
+      addSiiCard(formValues, {
+        onSettled: () => {
+          setShowModal(false);
+          setFormValues(null);
+        },
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
@@ -61,7 +76,7 @@ const GetSiiCard = () => {
   }
 
   if (isError) {
-    return <div className="text-red-500 text-center">Error loading </div>;
+    return <div className="text-red-500 text-center">Error loading</div>;
   }
 
   return (
@@ -162,16 +177,6 @@ const GetSiiCard = () => {
                   >
                     {t("mobile_number")}
                   </label>
-                  {/* <input
-                    id="mobileNumber"
-                    name="mobileNumber"
-                    type="text"
-                    className="w-full p-2 border border-gray-400 rounded-lg bg-navBackground/20"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.mobileNumber}
-                    style={{ direction: "ltr" }}
-                  /> */}
                   <PhoneInput
                     containerStyle={{ direction: "ltr" }}
                     country={"ae"}
@@ -188,7 +193,6 @@ const GetSiiCard = () => {
                       fontSize: "15px",
                       outline: "none",
                       backgroundColor: "#d3d3d3",
-
                       direction: "ltr",
                     }}
                     buttonStyle={{
@@ -208,12 +212,19 @@ const GetSiiCard = () => {
                 disabled={isSubmitting}
                 className="w-full py-3 bg-secondary text-navBackground font-semibold rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {isSubmitting ? t("Saveing") : t("save")}
+                {isSubmitting ? t("Saving") : t("save")}
               </button>
             </form>
           )}
         </Formik>
       </div>
+
+      <PrivacyPolicyModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onAgree={handleAgree}
+        privacyPolicy={cardPrivacyPolicy?.titleEn ?? ""}
+      />
     </div>
   );
 };

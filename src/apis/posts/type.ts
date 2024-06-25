@@ -6,6 +6,7 @@ export type PostModel = {
     profileImage: string;
     userName: string;
     isBusiness?: boolean;
+    email?: string;
   };
   images: string[];
   caption: string;

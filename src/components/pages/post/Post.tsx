@@ -193,8 +193,8 @@ const Post = (props: PostProps) => {
                   <div className=" px-2 md:px-3 py-1 bg-secondary rounded-lg">
                     <Link
                       to={
-                        props.post.discountFunctionType
-                          ? `/${props.post.owner.userName}?discountType=${props.post.discountFunctionType}`
+                        props.post.discountFunctionType && props.post._id
+                          ? `/${props.post.owner.userName}?postId=${props.post._id}&discountType=${props.post.discountFunctionType}`
                           : `/${props.post.owner.userName}`
                       }
                       state={{

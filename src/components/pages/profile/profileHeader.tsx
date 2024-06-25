@@ -276,6 +276,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     whatsAppNumber: "",
     tags: [],
     postType: fileType,
+    discountFunctionType: "get_offer",
   };
 
   // const initialValues2: FolderInputProps = {
