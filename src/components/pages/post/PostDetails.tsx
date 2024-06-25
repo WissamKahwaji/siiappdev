@@ -230,7 +230,9 @@ const PostDetails = ({
           <div className="flex items-center gap-x-2">
             <img
               src={
-                postInfo?.owner.profileImage ?? "https://via.placeholder.com/40"
+                postInfo?.owner.profileImage != undefined
+                  ? postInfo?.owner.profileImage
+                  : "https://via.placeholder.com/40"
               }
               alt="User"
               className="w-10 h-10 rounded-full "
