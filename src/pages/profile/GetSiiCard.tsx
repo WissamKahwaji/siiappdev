@@ -91,9 +91,7 @@ const GetSiiCard = () => {
             {yourName}
           </p>
         </div>
-        <p className="text-gray-700 text-sm mb-2">
-          {t("get_your_sii_card_info")}
-        </p>
+        <p className="text-gray-700 text-sm mb-2">{t("get_sii_card_info")}</p>
         <hr className="w-full mb-6" />
         <Formik
           initialValues={initialValues}
