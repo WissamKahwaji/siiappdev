@@ -1579,7 +1579,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                     }}
                                     className="form-radio h-4 w-4 text-seconBackground "
                                   />
-                                  <span className="text-gray-700 font-medium">
+                                  <span className="text-gray-700 font-medium text-xs md:text-base">
                                     {t("get_offer")}
                                   </span>
                                 </label>
@@ -1600,7 +1600,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                     }}
                                     className="form-radio h-4 w-4 text-seconBackground "
                                   />
-                                  <span className="text-gray-700 font-medium">
+                                  <span className="text-gray-700 font-medium text-xs md:text-base">
                                     {t("send_message")}
                                   </span>
                                 </label>
