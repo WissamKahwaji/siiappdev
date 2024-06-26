@@ -23,6 +23,8 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import SendOfferModal from "../../const/SendOfferModal";
+import { useGetUserSiiCardQuery } from "../../../apis/sii_card/queries";
+import GetSiiCardModal from "../../const/GetSiiCardModal";
 
 type PostProps = {
   post: PostModel;
@@ -35,6 +37,7 @@ const Post = (props: PostProps) => {
   const selectedLang = i18n.language;
   const { isAuthenticated } = useAuth();
   // const { mutate: addCommentInfo } = useAddCommentMutaion();
+  const { data: cardInfo } = useGetUserSiiCardQuery();
   const { mutate: toggleLike } = useToggleLikeMutaion();
   const { mutate: toggleSave } = useToggleSaveMutaion();
 
@@ -50,7 +53,8 @@ const Post = (props: PostProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   // const commentInputRef = useRef<HTMLInputElement>(null);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
-
+  const [isRequestCardModalOpen, setIsRequestCardModalOpen] = useState(false);
+  const userName = localStorage.getItem("userName");
   const openOfferModal = () => setIsOfferModalOpen(true);
   const closeOfferModal = () => setIsOfferModalOpen(false);
   const toggleBrief = () => {
@@ -120,6 +124,7 @@ const Post = (props: PostProps) => {
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
     setIsModalOpen(false);
+    setIsRequestCardModalOpen(false);
   };
 
   // const handleSubmit = (
@@ -197,19 +202,55 @@ const Post = (props: PostProps) => {
                 <div className=" w-full mt-0.5 bg-transparent">
                   <div className=" px-2 md:px-3 py-1 bg-secondary rounded-lg">
                     {props.navigateToProfile ? (
-                      <Link
-                        to={
-                          props.post.discountFunctionType && props.post._id
-                            ? `/${props.post.owner.userName}?postId=${props.post._id}&discountType=${props.post.discountFunctionType}`
-                            : `/${props.post.owner.userName}`
-                        }
-                        state={{
-                          discountType: props.post.discountFunctionType,
-                          postName: props.post.caption,
-                        }}
-                        reloadDocument
-                      >
-                        <div className="w-full flex flex-row justify-between items-center ">
+                      isAuthenticated ? (
+                        <Link
+                          to={
+                            props.post.discountFunctionType && props.post._id
+                              ? `/${props.post.owner.userName}?postId=${props.post._id}&discountType=${props.post.discountFunctionType}`
+                              : `/${props.post.owner.userName}`
+                          }
+                          state={{
+                            discountType: props.post.discountFunctionType,
+                            postName: props.post.caption,
+                          }}
+                          reloadDocument
+                        >
+                          <div className="w-full flex flex-row justify-between items-center ">
+                            <div>
+                              <p className="text-blue-500 font-bold">
+                                <span className="font-semibold text-black">
+                                  {`${t("discount")} : `}
+                                </span>{" "}
+                                {props.post.discountPercentage}% off
+                              </p>
+                              <p className="md:text-xs text-[10px] text-gray-600">
+                                {t(
+                                  "This discount for this service will be given to all users who have a Sii card"
+                                )}
+                              </p>
+                            </div>
+
+                            {selectedLang === "en" ? (
+                              <MdOutlineKeyboardArrowRight size={24} />
+                            ) : (
+                              <MdOutlineKeyboardArrowLeft size={24} />
+                            )}
+                          </div>
+                        </Link>
+                      ) : (
+                        <div
+                          className="w-full flex flex-row justify-between items-center cursor-pointer "
+                          onClick={() => {
+                            toast.error(
+                              <LoginToast
+                                onClose={() => {
+                                  setIsLoginModalOpen(true);
+                                }}
+                              />,
+                              { toastId: "auth" }
+                            );
+                          }}
+                        >
                           <div>
                             <p className="text-blue-500 font-bold">
                               <span className="font-semibold text-black">
@@ -230,11 +271,28 @@ const Post = (props: PostProps) => {
                             <MdOutlineKeyboardArrowLeft size={24} />
                           )}
                         </div>
-                      </Link>
+                      )
                     ) : (
                       <div
                         className="w-full flex flex-row justify-between items-center cursor-pointer"
-                        onClick={openOfferModal}
+                        onClick={() => {
+                          if (!isAuthenticated) {
+                            toast.error(
+                              <LoginToast
+                                onClose={() => {
+                                  setIsLoginModalOpen(true);
+                                }}
+                              />,
+                              { toastId: "auth" }
+                            );
+                          } else {
+                            if (cardInfo) {
+                              openOfferModal();
+                            } else {
+                              setIsRequestCardModalOpen(true);
+                            }
+                          }
+                        }}
                       >
                         <div>
                           <p className="text-blue-500 font-bold">
@@ -573,11 +631,22 @@ const Post = (props: PostProps) => {
           <LoginModalContent />
         </Modal>
       )}
+      {isRequestCardModalOpen && (
+        <Modal
+          isOpen={isRequestCardModalOpen}
+          setIsOpen={handleCloseModal}
+          title={t("request_your_sii_card")}
+          size="md"
+        >
+          <GetSiiCardModal userName={userName} />
+        </Modal>
+      )}
       <SendOfferModal
         isModalOpen={isOfferModalOpen}
         closeModal={closeOfferModal}
         toEmail={selectedPost?.owner?.email ?? ""}
         postCaption={selectedPost?.caption ?? ""}
+        cardNumber={cardInfo?.cardNumber}
       />
     </div>
   );

@@ -8,21 +8,26 @@ import { useTranslation } from "react-i18next";
 import { useGetPostByIdQuery } from "../../apis/posts/queries";
 
 import SendOfferModal from "../../components/const/SendOfferModal";
+import { useGetUserSiiCardQuery } from "../../apis/sii_card/queries";
+import Modal from "../../components/const/Modal";
+import GetSiiCardModal from "../../components/const/GetSiiCardModal";
 
 const Profile = () => {
   const { userName } = useParams<{ userName: string }>();
+  const userNameSigned = localStorage.getItem("userName");
   const { t } = useTranslation();
   const {
     data: userInfo,
     isLoading: isLoadingUser,
     isError: isErrorUser,
   } = useGetUserByUserNameQuery(userName ?? "");
+  const { data: cardInfo } = useGetUserSiiCardQuery();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const discountType = queryParams.get("discountType");
   const postId = queryParams.get("postId");
   const { data: postInfo } = useGetPostByIdQuery(postId ?? "");
-
+  const [isRequestCardModalOpen, setIsRequestCardModalOpen] = useState(false);
   const handleClick = () => {
     if (
       discountType &&
@@ -33,14 +38,19 @@ const Profile = () => {
       const whatsappLink = `https://wa.me/${phoneNumber}`;
       window.location.href = whatsappLink;
     } else {
-      openModal();
+      if (cardInfo) {
+        openModal();
+      } else {
+        setIsRequestCardModalOpen(true);
+      }
+      // openModal();
     }
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  const handleCloseModal = () => setIsRequestCardModalOpen(false);
   useEffect(() => {
     console.log("Fetching data for userName:", userName);
   }, [userName]);
@@ -78,7 +88,18 @@ const Profile = () => {
           closeModal={closeModal}
           toEmail={postInfo?.owner?.email ?? ""}
           postCaption={postInfo?.caption ?? ""}
+          cardNumber={cardInfo?.cardNumber}
         />
+        {isRequestCardModalOpen && (
+          <Modal
+            isOpen={isRequestCardModalOpen}
+            setIsOpen={handleCloseModal}
+            title={t("request_your_sii_card")}
+            size="md"
+          >
+            <GetSiiCardModal userName={userNameSigned} />
+          </Modal>
+        )}
       </main>
     </div>
   );

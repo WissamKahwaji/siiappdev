@@ -11,6 +11,7 @@ import "react-phone-input-2/lib/style.css";
 import LoadingComponent from "../../components/const/LoadingComponent";
 import { useGetCardPrivacyPolicyQuery } from "../../apis/card_privacy_policy/queries";
 import PrivacyPolicyModal from "../../components/const/PrivacyPolicyModal";
+import cardImg from "../../assets/card_front_last.png";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -45,6 +46,7 @@ const GetSiiCard = () => {
     mobileNumber: userInfo?.mobileNumber ?? "",
   };
 
+  const [yourName, setYourName] = useState(userInfo?.fullName ?? "");
   const { mutate: addSiiCard } = useAddSiiCardMutaion();
 
   const handleSubmit = (
@@ -83,6 +85,12 @@ const GetSiiCard = () => {
     <div className="flex flex-col justify-center items-center font-header w-full h-full py-12 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-4 shadow-xl rounded-xl border border-gray-400 flex flex-col items-start justify-start max-w-lg w-full">
         <h2 className="text-2xl mb-3">{t("get_your_sii_card")}</h2>
+        <div className="relative w-full justify-center flex h-[200px] md:h-[250px]  mb-6">
+          <img src={cardImg} alt="" className="w-full h-full" />
+          <p className="absolute bottom-3 md:left-11 left-8 text-white font-serif md:text-lg text-sm">
+            {yourName}
+          </p>
+        </div>
         <p className="text-gray-700 text-sm mb-2">
           {t("get_your_sii_card_info")}
         </p>
@@ -120,7 +128,7 @@ const GetSiiCard = () => {
                     readOnly
                     type="text"
                     value={userName}
-                    className="w-full p-2 border border-gray-400 rounded-lg bg-navBackground/20 cursor-not-allowed"
+                    className="w-full p-2 border border-secondary rounded-lg bg-gray-50 opacity-40 cursor-not-allowed"
                     style={{ direction: "ltr" }}
                   />
                 </div>
@@ -129,7 +137,7 @@ const GetSiiCard = () => {
                     className="mb-2 text-sm font-medium text-gray-700"
                     htmlFor="fullName"
                   >
-                    {t("your_name")}
+                    {t("your_name_on_the_card")}
                   </label>
                   <input
                     id="fullName"
@@ -137,7 +145,10 @@ const GetSiiCard = () => {
                     type="text"
                     className="w-full p-2 border border-gray-400 rounded-lg bg-navBackground/20"
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={e => {
+                      handleChange(e);
+                      setYourName(e.currentTarget.value);
+                    }}
                     value={values.fullName}
                     style={{ direction: "ltr" }}
                   />

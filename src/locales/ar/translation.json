@@ -58,7 +58,7 @@
     "whatsApp_number":"رقم الواتساب",
     "mobile_number":"رقم الموبايل",
     "hashTags":"هاشتاغ",
-    "discount_percentage":"نسبة الخصم (1-100%)",
+    "discount_percentage":"نسبة الخصم (1-99%)",
     "discount":"نسبة الخصم",
     "This discount for this service will be given to all users who have a Sii card":"سيتم منح هذا الخصم لهذه الخدمة لجميع المستخدمين الذين لديهم بطاقة Sii",
     "saving":"يتم الحفظ",
@@ -164,5 +164,8 @@
    "useful_links":"روابط مميزة",
    "contact_us":"تواصل معنا",
    "fullName":"الاسم الكامل",
-   "your_mobile_number":"رقم الهاتف"
+   "your_mobile_number":"رقم الهاتف",
+   "your_name_on_the_card":"اسمك على البطاقة",
+   "you_do_not_have__card_to_get_this_offer":"انت لا تملك بطاقة Sii ! لذلك لا يمكنك الحصول على هذه العروض",
+   "request_your_sii_card":"اطلب بطاقة Sii الان"
    }

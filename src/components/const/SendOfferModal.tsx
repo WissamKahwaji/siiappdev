@@ -8,12 +8,14 @@ interface SendOfferModalProps {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
   toEmail: string;
   postCaption: string;
+  cardNumber?: string | undefined;
 }
 const SendOfferModal = ({
   isModalOpen,
   closeModal,
   toEmail,
   postCaption,
+  cardNumber,
 }: SendOfferModalProps) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -96,6 +98,15 @@ const SendOfferModal = ({
         {/* <p className="text-center text-gray-600 mb-4">
           {t("write_suggestion")}
         </p> */}
+        <div className="w-full justify-start flex flex-col items-start">
+          <p className="text-sm mb-2">{t("card_number")}</p>
+          <div
+            className="w-full text-start p-2 border border-secondary rounded-lg bg-gray-50 opacity-40 cursor-not-allowed"
+            style={{ direction: "ltr" }}
+          >
+            {cardNumber ?? ""}
+          </div>
+        </div>
         <input
           type="text"
           id="fullName"

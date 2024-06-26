@@ -28,7 +28,7 @@ const useSignInMutation = () => {
       localStorage.setItem("userId", data.result._id);
       localStorage.setItem("userName", data.result.userName);
       localStorage.setItem("email", variables.email);
-      localStorage.setItem("password", variables.password);
+      // localStorage.setItem("password", variables.password);
       localStorage.setItem("profileImage", data.result.profileImage);
       navigate(`/${data.result.userName}`, { replace: true });
     },
@@ -50,7 +50,7 @@ const useSignUpMutation = () => {
       localStorage.setItem("userId", data.result._id);
       localStorage.setItem("userName", data.result.userName);
       localStorage.setItem("email", variables.email);
-      localStorage.setItem("password", variables.password);
+      // localStorage.setItem("password", variables.password);
       localStorage.setItem("profileImage", data.profileImage);
 
       navigate(`/${data.result.userName}`, { replace: true });

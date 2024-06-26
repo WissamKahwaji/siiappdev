@@ -17,6 +17,7 @@ import LoadingComponent from "../../components/const/LoadingComponent";
 
 const Home = () => {
   const { t } = useTranslation();
+  localStorage.removeItem("password");
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);

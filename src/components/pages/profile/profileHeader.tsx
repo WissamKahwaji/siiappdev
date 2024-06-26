@@ -1533,63 +1533,80 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             "This discount for this service will be given to all users who have a Sii card"
                           )}
                         </p>
-                        <input
-                          id="discountPercentage"
-                          name="discountPercentage"
-                          placeholder="Enter discount percentage"
-                          type="number"
-                          min={1}
-                          max={100}
-                          className="px-4 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          value={values.discountPercentage ?? ""}
-                        />
-                        {values.discountPercentage &&
-                          values.discountPercentage > 0 && (
-                            <div className="flex flex-row items-center gap-x-8 mt-8">
-                              <label className="flex items-center gap-x-2 cursor-pointer">
-                                <input
-                                  type="radio"
-                                  name="discountFunctionType"
-                                  value="get_offer"
-                                  checked={discountFunctionType === "get_offer"}
-                                  onChange={() => {
-                                    setDiscountFunctionType("get_offer");
-                                    setFieldValue(
-                                      "discountFunctionType",
-                                      "get_offer"
-                                    );
-                                  }}
-                                  className="form-radio h-4 w-4 text-seconBackground "
-                                />
-                                <span className="text-gray-700 font-medium">
-                                  {t("get_offer")}
-                                </span>
-                              </label>
-                              <label className="flex items-center gap-x-2 cursor-pointer">
-                                <input
-                                  type="radio"
-                                  name="discountFunctionType"
-                                  value="send_message"
-                                  checked={
-                                    discountFunctionType === "send_message"
-                                  }
-                                  onChange={() => {
-                                    setDiscountFunctionType("send_message");
-                                    setFieldValue(
-                                      "discountFunctionType",
-                                      "send_message"
-                                    );
-                                  }}
-                                  className="form-radio h-4 w-4 text-seconBackground "
-                                />
-                                <span className="text-gray-700 font-medium">
-                                  {t("send_message")}
-                                </span>
-                              </label>
-                            </div>
-                          )}
+                        <div className="w-full flex justify-start items-center gap-x-5">
+                          <input
+                            id="discountPercentage"
+                            name="discountPercentage"
+                            placeholder="Enter discount percentage"
+                            type="number"
+                            min={1}
+                            max={99}
+                            inputMode="numeric"
+                            pattern="\d*"
+                            className="px-4 py-2 w-1/2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                            onBlur={handleBlur}
+                            onChange={e => {
+                              const { value } = e.currentTarget;
+                              const numericValue = parseInt(value, 10);
+
+                              // Ensure the value is a valid two-digit number
+                              if (
+                                (numericValue >= 1 && numericValue <= 99) ||
+                                value == ""
+                              ) {
+                                handleChange(e);
+                              }
+                            }}
+                            value={values.discountPercentage ?? ""}
+                          />
+                          {values.discountPercentage &&
+                            values.discountPercentage > 0 && (
+                              <div className="flex flex-row items-center gap-x-8 ">
+                                <label className="flex items-center gap-x-2 cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="discountFunctionType"
+                                    value="get_offer"
+                                    checked={
+                                      discountFunctionType === "get_offer"
+                                    }
+                                    onChange={() => {
+                                      setDiscountFunctionType("get_offer");
+                                      setFieldValue(
+                                        "discountFunctionType",
+                                        "get_offer"
+                                      );
+                                    }}
+                                    className="form-radio h-4 w-4 text-seconBackground "
+                                  />
+                                  <span className="text-gray-700 font-medium">
+                                    {t("get_offer")}
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-x-2 cursor-pointer">
+                                  <input
+                                    type="radio"
+                                    name="discountFunctionType"
+                                    value="send_message"
+                                    checked={
+                                      discountFunctionType === "send_message"
+                                    }
+                                    onChange={() => {
+                                      setDiscountFunctionType("send_message");
+                                      setFieldValue(
+                                        "discountFunctionType",
+                                        "send_message"
+                                      );
+                                    }}
+                                    className="form-radio h-4 w-4 text-seconBackground "
+                                  />
+                                  <span className="text-gray-700 font-medium">
+                                    {t("send_message")}
+                                  </span>
+                                </label>
+                              </div>
+                            )}
+                        </div>
                       </div>
                     )}
                   </div>

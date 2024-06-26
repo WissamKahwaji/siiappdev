@@ -129,7 +129,7 @@ const useSignUpWithAddMutation = () => {
       localStorage.setItem("userId", data.result._id);
       localStorage.setItem("userName", data.result.userName);
       localStorage.setItem("email", variables.email);
-      localStorage.setItem("password", variables.password);
+      // localStorage.setItem("password", variables.password);
       navigate(`/`, { replace: true });
     },
     onError: () => {
