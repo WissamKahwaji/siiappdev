@@ -1543,7 +1543,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             max={99}
                             inputMode="numeric"
                             pattern="\d*"
-                            className="px-4 py-2 w-1/2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                            className="px-4 py-2 w-1/5 md:w-1/2 border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                             onBlur={handleBlur}
                             onChange={e => {
                               const { value } = e.currentTarget;
