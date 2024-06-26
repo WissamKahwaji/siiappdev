@@ -230,18 +230,19 @@ const PostDetails = ({
           <div className="flex items-center gap-x-2">
             <img
               src={
-                postInfo?.owner.profileImage != undefined
-                  ? postInfo?.owner.profileImage
+                postInfo?.owner?.profileImage
+                  ? postInfo.owner?.profileImage
                   : "https://via.placeholder.com/40"
               }
               alt="User"
               className="w-10 h-10 rounded-full "
             />
+
             <p className="text-navBackground text-xs md:text-base font-serif">
-              {postInfo?.owner.fullName}
+              {postInfo?.owner?.fullName ? postInfo?.owner?.fullName : ""}
             </p>
           </div>
-          {postInfo?.owner._id === currentUserId && (
+          {postInfo?.owner?._id === currentUserId && (
             <FontAwesomeIcon
               icon={faEllipsis}
               className="cursor-pointer"

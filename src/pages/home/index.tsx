@@ -160,7 +160,12 @@ const Home = () => {
       </div>
       {postsInfo && postsInfo.length > 0 ? (
         postsInfo.map((post, index) => (
-          <Post key={index} post={post} currentUserId={currentUserId ?? ""} />
+          <Post
+            key={index}
+            post={post}
+            currentUserId={currentUserId ?? ""}
+            navigateToProfile={true}
+          />
         ))
       ) : (
         <div>There are no posts yet !!!</div>

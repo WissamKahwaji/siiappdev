@@ -31,6 +31,7 @@ const PostListPage = () => {
       }
     }
   }, [postId, postsInfo]);
+
   if (isLoadingPosts) {
     return (
       <div className="text-center h-screen flex flex-col justify-center items-center">
@@ -48,7 +49,11 @@ const PostListPage = () => {
       {postsInfo &&
         postsInfo.map((post: PostModel, index) => (
           <div key={post._id} ref={el => (scrollRefs.current[index] = el)}>
-            <Post post={post} currentUserId={currentUserId ?? ""} />
+            <Post
+              post={post}
+              currentUserId={currentUserId ?? ""}
+              navigateToProfile={false}
+            />
           </div>
         ))}
     </div>

@@ -219,7 +219,7 @@ const QrCodeInfoPage = () => {
                 );
               }
             })}
-          {"location" in user! && user.location && (
+          {user && user.location && (
             <div className="py-3 px-4 w-full bg-secondary rounded-lg text-navBackground flex items-center justify-start gap-x-4 transition-transform transform hover:scale-105 ease-in-out duration-300">
               <div>
                 <FaMapLocationDot className="w-5 h-5 md:w-9 md:h-9" />
