@@ -67,6 +67,20 @@ const userCategories = [
   "Fashion",
   "Nonprofit organization",
   "Retail",
+  "Graphic design",
+  "programmers",
+  "digital marketing",
+  "foodstuffs",
+  "trade",
+  "perfumes",
+  "accessories",
+  "factory",
+  "Sports",
+  "Jewelry",
+  "Bloggers",
+  "Freelancers",
+  "Influencers",
+  "Gaming",
 ];
 
 const EditProfilePage: React.FC = () => {
