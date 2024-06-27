@@ -70,7 +70,10 @@ const Signup = () => {
   return (
     <div className="relative">
       <div className="absolute top-8 md:right-[80px] right-10">
-        <LanguageButton className="relative flex flex-col items-center rounded-lg" />
+        <LanguageButton
+          className="relative flex flex-col items-center rounded-lg"
+          title={selectedLang === "en" ? "English" : "العربية"}
+        />
       </div>
       <div
         className="py-10 w-full flex items-center justify-center"

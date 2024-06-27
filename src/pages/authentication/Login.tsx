@@ -79,7 +79,10 @@ const Login = () => {
   return (
     <div className="relative">
       <div className="absolute top-8 md:right-[80px] right-10">
-        <LanguageButton className="relative flex flex-col items-center rounded-lg" />
+        <LanguageButton
+          className="relative flex flex-col items-center rounded-lg"
+          title={selectedLang === "en" ? "English" : "العربية"}
+        />
       </div>
       <div className="py-20 w-full flex flex-col md:flex-row items-center justify-center md:gap-x-20 capitalize">
         <div className="md:w-96 w-52 h-auto">
