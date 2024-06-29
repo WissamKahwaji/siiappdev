@@ -465,6 +465,7 @@ const PostDetails = ({
               onClose={() => setIsEditModalOpen(false)}
               selectedPost={postInfo}
               onEdit={handleEditPost}
+              postImages={postInfo.images}
             />
           </>
         )}

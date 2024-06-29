@@ -13,6 +13,7 @@ interface EditPostDetailsProps {
   isOpen: boolean;
   onClose: () => void;
   selectedPost: PostModel;
+  postImages: string[];
   onEdit: (
     values: FolderOrPostProps,
     helpers: FormikHelpers<FolderOrPostProps>
@@ -24,22 +25,23 @@ const EditPostDetails = ({
   onClose,
   selectedPost,
   onEdit,
+  postImages,
 }: EditPostDetailsProps) => {
   const { t, i18n } = useTranslation();
   const selectedLang = i18n.language;
   const [discountFunctionType, setDiscountFunctionType] = useState(
     selectedPost.discountFunctionType ?? "get_offer"
   );
-  const [images, setImages] = useState<string[]>(selectedPost.images ?? []);
+  const [images, setImages] = useState<string[]>([]);
   useEffect(() => {
-    if (selectedPost.images) {
+    if (postImages) {
       if (selectedLang === "ar") {
-        setImages([...selectedPost.images].reverse());
+        setImages([...postImages].reverse());
       } else {
-        setImages(selectedPost.images);
+        setImages(postImages);
       }
     }
-  }, [selectedLang, selectedPost.images]);
+  }, [selectedLang, postImages]);
   const initialValues: FolderOrPostProps = {
     _id: selectedPost._id,
 
