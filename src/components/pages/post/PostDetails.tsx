@@ -183,7 +183,7 @@ const PostDetails = ({
       case "image":
         return (
           <>
-            {selectedPost.images.length > 1 ? (
+            {selectedPost.images && selectedPost.images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
                 {selectedPost.images && (
                   <ImagePostSlider onImageChange={handleImageChange}>
