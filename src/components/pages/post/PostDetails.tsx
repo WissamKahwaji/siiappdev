@@ -68,9 +68,19 @@ const PostDetails = ({
   const [showFullBrief, setShowFullBrief] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
   const [captions, setCaptions] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const toggleBrief = () => {
     setShowFullBrief(!showFullBrief);
   };
+  useEffect(() => {
+    if (selectedPost.images) {
+      if (selectedLang === "ar") {
+        setImages([...selectedPost.images].reverse());
+      } else {
+        setImages(selectedPost.images);
+      }
+    }
+  }, [selectedLang, selectedPost.images]);
   useEffect(() => {
     if (postInfo?.otherCaptions && postInfo?.otherCaptions.length > 0) {
       const newCaptions: string[] = [postInfo?.caption].concat(
@@ -183,29 +193,19 @@ const PostDetails = ({
       case "image":
         return (
           <>
-            {selectedPost.images && selectedPost.images.length > 1 ? (
+            {images && images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
-                {selectedPost.images && (
+                {images && (
                   <ImagePostSlider onImageChange={handleImageChange}>
-                    {selectedLang === "en"
-                      ? selectedPost.images.map((img, index) => (
-                          <div key={index}>
-                            <img
-                              src={img}
-                              alt="Post"
-                              className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
-                            />
-                          </div>
-                        ))
-                      : [...selectedPost.images].reverse().map((img, index) => (
-                          <div key={index}>
-                            <img
-                              src={img}
-                              alt="Post"
-                              className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
-                            />
-                          </div>
-                        ))}
+                    {images.map((img, index) => (
+                      <div key={index}>
+                        <img
+                          src={img}
+                          alt={`Post image ${index + 1}`}
+                          className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                        />
+                      </div>
+                    ))}
                   </ImagePostSlider>
                 )}
               </div>
