@@ -69,7 +69,7 @@ const EditPostDetails = ({
         return (
           <>
             {images && images.length > 1 ? (
-              <div className="md:w-full max-w-xs md:max-w-full">
+              <div className="md:w-full max-w-[340px] min-w-[340px] md:max-w-full">
                 {images && (
                   <ImagePostSlider>
                     {images.map((img, index) => (
