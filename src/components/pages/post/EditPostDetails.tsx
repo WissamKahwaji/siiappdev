@@ -4,7 +4,7 @@ import Modal from "../../const/Modal";
 import HashtagsInput from "../../const/HashtagsInput";
 import { useTranslation } from "react-i18next";
 import { FolderOrPostProps } from "../../../apis/folder/type";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImagePostSlider from "../../const/image_post_slider/ImagePostSlider";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -30,6 +30,16 @@ const EditPostDetails = ({
   const [discountFunctionType, setDiscountFunctionType] = useState(
     selectedPost.discountFunctionType ?? "get_offer"
   );
+  const [images, setImages] = useState<string[]>([]);
+  useEffect(() => {
+    if (selectedPost.images) {
+      if (selectedLang === "ar") {
+        setImages([...selectedPost.images].reverse());
+      } else {
+        setImages(selectedPost.images);
+      }
+    }
+  }, [selectedLang, selectedPost.images]);
   const initialValues: FolderOrPostProps = {
     _id: selectedPost._id,
 
@@ -56,9 +66,22 @@ const EditPostDetails = ({
       case "image":
         return (
           <>
-            {selectedPost.images.length > 1 ? (
+            {images && images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
-                <ImagePostSlider>
+                {images && (
+                  <ImagePostSlider>
+                    {images.map((img, index) => (
+                      <div key={index}>
+                        <img
+                          src={img}
+                          alt="Post"
+                          className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                        />
+                      </div>
+                    ))}
+                  </ImagePostSlider>
+                )}
+                {/* <ImagePostSlider>
                   {selectedLang === "en"
                     ? selectedPost.images.map((img, index) => (
                         <div key={index}>
@@ -78,7 +101,7 @@ const EditPostDetails = ({
                           />
                         </div>
                       ))}
-                </ImagePostSlider>
+                </ImagePostSlider> */}
               </div>
             ) : (
               <img
