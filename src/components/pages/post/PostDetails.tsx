@@ -30,6 +30,7 @@ import { BsBookmark, BsBookmarkCheckFill } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
 import LoadingComponent from "../../const/LoadingComponent";
 import { FolderOrPostProps } from "../../../apis/folder/type";
+import ImagePostSlider from "../../const/image_post_slider/ImagePostSlider";
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -65,10 +66,17 @@ const PostDetails = ({
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [showFullBrief, setShowFullBrief] = useState(false);
   const [shouldShowToggle, setShouldShowToggle] = useState(false);
+  const [captions, setCaptions] = useState<string[]>([]);
   const toggleBrief = () => {
     setShowFullBrief(!showFullBrief);
   };
   useEffect(() => {
+    if (postInfo?.otherCaptions && postInfo?.otherCaptions.length > 0) {
+      const newCaptions: string[] = [postInfo?.caption].concat(
+        postInfo?.otherCaptions
+      );
+      setCaptions(newCaptions);
+    }
     if (selectedPost.likes?.includes(currentUserId)) {
       setIsLiked(true);
     }
@@ -81,7 +89,14 @@ const PostDetails = ({
     } else {
       setShouldShowToggle(false);
     }
-  }, [selectedPost.likes, selectedPost.saves, currentUserId, postInfo?._id]);
+  }, [
+    selectedPost.likes,
+    selectedPost.saves,
+    currentUserId,
+    postInfo?._id,
+    postInfo?.otherCaptions,
+    postInfo?.caption,
+  ]);
 
   const handleToggleLike = () => {
     if (!isAuthenticated) {
@@ -147,6 +162,11 @@ const PostDetails = ({
     setIsOptionsModalOpen(false);
     onClose();
   };
+  const [captionShow, setCaptionShow] = useState<string>(selectedPost.caption);
+  const handleImageChange = (index: number) => {
+    // Update the caption for the current image index
+    setCaptionShow(captions[index]);
+  };
 
   if (isLoadingPost)
     return (
@@ -161,11 +181,34 @@ const PostDetails = ({
     switch (postInfo?.postType) {
       case "image":
         return (
-          <img
-            src={postInfo.images[0]}
-            alt="Post"
-            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
-          />
+          <>
+            {postInfo.images.length > 1 ? (
+              <div className="md:w-full max-w-xs md:max-w-full">
+                <ImagePostSlider onImageChange={handleImageChange}>
+                  {postInfo.images.map((img, index) => (
+                    <div key={index}>
+                      <img
+                        src={img}
+                        alt="Post"
+                        className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                      />
+                    </div>
+                  ))}
+                </ImagePostSlider>
+              </div>
+            ) : (
+              <img
+                src={postInfo.images[0]}
+                alt="Post"
+                className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+              />
+            )}
+          </>
+          // <img
+          //   src={postInfo.images[0]}
+          //   alt="Post"
+          //   className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+          // />
         );
       case "video":
         return (
@@ -221,7 +264,7 @@ const PostDetails = ({
 
   return (
     <div className="flex flex-col md:flex-row w-full h-full font-header">
-      <div className="md:w-1/2 w-full  flex flex-col items-center">
+      <div className="md:w-1/2 w-full pb-2 flex flex-col items-center">
         {renderPostContent()}
       </div>
 
@@ -261,7 +304,11 @@ const PostDetails = ({
               !showFullBrief ? "clamp-3-lines" : ""
             }`}
           >
-            {postInfo?.caption}
+            {postInfo &&
+            postInfo.otherCaptions &&
+            postInfo.otherCaptions.length > 0
+              ? captionShow
+              : postInfo?.caption}
           </div>
           {shouldShowToggle && (
             <span

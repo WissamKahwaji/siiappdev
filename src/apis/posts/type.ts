@@ -10,6 +10,7 @@ export type PostModel = {
   };
   images: string[];
   caption: string;
+  otherCaptions?: string[];
   comments?: CommentModel[];
   likes?: string[];
   saves?: string[];
@@ -30,6 +31,7 @@ export type PostModel = {
 export type PostInputProps = {
   _id?: string;
   caption: string;
+  otherCaptions?: string[];
   postImages?: File[];
   link?: string | undefined;
   whatsAppNumber?: string | undefined;

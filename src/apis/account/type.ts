@@ -8,6 +8,8 @@ export type UserModel = {
   bio?: string | null;
   followings: [string];
   followers: [string];
+  followingsNumber?: number | null;
+  followersNumber?: number | null;
   posts: [string];
   savedPosts: [string];
   likedPosts: [string];

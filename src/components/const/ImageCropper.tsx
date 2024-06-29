@@ -8,16 +8,19 @@ import { useTranslation } from "react-i18next";
 interface ImageCropperProps {
   onCropComplete: (croppedFile: File) => void;
   aspect?: number | undefined;
+  icon?: React.ReactNode;
 }
 
 const ImageCropper: React.FC<ImageCropperProps> = ({
   onCropComplete,
   aspect,
+  icon = <FiUpload className="w-10 h-10 text-gray-400" />,
 }) => {
   const [image, setImage] = useState<string | null>(null);
   const [croppedArea, setCroppedArea] = useState<Area | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [originalFileName, setOriginalFileName] = useState<string | null>(null);
 
   const handleCropComplete = useCallback(
     (croppedArea: Area, croppedAreaPixels: Area) => {
@@ -29,26 +32,32 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
 
   const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
+      reader.readAsDataURL(file);
       reader.onloadend = () => {
         setImage(reader.result as string);
+        setOriginalFileName(file.name);
       };
     }
   };
 
   const handleCropImage = useCallback(async () => {
-    if (!croppedArea || !image) {
+    if (!croppedArea || !image || !originalFileName) {
       return;
     }
     try {
-      const croppedFile = await getCroppedImg(image, croppedArea);
+      const croppedFile = await getCroppedImg(
+        image,
+        croppedArea,
+        originalFileName
+      );
       onCropComplete(croppedFile);
       setImage(null);
     } catch (error) {
       console.error(error);
     }
-  }, [croppedArea, image, onCropComplete]);
+  }, [croppedArea, image, originalFileName, onCropComplete]);
 
   const { t } = useTranslation();
 
@@ -98,14 +107,14 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             </div>
           </div>
         ) : (
-          <div className="relative w-full h-16 border-2 border-dashed rounded-md flex items-center justify-center">
+          <div className="relative w-20 h-16 border-2 border-dashed rounded-md flex items-center justify-center">
             <input
               type="file"
               accept="image/*"
               className="absolute w-full h-full opacity-0 cursor-pointer"
               onChange={handleSelectFile}
             />
-            <FiUpload className="w-10 h-10 text-gray-400" />
+            {icon}
           </div>
         )}
       </div>

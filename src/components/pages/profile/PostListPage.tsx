@@ -48,13 +48,12 @@ const PostListPage = () => {
     <div className="container mx-auto pt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center w-full">
       {postsInfo &&
         postsInfo.map((post: PostModel, index) => (
-          <div key={post._id} ref={el => (scrollRefs.current[index] = el)}>
-            <Post
-              post={post}
-              currentUserId={currentUserId ?? ""}
-              navigateToProfile={false}
-            />
-          </div>
+          <Post
+            postRef={el => (scrollRefs.current[index] = el)}
+            post={post}
+            currentUserId={currentUserId ?? ""}
+            navigateToProfile={false}
+          />
         ))}
     </div>
   );

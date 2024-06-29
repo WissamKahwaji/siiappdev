@@ -7,7 +7,7 @@ import {
   useToggleLikeMutaion,
   useToggleSaveMutaion,
 } from "../../../apis/posts/queries";
-import { useEffect, useRef, useState } from "react";
+import { LegacyRef, useEffect, useRef, useState } from "react";
 
 import Modal from "../../const/Modal";
 import PostDetails from "./PostDetails";
@@ -26,10 +26,13 @@ import SendOfferModal from "../../const/SendOfferModal";
 import { useGetUserSiiCardQuery } from "../../../apis/sii_card/queries";
 import GetSiiCardModal from "../../const/GetSiiCardModal";
 
+import ImagePostSlider from "../../const/image_post_slider/ImagePostSlider";
+
 type PostProps = {
   post: PostModel;
   currentUserId: string;
   navigateToProfile: boolean;
+  postRef?: LegacyRef<HTMLDivElement> | undefined;
 };
 
 const Post = (props: PostProps) => {
@@ -54,6 +57,7 @@ const Post = (props: PostProps) => {
   // const commentInputRef = useRef<HTMLInputElement>(null);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const [isRequestCardModalOpen, setIsRequestCardModalOpen] = useState(false);
+  const [captions, setCaptions] = useState<string[]>([]);
   const userName = localStorage.getItem("userName");
   const openOfferModal = () => setIsOfferModalOpen(true);
   const closeOfferModal = () => setIsOfferModalOpen(false);
@@ -62,6 +66,12 @@ const Post = (props: PostProps) => {
   };
 
   useEffect(() => {
+    if (props.post.otherCaptions && props.post.otherCaptions.length > 0) {
+      const newCaptions: string[] = [props.post.caption].concat(
+        props.post.otherCaptions
+      );
+      setCaptions(newCaptions);
+    }
     if (props.post.likes?.includes(props.currentUserId)) {
       setIsLiked(true);
     }
@@ -109,7 +119,14 @@ const Post = (props: PostProps) => {
         handleFullScreenChange
       );
     };
-  }, [props.post.likes, props.post.saves, props.currentUserId, props.post._id]);
+  }, [
+    props.post.likes,
+    props.post.saves,
+    props.currentUserId,
+    props.post._id,
+    props.post.otherCaptions,
+    props.post.caption,
+  ]);
 
   // const initialValues: AddCommentInputProps = {
   //   text: "",
@@ -185,18 +202,38 @@ const Post = (props: PostProps) => {
         toast.info("copy to clipboard");
       });
   };
+  const [captionShow, setCaptionShow] = useState<string>(props.post.caption);
+  const handleImageChange = (index: number) => {
+    // Update the caption for the current image index
+    setCaptionShow(captions[index]);
+  };
 
   const renderPostContent = () => {
     switch (props.post?.postType) {
       case "image":
         return (
           <div className="p-2 justify-center">
-            <img
-              src={props.post.images[0]}
-              alt="Post"
-              className="object-cover  border border-secondary rounded-lg md:w-full w-full  cursor-pointer"
-              onClick={() => handlePostClick(props.post)}
-            />
+            {props.post.images.length > 1 ? (
+              <ImagePostSlider onImageChange={handleImageChange}>
+                {props.post.images.map((image, index) => (
+                  <div key={index}>
+                    <img
+                      src={image}
+                      alt={`Post image ${index + 1}`}
+                      className="object-cover border border-secondary rounded-lg md:w-full w-full cursor-pointer"
+                      onClick={() => handlePostClick(props.post)}
+                    />
+                  </div>
+                ))}
+              </ImagePostSlider>
+            ) : (
+              <img
+                src={props.post.images[0]}
+                alt={`Post image`}
+                className="object-cover border border-secondary rounded-lg md:w-full w-full cursor-pointer"
+                onClick={() => handlePostClick(props.post)}
+              />
+            )}
             {props.post.discountPercentage &&
               props.post.discountPercentage > 0 && (
                 <div className=" w-full mt-0.5 bg-transparent">
@@ -376,7 +413,10 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <div className="border-2 rounded-lg border-secondary shadow-sm shadow-secondary mb-5 bg-white font-header w-full max-w-[550px] md:min-w-[550px] ">
+    <div
+      ref={props.postRef}
+      className="border-2 rounded-lg border-secondary shadow-sm shadow-secondary mb-5 bg-white font-header w-full max-w-[550px] md:min-w-[550px] "
+    >
       <div className="p-3 flex flex-row">
         <div className="flex-1">
           <Link to={`/${props.post.owner.userName}`} reloadDocument>
@@ -450,7 +490,9 @@ const Post = (props: PostProps) => {
                 !showFullBrief ? "clamp-3-lines" : ""
               }`}
             >
-              {props.post.caption}
+              {props.post.otherCaptions && props.post.otherCaptions.length > 0
+                ? captionShow
+                : props.post.caption}
             </div>
             {shouldShowToggle && (
               <span

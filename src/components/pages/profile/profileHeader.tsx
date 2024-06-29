@@ -64,6 +64,10 @@ import { FolderOrPostProps } from "../../../apis/folder/type";
 import { useAddFolderMutation } from "../../../apis/folder/queries";
 import LoadingComponent from "../../const/LoadingComponent";
 import { toPng } from "html-to-image";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { BiCarousel } from "react-icons/bi";
 
 interface ProfileHeaderProps {
   user: UserModel;
@@ -107,6 +111,19 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             console.error("Error generating image", error);
           });
       }
+    }
+  };
+  const [croppedImages, setCroppedImages] = useState<File[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleImagesCropComplete = (croppedFile: File, setFieldValue: any) => {
+    const updatedCroppedImages = [...croppedImages];
+    updatedCroppedImages[currentImageIndex] = croppedFile;
+    setCroppedImages(updatedCroppedImages);
+    setFieldValue("postImages", updatedCroppedImages);
+    console.log(updatedCroppedImages.length);
+    if (currentImageIndex < 9) {
+      setCurrentImageIndex(currentImageIndex + 1);
     }
   };
 
@@ -195,7 +212,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [isFollowed, setIsFollowed] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [followersCount, setFollowersCount] = useState<number>(
-    user.user.followers.length ?? 0
+    user.user.followersNumber ?? user.user.followers.length ?? 0
   );
   // const [isCropperOpen, setIsCropperOpen] = useState(false);
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -277,6 +294,28 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
     tags: [],
     postType: fileType,
     discountFunctionType: "get_offer",
+    otherCaptions: [],
+  };
+  const mainSliderRef = useRef<any>(null);
+  const thumbSliderRef = useRef<any>(null);
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1.2,
+    slidesToScroll: 1,
+    asNavFor: thumbSliderRef.current,
+
+    ref: (slider: Slider) => (mainSliderRef.current = slider),
+  };
+  const captionSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    asNavFor: mainSliderRef.current,
+    ref: (slider: Slider) => (thumbSliderRef.current = slider),
   };
 
   // const initialValues2: FolderInputProps = {
@@ -564,24 +603,24 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
         <div className="flex w-full justify-start items-start gap-x-5 mt-1">
           <div
             className="flex flex-row items-end gap-x-0.5 font-semibold text-sm "
-            onClick={() => {
-              if (user.user._id === userId) {
-                navigate("/account/followings");
-              }
-            }}
+            // onClick={() => {
+            //   if (user.user._id === userId) {
+            //     navigate("/account/followings");
+            //   }
+            // }}
           >
             <p className="font-semibold text-sm text-navBackground">
-              {user.user?.followings.length}
+              {user.user.followingsNumber ?? user.user?.followings.length}
             </p>
             <p className="text-xs text-secondary">{t("follows")}</p>
           </div>
           <div
             className="flex flex-row items-end gap-x-0.5 font-semibold text-sm capitalize "
-            onClick={() => {
-              if (user.user._id === userId) {
-                navigate("/account/followers");
-              }
-            }}
+            // onClick={() => {
+            //   if (user.user._id === userId) {
+            //     navigate("/account/followers");
+            //   }
+            // }}
           >
             <p className="font-semibold text-sm text-navBackground">
               {followersCount}
@@ -652,7 +691,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           </div>
           <div className="font-header mt-4 text-lg  min-w-[240px] max-w-[240px]  overflow-hidden whitespace-pre-wrap">
             <p className="text-sm  font-bold">{user?.user?.fullName}</p>
-            {user.user.isBusiness && (
+            {user.user.isBusiness && user.user.userCategory != "None" && (
               <Link to={`/users/${user.user.userCategory}`} className="w-auto">
                 <p className="text-sm font-header text-blue-500 font-bold cursor-pointer w-auto">
                   {user.user.userCategory}
@@ -665,25 +704,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           </div>
           <div className="flex w-full justify-start items-start gap-x-5 mt-2 ">
             <div
-              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm text-navBackground font-serif cursor-pointer"
-              onClick={() => {
-                if (user.user._id === userId) {
-                  navigate("/account/followings");
-                }
-              }}
+              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm text-navBackground font-serif"
+              // onClick={() => {
+              //   if (user.user._id === userId) {
+              //     navigate("/account/followings");
+              //   }
+              // }}
             >
               <p className="font-semibold text-sm text-navBackground">
-                {user.user?.followings.length}
+                {user.user.followingsNumber ?? user.user?.followings.length}
               </p>
               <p className="text-xs text-secondary">{t("follows")}</p>
             </div>
             <div
-              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm capitalize text-navBackground font-serif cursor-pointer"
-              onClick={() => {
-                if (user.user._id === userId) {
-                  navigate("/account/followers");
-                }
-              }}
+              className="flex flex-row items-end gap-x-0.5 font-semibold text-sm capitalize text-navBackground font-serif"
+              // onClick={() => {
+              //   if (user.user._id === userId) {
+              //     navigate("/account/followers");
+              //   }
+              // }}
             >
               <p className=" ">{followersCount}</p>
               <p className="text-xs text-secondary">{t("followers")}</p>
@@ -1020,6 +1059,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           isOpen={isModalOpen}
           setIsOpen={() => {
             setIsModalOpen(false);
+            setCroppedImages([]);
+            setCurrentImageIndex(0);
             setVideoFile(null);
             setCoverImage(null);
             // setPdfImage(null);
@@ -1121,24 +1162,56 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                       <label className="block mb-2 text-sm font-medium text-gray-700">
                         {t("post_image")}
                       </label>
-                      <div className="flex flex-row w-full">
-                        <img
-                          src={croppedImageDataUrl}
-                          alt="Cropped"
-                          className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
-                        />
+                      <div className="w-full mb-2">
+                        <Slider {...settings}>
+                          {croppedImages.map((image, index) => (
+                            <div key={index} className="w-full">
+                              <img
+                                src={URL.createObjectURL(image)}
+                                alt={`Cropped ${index}`}
+                                className="rounded-md border border-secondary shadow-sm shadow-secondary w-60 h-60 md:w-1/2 md:h-auto object-cover"
+                              />
+                            </div>
+                          ))}
+                        </Slider>
+                      </div>
+                      {currentImageIndex < 10 && (
                         <ImageCropper
                           aspect={1}
-                          onCropComplete={croppedFile => {
-                            handleCropComplete(
-                              croppedFile,
-                              setFieldValue,
-                              "postImages"
-                            );
-                          }}
+                          onCropComplete={croppedFile =>
+                            handleImagesCropComplete(croppedFile, setFieldValue)
+                          }
+                          icon={
+                            <BiCarousel className="w-10 h-10 text-secondary" />
+                          }
                         />
-                      </div>
+                      )}
                     </div>
+                    // <div className="w-[340px] md:w-full">
+                    //   <label className="block mb-2 text-sm font-medium text-gray-700">
+                    //     {t("post_image")}
+                    //   </label>
+                    //   <div className="w-full grid md:grid-cols-4 grid-cols-2 gap-y-2 mb-2">
+                    //     {croppedImages.map((image, index) => (
+                    //       <div className=" w-full">
+                    //         <img
+                    //           key={index}
+                    //           src={URL.createObjectURL(image)}
+                    //           alt={`Cropped ${index}`}
+                    //           className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
+                    //         />
+                    //       </div>
+                    //     ))}
+                    //   </div>
+                    //   {currentImageIndex < 10 && (
+                    //     <ImageCropper
+                    //       aspect={1}
+                    //       onCropComplete={croppedFile =>
+                    //         handleImagesCropComplete(croppedFile, setFieldValue)
+                    //       }
+                    //     />
+                    //   )}
+                    // </div>
                   )}
                   {fileType === "video" && (
                     <div className="flex flex-col">
@@ -1415,7 +1488,70 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                         )}
                       </div>
                     )}
-                    <div className="flex flex-col items-start justify-start w-full">
+                    <div className="w-full ">
+                      <Slider {...captionSettings}>
+                        <div className="flex flex-col items-start justify-start w-full px-1">
+                          <label
+                            className="mb-2 text-sm justify-start w-full flex font-medium text-gray-700"
+                            htmlFor="caption"
+                          >
+                            {t("caption")}
+                          </label>
+                          <textarea
+                            id="caption"
+                            name="caption"
+                            minLength={1}
+                            className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                            onBlur={handleBlur}
+                            onChange={e => {
+                              handleChange(e);
+                              setFieldValue(
+                                "otherCaptions",
+                                Array(croppedImages.length - 1).fill(
+                                  e.target.value
+                                )
+                              );
+                            }}
+                            value={values.caption ?? ""}
+                          />
+                          {errors.caption && touched.caption && (
+                            <div className="text-red-500 text-xs mt-1">
+                              {errors.caption}
+                            </div>
+                          )}
+                        </div>
+                        {croppedImages &&
+                          croppedImages.slice(1).map((_caption, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col items-start justify-start w-full px-1"
+                            >
+                              <label
+                                className="mb-2 text-sm font-medium text-gray-700 justify-start w-full flex"
+                                htmlFor={`otherCaptions-${index}`}
+                              >
+                                {t(`caption for image ${index + 2}`)}
+                              </label>
+                              <textarea
+                                id={`otherCaptions-${index}`}
+                                name={`otherCaptions[${index}]`}
+                                minLength={1}
+                                className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                value={values.otherCaptions![index]}
+                              />
+                              {errors.otherCaptions &&
+                                touched.otherCaptions && (
+                                  <div className="text-red-500 text-xs mt-1">
+                                    {errors.otherCaptions}
+                                  </div>
+                                )}
+                            </div>
+                          ))}
+                      </Slider>
+                    </div>
+                    {/* <div className="flex flex-col items-start justify-start w-full">
                       <label
                         className="mb-2 text-sm font-medium text-gray-700"
                         htmlFor="caption"
@@ -1436,7 +1572,57 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           {errors.caption}
                         </div>
                       )}
-                    </div>
+                    </div> */}
+                    {/* <div className="grid grid-cols-1 gap-x-5 gap-y-3 "> */}
+                    {/* {values.otherCaptions &&
+                        values.otherCaptions.map((caption, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col items-start justify-start w-full"
+                          >
+                            <label
+                              className="mb-2 text-sm font-medium text-gray-700"
+                              htmlFor={`otherCaptions-${index}`}
+                            >
+                              {t(`caption for image ${index + 2}`)}
+                            </label>
+                            <textarea
+                              id={`otherCaptions-${index}`}
+                              name={`otherCaptions[${index}]`}
+                              minLength={1}
+                              className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              value={caption}
+                            />
+                            {errors.otherCaptions && touched.otherCaptions && (
+                              <div className="text-red-500 text-xs mt-1">
+                                {errors.otherCaptions}
+                              </div>
+                            )}
+                          </div>
+                        ))} */}
+
+                    {/* {values.otherCaptions &&
+                        values.otherCaptions?.length <
+                          croppedImages.length - 1 && (
+                          <button
+                            type="button"
+                            className="bg-secondary text-navBackground font-semibold py-2 px-4 rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 transform ease-in-out duration-300"
+                            onClick={() => {
+                              if (values.otherCaptions) {
+                                setFieldValue("otherCaptions", [
+                                  ...values.otherCaptions,
+                                  "",
+                                ]);
+                              }
+                            }}
+                          >
+                            {t("add_another_caption")}
+                          </button>
+                        )} */}
+                    {/* </div> */}
+
                     <div className="flex flex-col items-start justify-start w-full">
                       <label
                         className="mb-2 text-sm font-medium text-gray-700"

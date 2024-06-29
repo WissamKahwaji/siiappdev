@@ -2,7 +2,8 @@ import { Area } from "react-easy-crop";
 
 export default async function getCroppedImg(
   imageSrc: string,
-  pixelCrop: Area
+  pixelCrop: Area,
+  originalFileName: string
 ): Promise<File> {
   const image = new Image();
   image.src = imageSrc;
@@ -32,7 +33,9 @@ export default async function getCroppedImg(
 
       canvas.toBlob(blob => {
         if (blob) {
-          const file = new File([blob], "cropped.jpg", { type: "image/jpeg" });
+          const file = new File([blob], originalFileName, {
+            type: "image/jpeg",
+          });
           resolve(file);
         } else {
           reject(new Error("Canvas is empty"));

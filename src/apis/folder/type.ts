@@ -43,6 +43,7 @@ export type FolderOrPostProps = {
   _id?: string;
   name?: string;
   caption: string;
+  otherCaptions?: string[];
   coverImg?: string | undefined;
   folderImages?: string[];
   link?: string | undefined;

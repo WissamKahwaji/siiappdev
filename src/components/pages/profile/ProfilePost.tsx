@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { PostModel } from "../../../apis/posts/type";
 import { useTranslation } from "react-i18next";
+import { BiCarousel } from "react-icons/bi";
 
 // import { Document, Page, pdfjs } from "react-pdf";
 // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -26,6 +27,11 @@ const ProfilePost: React.FC<ProfilePostProps> = ({ post, isVideo }) => {
               alt="post"
               className="absolute inset-0 object-contain w-full h-full "
             />
+            {post.images.length > 1 && (
+              <div className="absolute top-2 right-4">
+                <BiCarousel className="text-secondary w-6 h-6" />
+              </div>
+            )}
             {post.discountPercentage && post.discountPercentage > 0 && (
               <div className="absolute bottom-2 w-full md:px-2 px-1 bg-transparent ">
                 <div className=" md:p-3 p-1 bg-secondary">

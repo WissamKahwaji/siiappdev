@@ -1,0 +1,18 @@
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+.custom-arrow {
+  @apply absolute z-10;
+}
+
+.slick-prev.custom-arrow {
+  left: 10px !important;
+  right: auto !important;
+}
+
+.slick-next.custom-arrow {
+  right: 10px !important;
+  left: auto !important;
+}

@@ -48,6 +48,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const userCategories = [
+  "None",
   "Finance",
   "Media Agency",
   "Public",
@@ -346,11 +347,11 @@ const EditProfilePage: React.FC = () => {
                           onChange={handleChange}
                           value={values.userCategory}
                         >
-                          <option
+                          {/* <option
                             value=""
                             label="Select category"
                             className="text-secondary"
-                          />
+                          /> */}
                           {userCategories.map(category => (
                             <option
                               key={category}

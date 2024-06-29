@@ -5,7 +5,10 @@ import HashtagsInput from "../../const/HashtagsInput";
 import { useTranslation } from "react-i18next";
 import { FolderOrPostProps } from "../../../apis/folder/type";
 import { useState } from "react";
-
+import ImagePostSlider from "../../const/image_post_slider/ImagePostSlider";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 interface EditPostDetailsProps {
   isOpen: boolean;
   onClose: () => void;
@@ -37,16 +40,47 @@ const EditPostDetails = ({
     tags: selectedPost.tags,
     discountPercentage: selectedPost.discountPercentage,
     discountFunctionType: selectedPost.discountFunctionType,
+    otherCaptions: selectedPost.otherCaptions,
+  };
+  const captionSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
   };
   const renderPostMedia = () => {
     switch (selectedPost.postType) {
       case "image":
         return (
-          <img
-            src={selectedPost.images[0]}
-            alt="Post"
-            className="w-full h-auto rounded-lg object-contain"
-          />
+          <>
+            {selectedPost.images.length > 1 ? (
+              <div className="md:w-full max-w-xs md:max-w-full">
+                <ImagePostSlider>
+                  {selectedPost.images.map((img, index) => (
+                    <div key={index}>
+                      <img
+                        src={img}
+                        alt="Post"
+                        className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                      />
+                    </div>
+                  ))}
+                </ImagePostSlider>
+              </div>
+            ) : (
+              <img
+                src={selectedPost.images[0]}
+                alt="Post"
+                className="w-full h-auto rounded-lg object-contain"
+              />
+            )}
+          </>
+          // <img
+          //   src={selectedPost.images[0]}
+          //   alt="Post"
+          //   className="w-full h-auto rounded-lg object-contain"
+          // />
         );
       case "video":
         return (
@@ -83,9 +117,10 @@ const EditPostDetails = ({
         }) => (
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar  md:space-y-0 md:grid md:grid-cols-2 gap-x-4 font-header"
+            className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar  md:space-y-0 md:grid md:grid-cols-2 gap-x-4 font-header max-w-[350px] md:max-w-full"
           >
             <div className="flex justify-center">{renderPostMedia()}</div>
+            {/* {renderPostMedia()} */}
             <div className="flex flex-col items-start justify-start w-full relative py-1 px-2">
               <div className="flex items-center mb-5 gap-x-2">
                 <img
@@ -100,7 +135,58 @@ const EditPostDetails = ({
                   {selectedPost.owner.fullName}
                 </p>
               </div>
-              <label htmlFor="caption" className="text-gray-700 text-sm">
+              <div className="md:w-full max-w-[360px]">
+                <Slider {...captionSettings}>
+                  <div className="flex flex-col items-start justify-start w-full  px-1">
+                    <label htmlFor="caption" className="text-gray-700 text-sm">
+                      {t("caption")}
+                    </label>
+                    <textarea
+                      id="caption"
+                      name="caption"
+                      placeholder={t("edit_caption")}
+                      className="p-2 border h-32 mb-2 border-secondary rounded w-full focus:outline-none focus:ring-2 focus:ring-navBackground"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.caption}
+                    />
+                    {errors.caption && touched.caption && (
+                      <div className="text-red-500 text-xs mt-1">
+                        {errors.caption}
+                      </div>
+                    )}
+                  </div>
+                  {selectedPost.images &&
+                    selectedPost.images.slice(1).map((_caption, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col items-start justify-start w-full px-1"
+                      >
+                        <label
+                          className="mb-2 text-sm font-medium text-gray-700"
+                          htmlFor={`otherCaptions-${index}`}
+                        >
+                          {t(`caption for image ${index + 2}`)}
+                        </label>
+                        <textarea
+                          id={`otherCaptions-${index}`}
+                          name={`otherCaptions[${index}]`}
+                          minLength={1}
+                          className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.otherCaptions![index]}
+                        />
+                        {errors.otherCaptions && touched.otherCaptions && (
+                          <div className="text-red-500 text-xs mt-1">
+                            {errors.otherCaptions}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </Slider>
+              </div>
+              {/* <label htmlFor="caption" className="text-gray-700 text-sm">
                 {t("caption")}
               </label>
               <textarea
@@ -116,8 +202,12 @@ const EditPostDetails = ({
                 <div className="text-red-500 text-xs mt-1">
                   {errors.caption}
                 </div>
-              )}
-              <label htmlFor="whatsAppNumber" className="text-gray-700 text-sm">
+              )} */}
+
+              <label
+                htmlFor="whatsAppNumber"
+                className="text-gray-700 text-sm mt-6"
+              >
                 {t("whatsApp_number")}
               </label>
               <input
@@ -292,3 +382,53 @@ const EditPostDetails = ({
 };
 
 export default EditPostDetails;
+
+// {selectedPost.images && selectedPost.images.length > 1 && (
+//   <div className="w-full mb-2">
+//     {values.otherCaptions?.map((caption, index) => (
+//       <div
+//         key={index}
+//         className="flex flex-col items-start justify-start w-full"
+//       >
+//         <label
+//           className="mb-2 text-sm font-medium text-gray-700"
+//           htmlFor={`otherCaptions-${index}`}
+//         >
+//           {t(`caption for image ${index + 2}`)}
+//         </label>
+//         <textarea
+//           id={`otherCaptions-${index}`}
+//           name={`otherCaptions[${index}]`}
+//           minLength={1}
+//           className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
+//           onBlur={handleBlur}
+//           onChange={handleChange}
+//           value={caption}
+//         />
+//         {errors.otherCaptions && touched.otherCaptions && (
+//           <div className="text-red-500 text-xs mt-1">
+//             {errors.otherCaptions}
+//           </div>
+//         )}
+//       </div>
+//     ))}
+//     {values.otherCaptions &&
+//       values.otherCaptions?.length <
+//         selectedPost.images.length - 1 && (
+//         <button
+//           type="button"
+//           className="bg-secondary text-navBackground font-semibold py-2 px-4 rounded-lg hover:bg-navBackground hover:text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 transform ease-in-out duration-300"
+//           onClick={() => {
+//             if (values.otherCaptions) {
+//               setFieldValue("otherCaptions", [
+//                 ...values.otherCaptions,
+//                 "",
+//               ]);
+//             }
+//           }}
+//         >
+//           {t("add_another_caption")}
+//         </button>
+//       )}
+//   </div>
+// )}

@@ -161,11 +161,14 @@ const QrCodeInfoPage = () => {
             <p className="text-secondary md:text-lg text-base">
               {userInfo?.fullName}
             </p>
-            {userInfo && userInfo.isBusiness && userInfo.userCategory && (
-              <p className="text-gray-400 md:text-base text-sm">
-                {userInfo.userCategory}
-              </p>
-            )}
+            {userInfo &&
+              userInfo.isBusiness &&
+              userInfo.userCategory &&
+              userInfo.userCategory != "None" && (
+                <p className="text-gray-400 md:text-base text-sm">
+                  {userInfo.userCategory}
+                </p>
+              )}
           </div>
           <Link to={`/${userInfo?.userName}`} replace>
             <p className="bg-secondary rounded-lg px-3 py-2 text-navBackground text-sm shadow-sm shadow-gray-200 hover:text-secondary hover:bg-navBackground/40 transform ease-in-out duration-300">

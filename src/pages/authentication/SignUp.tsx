@@ -124,7 +124,7 @@ const Signup = () => {
                     type="text"
                     name="email"
                     className="text-xs w-full font-header rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400"
-                    placeholder={t("your_email_or_phone_number")}
+                    placeholder={t("email")}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
