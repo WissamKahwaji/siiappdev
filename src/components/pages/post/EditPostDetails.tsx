@@ -30,7 +30,7 @@ const EditPostDetails = ({
   const [discountFunctionType, setDiscountFunctionType] = useState(
     selectedPost.discountFunctionType ?? "get_offer"
   );
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>(selectedPost.images ?? []);
   useEffect(() => {
     if (selectedPost.images) {
       if (selectedLang === "ar") {
