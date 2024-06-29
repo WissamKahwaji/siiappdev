@@ -1495,7 +1495,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             className="mb-2 text-sm justify-start w-full flex font-medium text-gray-700"
                             htmlFor="caption"
                           >
-                            {t("caption")}
+                            {t("caption for image 1")}
                           </label>
                           <textarea
                             id="caption"

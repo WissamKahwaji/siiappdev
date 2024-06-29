@@ -215,16 +215,27 @@ const Post = (props: PostProps) => {
           <div className="p-2 justify-center">
             {props.post.images.length > 1 ? (
               <ImagePostSlider onImageChange={handleImageChange}>
-                {props.post.images.map((image, index) => (
-                  <div key={index}>
-                    <img
-                      src={image}
-                      alt={`Post image ${index + 1}`}
-                      className="object-cover border border-secondary rounded-lg md:w-full w-full cursor-pointer"
-                      onClick={() => handlePostClick(props.post)}
-                    />
-                  </div>
-                ))}
+                {selectedLang === "en"
+                  ? props.post.images.map((image, index) => (
+                      <div key={index}>
+                        <img
+                          src={image}
+                          alt={`Post image ${index + 1}`}
+                          className="object-cover border border-secondary rounded-lg md:w-full w-full cursor-pointer"
+                          onClick={() => handlePostClick(props.post)}
+                        />
+                      </div>
+                    ))
+                  : [...props.post.images].reverse().map((image, index) => (
+                      <div key={index}>
+                        <img
+                          src={image}
+                          alt={`Post image ${index + 1}`}
+                          className="object-cover border border-secondary rounded-lg md:w-full w-full cursor-pointer"
+                          onClick={() => handlePostClick(props.post)}
+                        />
+                      </div>
+                    ))}
               </ImagePostSlider>
             ) : (
               <img

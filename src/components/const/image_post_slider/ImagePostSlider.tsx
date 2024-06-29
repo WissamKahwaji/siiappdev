@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./imagePostSlider.css";
 import { BiCarousel } from "react-icons/bi";
+
 // import {
 //   MdOutlineKeyboardArrowLeft,
 //   MdOutlineKeyboardArrowRight,
@@ -61,6 +62,7 @@ const sliderSettings = {
   speed: 500,
   slidesToShow: 1,
   slidesToScroll: 1,
+  rtl: false,
   // nextArrow: <NextArrow className="custom-arrow" />,
   // prevArrow: <PrevArrow className="custom-arrow" />,
 };

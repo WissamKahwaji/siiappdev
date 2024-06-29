@@ -25,7 +25,8 @@ const EditPostDetails = ({
   selectedPost,
   onEdit,
 }: EditPostDetailsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const selectedLang = i18n.language;
   const [discountFunctionType, setDiscountFunctionType] = useState(
     selectedPost.discountFunctionType ?? "get_offer"
   );
@@ -42,6 +43,7 @@ const EditPostDetails = ({
     discountFunctionType: selectedPost.discountFunctionType,
     otherCaptions: selectedPost.otherCaptions,
   };
+
   const captionSettings = {
     dots: true,
     infinite: false,
@@ -57,15 +59,25 @@ const EditPostDetails = ({
             {selectedPost.images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
                 <ImagePostSlider>
-                  {selectedPost.images.map((img, index) => (
-                    <div key={index}>
-                      <img
-                        src={img}
-                        alt="Post"
-                        className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
-                      />
-                    </div>
-                  ))}
+                  {selectedLang === "en"
+                    ? selectedPost.images.map((img, index) => (
+                        <div key={index}>
+                          <img
+                            src={img}
+                            alt="Post"
+                            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                          />
+                        </div>
+                      ))
+                    : [...selectedPost.images].reverse().map((img, index) => (
+                        <div key={index}>
+                          <img
+                            src={img}
+                            alt="Post"
+                            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                          />
+                        </div>
+                      ))}
                 </ImagePostSlider>
               </div>
             ) : (
@@ -135,11 +147,11 @@ const EditPostDetails = ({
                   {selectedPost.owner.fullName}
                 </p>
               </div>
-              <div className="md:w-full max-w-[360px]">
+              <div className="md:w-full max-w-[340px]">
                 <Slider {...captionSettings}>
                   <div className="flex flex-col items-start justify-start w-full  px-1">
                     <label htmlFor="caption" className="text-gray-700 text-sm">
-                      {t("caption")}
+                      {t("caption for image 1")}
                     </label>
                     <textarea
                       id="caption"

@@ -45,7 +45,8 @@ const PostDetails = ({
   currentUserId,
   onClose,
 }: PostDetailsProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const selectedLang = i18n.language;
   const { isAuthenticated } = useAuth();
   const { mutate: toggleLike } = useToggleLikeMutaion();
   const { mutate: toggleSave } = useToggleSaveMutaion();
@@ -185,15 +186,25 @@ const PostDetails = ({
             {postInfo.images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
                 <ImagePostSlider onImageChange={handleImageChange}>
-                  {postInfo.images.map((img, index) => (
-                    <div key={index}>
-                      <img
-                        src={img}
-                        alt="Post"
-                        className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
-                      />
-                    </div>
-                  ))}
+                  {selectedLang === "en"
+                    ? postInfo.images.map((img, index) => (
+                        <div key={index}>
+                          <img
+                            src={img}
+                            alt="Post"
+                            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                          />
+                        </div>
+                      ))
+                    : [...postInfo.images].reverse().map((img, index) => (
+                        <div key={index}>
+                          <img
+                            src={img}
+                            alt="Post"
+                            className="md:w-full md:h-full w-full h-full md:max-h-[369px] md:object-contain object-cover rounded-lg border-4 border-secondary"
+                          />
+                        </div>
+                      ))}
                 </ImagePostSlider>
               </div>
             ) : (
