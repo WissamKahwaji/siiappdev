@@ -183,12 +183,12 @@ const PostDetails = ({
       case "image":
         return (
           <>
-            {postInfo.images.length > 1 ? (
+            {selectedPost.images.length > 1 ? (
               <div className="md:w-full max-w-xs md:max-w-full">
-                {postInfo.images && (
+                {selectedPost.images && (
                   <ImagePostSlider onImageChange={handleImageChange}>
                     {selectedLang === "en"
-                      ? postInfo?.images.map((img, index) => (
+                      ? selectedPost.images.map((img, index) => (
                           <div key={index}>
                             <img
                               src={img}
@@ -197,7 +197,7 @@ const PostDetails = ({
                             />
                           </div>
                         ))
-                      : [...postInfo.images]?.reverse().map((img, index) => (
+                      : [...selectedPost.images].reverse().map((img, index) => (
                           <div key={index}>
                             <img
                               src={img}
