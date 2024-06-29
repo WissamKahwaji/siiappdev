@@ -174,7 +174,7 @@ const EditPostDetails = ({
                   {selectedPost.owner.fullName}
                 </p>
               </div>
-              <div className="md:w-full max-w-[340px]">
+              <div className="md:w-full  max-w-[340px] min-w-[340px]">
                 <Slider {...captionSettings}>
                   <div className="flex flex-col items-start justify-start w-full  px-1">
                     <label htmlFor="caption" className="text-gray-700 text-sm">
