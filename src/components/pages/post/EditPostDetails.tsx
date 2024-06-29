@@ -156,7 +156,9 @@ const EditPostDetails = ({
             onSubmit={handleSubmit}
             className="space-y-6 max-h-[500px] overflow-y-auto no-scrollbar  md:space-y-0 md:grid md:grid-cols-2 gap-x-4 font-header max-w-[350px] md:max-w-full"
           >
-            <div className="flex justify-center">{renderPostMedia()}</div>
+            <div className="flex justify-center max-w-[350px] md:w-full">
+              {renderPostMedia()}
+            </div>
             {/* {renderPostMedia()} */}
             <div className="flex flex-col items-start justify-start w-full relative py-1 px-2">
               <div className="flex items-center mb-5 gap-x-2">
