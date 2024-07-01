@@ -11,6 +11,7 @@ const QrCodeUser = ({ qrCodeUrl, userName, qrCodeRef }: QrCodeUserProps) => {
   useEffect(() => {
     if (qrCodeUrl) {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.src = qrCodeUrl;
       img.onload = () => {
         if (canvasRef.current) {
