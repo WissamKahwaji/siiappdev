@@ -97,25 +97,22 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const handleSaveAsImage = () => {
-    if (qrCodeRef && qrCodeRef.current) {
-      htmlToImage
-        .toPng(qrCodeRef.current)
-        .then(dataUrl => {
-          const link = document.createElement("a");
-          link.href = dataUrl;
-          link.download = `${user.user.fullName}_QRCode.png`;
-
-          document.body.appendChild(link);
-          link.click();
-
-          // Remove the link after a short delay
-          setTimeout(() => {
+    if (qrCodeRef) {
+      if (qrCodeRef.current) {
+        htmlToImage
+          .toPng(qrCodeRef.current)
+          .then(dataUrl => {
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `${user.user.fullName}_QRCode.png`;
+            document.body.appendChild(link);
+            link.click();
             document.body.removeChild(link);
-          }, 600); // Adjust the delay as needed
-        })
-        .catch(error => {
-          console.error("Error generating image", error);
-        });
+          })
+          .catch(error => {
+            console.error("Error generating image", error);
+          });
+      }
     }
   };
   const [croppedImages, setCroppedImages] = useState<File[]>([]);
