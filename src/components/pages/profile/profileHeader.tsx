@@ -63,7 +63,8 @@ import { ImProfile } from "react-icons/im";
 import { FolderOrPostProps } from "../../../apis/folder/type";
 import { useAddFolderMutation } from "../../../apis/folder/queries";
 import LoadingComponent from "../../const/LoadingComponent";
-import { toPng } from "html-to-image";
+import * as htmlToImage from "html-to-image";
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -97,21 +98,28 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
 
   const handleSaveAsImage = () => {
     if (qrCodeRef.current) {
-      const canvasElement = qrCodeRef.current.querySelector("canvas");
-      if (canvasElement) {
-        toPng(canvasElement)
-          .then(dataUrl => {
-            const link = document.createElement("a");
-            link.href = dataUrl;
-            link.download = `${user.user.fullName}_QRCode.png`;
+      htmlToImage
+        .toPng(qrCodeRef.current)
+        .then(dataUrl => {
+          const link = document.createElement("a");
+          link.href = dataUrl;
+          link.download = `${user.user.fullName}_QRCode.png`;
+
+          // For Safari, trigger the download in a new window
+          if (
+            navigator.userAgent.includes("Safari") &&
+            !navigator.userAgent.includes("Chrome")
+          ) {
+            window.open(dataUrl, "_blank");
+          } else {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-          })
-          .catch(error => {
-            console.error("Error generating image", error);
-          });
-      }
+          }
+        })
+        .catch(error => {
+          console.error("Error generating image", error);
+        });
     }
   };
   const [croppedImages, setCroppedImages] = useState<File[]>([]);
