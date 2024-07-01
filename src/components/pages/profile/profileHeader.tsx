@@ -92,7 +92,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const [isNewLoginFormModalOpen, setIsNewLoginFormModalOpen] = useState(false);
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [croppedImageDataUrl, setCroppedImageDataUrl] = useState<string>("");
-
+  const [isCaptionEdited, setIsCaptionEdited] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const handleSaveAsImage = () => {
@@ -286,6 +286,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   //   const file = event.target.files?.[0];
   //   setCoverImage(file ?? null);
   // };
+
   const initialValues: FolderOrPostProps = {
     caption: "",
     link: "",
@@ -1175,16 +1176,43 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                           ))}
                         </Slider>
                       </div>
-                      {currentImageIndex < 10 && (
-                        <ImageCropper
-                          aspect={1}
-                          onCropComplete={croppedFile =>
-                            handleImagesCropComplete(croppedFile, setFieldValue)
-                          }
-                          icon={
-                            <BiCarousel className="w-10 h-10 text-secondary" />
-                          }
-                        />
+                      {croppedImages.length == 0 ? (
+                        <>
+                          <div className="w-full flex flex-row">
+                            <img
+                              src=""
+                              alt={`Cropped`}
+                              className="rounded-md border border-secondary shadow-sm shadow-secondary w-32 h-32 object-cover"
+                            />
+                            <ImageCropper
+                              aspect={1}
+                              onCropComplete={croppedFile =>
+                                handleImagesCropComplete(
+                                  croppedFile,
+                                  setFieldValue
+                                )
+                              }
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          {currentImageIndex < 10 && (
+                            <ImageCropper
+                              aspect={1}
+                              onCropComplete={croppedFile =>
+                                handleImagesCropComplete(
+                                  croppedFile,
+                                  setFieldValue
+                                )
+                              }
+                              icon={
+                                <BiCarousel className="w-10 h-10 text-secondary" />
+                              }
+                              titleIcon="select multi images"
+                            />
+                          )}
+                        </>
                       )}
                     </div>
                     // <div className="w-[340px] md:w-full">
@@ -1495,7 +1523,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             className="mb-2 text-sm justify-start w-full flex font-medium text-gray-700"
                             htmlFor="caption"
                           >
-                            {t("caption for image 1")}
+                            {`${t(`caption_for_image`)} 1`}
                           </label>
                           <textarea
                             id="caption"
@@ -1505,12 +1533,15 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                             onBlur={handleBlur}
                             onChange={e => {
                               handleChange(e);
-                              setFieldValue(
-                                "otherCaptions",
-                                Array(croppedImages.length - 1).fill(
-                                  e.target.value
-                                )
-                              );
+
+                              if (!isCaptionEdited) {
+                                setFieldValue(
+                                  "otherCaptions",
+                                  Array(croppedImages.length - 1).fill(
+                                    e.target.value
+                                  )
+                                );
+                              }
                             }}
                             value={values.caption ?? ""}
                           />
@@ -1530,7 +1561,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                 className="mb-2 text-sm font-medium text-gray-700 justify-start w-full flex"
                                 htmlFor={`otherCaptions-${index}`}
                               >
-                                {t(`caption for image ${index + 2}`)}
+                                {`${t(`caption_for_image`)} ${index + 2}`}
                               </label>
                               <textarea
                                 id={`otherCaptions-${index}`}
@@ -1538,8 +1569,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
                                 minLength={1}
                                 className="px-4 h-32 py-2 w-full border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-navBackground"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
-                                value={values.otherCaptions![index]}
+                                onChange={e => {
+                                  handleChange(e);
+                                  setIsCaptionEdited(true);
+                                }}
+                                value={
+                                  values.otherCaptions![index] ?? values.caption
+                                }
                               />
                               {errors.otherCaptions &&
                                 touched.otherCaptions && (

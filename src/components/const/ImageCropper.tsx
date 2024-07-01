@@ -9,12 +9,14 @@ interface ImageCropperProps {
   onCropComplete: (croppedFile: File) => void;
   aspect?: number | undefined;
   icon?: React.ReactNode;
+  titleIcon?: string;
 }
 
 const ImageCropper: React.FC<ImageCropperProps> = ({
   onCropComplete,
   aspect,
   icon = <FiUpload className="w-10 h-10 text-gray-400" />,
+  titleIcon,
 }) => {
   const [image, setImage] = useState<string | null>(null);
   const [croppedArea, setCroppedArea] = useState<Area | null>(null);
@@ -107,7 +109,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
             </div>
           </div>
         ) : (
-          <div className="relative w-20 h-16 border-2 border-dashed rounded-md flex items-center justify-center">
+          <div className="relative w-20 h-16 border-2 border-dashed rounded-md flex flex-col items-center justify-center">
             <input
               type="file"
               accept="image/*"
@@ -115,6 +117,9 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
               onChange={handleSelectFile}
             />
             {icon}
+            {titleIcon && (
+              <p className="text-[8px] text-gray-500">{titleIcon}</p>
+            )}
           </div>
         )}
       </div>

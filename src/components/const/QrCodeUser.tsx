@@ -1,5 +1,4 @@
-import { LegacyRef } from "react";
-
+import { LegacyRef, useEffect, useRef } from "react";
 interface QrCodeUserProps {
   qrCodeUrl: string | undefined;
   userName: string;
@@ -7,6 +6,26 @@ interface QrCodeUserProps {
 }
 
 const QrCodeUser = ({ qrCodeUrl, userName, qrCodeRef }: QrCodeUserProps) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (qrCodeUrl && canvasRef.current) {
+      const img = new Image();
+      img.src = qrCodeUrl;
+      img.onload = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas!.getContext("2d");
+        if (ctx) {
+          canvas!.width = img.width + 16; // Adjust for border size
+          canvas!.height = img.height + 16;
+          ctx.fillStyle = "#E5E7EB"; // Border color
+          ctx.fillRect(0, 0, canvas!.width, canvas!.height);
+          ctx.drawImage(img, 8, 8, img.width, img.height); // Center the image
+        }
+      };
+    }
+  }, [qrCodeUrl]);
+
   return (
     <div className="flex items-center justify-center p-4">
       {qrCodeUrl ? (
