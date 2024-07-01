@@ -96,9 +96,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const handleSaveAsImage = () => {
-    if (qrCodeRef) {
-      if (qrCodeRef.current) {
-        toPng(qrCodeRef.current)
+    if (qrCodeRef.current) {
+      const canvasElement = qrCodeRef.current.querySelector("canvas");
+      if (canvasElement) {
+        toPng(canvasElement)
           .then(dataUrl => {
             const link = document.createElement("a");
             link.href = dataUrl;
