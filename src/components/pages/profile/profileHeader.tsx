@@ -110,7 +110,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             navigator.userAgent.includes("Safari") &&
             !navigator.userAgent.includes("Chrome")
           ) {
-            window.open(dataUrl, "_blank");
+            // Add a slight delay for Safari
+            setTimeout(() => {
+              window.open(dataUrl, "_blank");
+            }, 100); // Adjust the delay as needed
           } else {
             document.body.appendChild(link);
             link.click();
