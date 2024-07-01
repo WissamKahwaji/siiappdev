@@ -28,7 +28,7 @@ const QrCodeUser = ({ qrCodeUrl, userName, qrCodeRef }: QrCodeUserProps) => {
         console.error("Error loading QR code image:", error);
       };
     }
-  }, [qrCodeUrl, canvasRef.current]);
+  }, [qrCodeUrl]);
 
   return (
     <div className="flex items-center justify-center p-4">
