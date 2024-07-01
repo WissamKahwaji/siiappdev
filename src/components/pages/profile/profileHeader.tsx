@@ -113,7 +113,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
             // Add a slight delay for Safari
             setTimeout(() => {
               window.open(dataUrl, "_blank");
-            }, 100); // Adjust the delay as needed
+            }, 300); // Adjust the delay as needed
           } else {
             document.body.appendChild(link);
             link.click();
