@@ -97,7 +97,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const handleSaveAsImage = () => {
-    if (qrCodeRef.current) {
+    if (qrCodeRef && qrCodeRef.current) {
       htmlToImage
         .toPng(qrCodeRef.current)
         .then(dataUrl => {
@@ -105,20 +105,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = user => {
           link.href = dataUrl;
           link.download = `${user.user.fullName}_QRCode.png`;
 
-          // For Safari, try opening in a new window if direct click doesn't work
-          if (
-            navigator.userAgent.includes("Safari") &&
-            !navigator.userAgent.includes("Chrome")
-          ) {
-            setTimeout(() => {
-              window.open(dataUrl, "_blank");
-            }, 1000); // Adjust the delay as needed
-          } else {
-            // For other browsers, append and click the link
-            document.body.appendChild(link);
-            link.click();
+          document.body.appendChild(link);
+          link.click();
+
+          // Remove the link after a short delay
+          setTimeout(() => {
             document.body.removeChild(link);
-          }
+          }, 600); // Adjust the delay as needed
         })
         .catch(error => {
           console.error("Error generating image", error);
