@@ -9,25 +9,26 @@ const QrCodeUser = ({ qrCodeUrl, userName, qrCodeRef }: QrCodeUserProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (qrCodeUrl) {
+    if (qrCodeUrl && canvasRef.current) {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.src = qrCodeUrl;
       img.onload = () => {
-        if (canvasRef.current) {
-          const canvas = canvasRef.current;
-          const ctx = canvas.getContext("2d");
-          if (ctx) {
-            canvas.width = img.width + 16; // Adjust for border size
-            canvas.height = img.height + 16;
-            ctx.fillStyle = "#E5E7EB"; // Border color
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 8, 8, img.width, img.height); // Center the image
-          }
+        const canvas = canvasRef.current as HTMLCanvasElement;
+        const ctx = canvas?.getContext("2d"); // Optional chaining
+        if (ctx) {
+          canvas.width = img.width + 16; // Adjust for border size
+          canvas.height = img.height + 16;
+          ctx.fillStyle = "#E5E7EB"; // Border color
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 8, 8, img.width, img.height); // Center the image
         }
       };
+      img.onerror = error => {
+        console.error("Error loading QR code image:", error);
+      };
     }
-  }, [qrCodeUrl]);
+  }, [qrCodeUrl, canvasRef.current]);
 
   return (
     <div className="flex items-center justify-center p-4">
